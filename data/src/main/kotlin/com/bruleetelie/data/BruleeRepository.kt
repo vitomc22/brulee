@@ -142,7 +142,9 @@ class BruleeRepository(
             orders.map { order ->
                 if (order.id == orderId) {
                     val updatedSteps = order.steps.map { step ->
-                        if (step.id == stepId) step.copy(isCompleted = completed) else step
+                        val matchesId = step.id == stepId ||
+                            step.id.substringBefore('-').removePrefix("s") == stepId
+                        if (matchesId) step.copy(isCompleted = completed) else step
                     }
                     order.copy(
                         steps = updatedSteps,

@@ -116,3 +116,10 @@ latest binary's recommended copy:
 Both are idempotent: re-runs replace the block delimited by the ai-memory
 start/end HTML-comment markers, without disturbing the rest of the file.
 <!-- ai-memory:end -->
+
+## Compose UI testing
+
+- Every UI change or increment must include or update the relevant Compose UI tests.
+- Always run the affected Compose UI tests on the Android Studio emulator named `Small Phone API 37.2`, followed by the existing unit-test regression suite, before considering UI work complete.
+- Keep the primary quote flow covered end to end: create a recipe, add ingredients and their costs, calculate operational costs and pricing, fill customer data, approve the quote, and verify that it enters production.
+- Prefer stable semantic test tags for critical actions and fields; tests must not depend on screen coordinates.
