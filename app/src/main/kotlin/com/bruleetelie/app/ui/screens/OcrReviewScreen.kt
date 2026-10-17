@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bruleetelie.app.ui.components.StatusPill
 import com.bruleetelie.app.ui.components.TactilePrimaryButton
@@ -145,5 +146,13 @@ fun OcrReviewScreen(
             text = "SALVAR ITENS CONFIRMADOS",
             onClick = onFinishReview
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun OcrReviewScreenPreview() {
+    BruleeTheme {
+        OcrReviewScreen(onFinishReview = {})
     }
 }

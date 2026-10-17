@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bruleetelie.app.ui.components.StatusPill
 import com.bruleetelie.app.ui.components.StepProgressBar
@@ -664,5 +665,18 @@ private fun SentSuccessView(customerName: String, onFinish: () -> Unit) {
                 onClick = onFinish
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun NewQuoteWizardScreenPreview() {
+    BruleeTheme {
+        NewQuoteWizardScreen(
+            operatingSettings = OperatingSettings(),
+            onQuoteApproved = {},
+            onSendWhatsApp = {},
+            onClose = {}
+        )
     }
 }

@@ -28,4 +28,33 @@ class BruleeAppLogicTest {
         val formatted = money.format()
         assertEquals("R$\u00A0149,90", formatted)
     }
+
+    @Test
+    fun `test quote approval logic updates state and adds order`() {
+        val repo = com.bruleetelie.data.BruleeRepository()
+        val initialOrdersCount = repo.productionOrders.value.size
+
+        val quote = com.bruleetelie.domain.Quote(
+            id = "q-preview-1",
+            code = "#ORC-300",
+            customer = com.bruleetelie.domain.Customer("c-1", "Mariana", "(11) 91234-5678"),
+            productName = "Bolo Red Velvet",
+            productSubtitle = "Com recheio cream cheese",
+            unitsCount = 1,
+            pricing = com.bruleetelie.domain.PricingResult(
+                costs = com.bruleetelie.domain.RecipeCosts(Money.fromReais("50.00"), Money.fromReais("40.00"), Money.fromReais("5.00"), Money.fromReais("5.00")),
+                salePrice = Money.fromReais("150.00"),
+                profit = Money.fromReais("50.00"),
+                marginPercent = java.math.BigDecimal("33.33")
+            ),
+            deliveryDate = "Amanhã"
+        )
+
+        repo.addQuote(quote)
+        repo.approveQuote(quote.id)
+
+        val updatedOrders = repo.productionOrders.value
+        assertEquals(initialOrdersCount + 1, updatedOrders.size)
+        assertEquals("#ORC-300", updatedOrders.first().quoteCode)
+    }
 }

@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bruleetelie.app.ui.components.MetricStatCard
 import com.bruleetelie.app.ui.components.StatusPill
@@ -212,5 +213,16 @@ private fun ProfitabilityRankingRow(rank: String, name: String, margin: String, 
             }
             StatusPill(margin, BruleePrimaryFixed, BruleePrimary)
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun FinanceDashboardScreenPreview() {
+    BruleeTheme {
+        FinanceDashboardScreen(
+            sales = emptyList(),
+            onExportPdf = {}
+        )
     }
 }

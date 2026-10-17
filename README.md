@@ -20,13 +20,22 @@ Esta fundação implementa o plano técnico e as camadas de dados e documentos:
 - `Money` em centavos e motor de precificação Pure Kotlin;
 - suíte completa de testes unitários (`:domain`, `:data`, `:documents`, `:app`).
 
-## Abrir e executar
+## Como testar a Interface (UI)
 
-1. Abra a raiz do projeto no Android Studio.
-2. Use JDK 21 (o projeto gera bytecode Java 17) e instale o Android SDK 35.
-3. Sincronize o Gradle e execute a configuração `app` em um emulador Android 8+.
+1. **Através do Android Studio (Compose Previews)**:
+   - Abra qualquer tela em `app/src/main/kotlin/com/bruleetelie/app/ui/screens/`.
+   - Clique em **Split** ou **Design** no Android Studio para visualizar o Compose Preview interativo instantaneamente sem precisar compilar o APK completo.
+   - Previews disponíveis:
+     - `ProductionBoardScreenPreview`
+     - `NewQuoteWizardScreenPreview`
+     - `FinanceDashboardScreenPreview`
+     - `ProductionCompletionScreenPreview`
+     - `OcrReviewScreenPreview`
 
-O Gradle Wrapper já está incluído. O ambiente de criação não possuía Android SDK; a compilação completa do APK deve ser feita no Android Studio após instalar o SDK 35.
+2. **No Emulador ou Dispositivo Físico**:
+   - Selecione o módulo `app` no Android Studio.
+   - Execute (`Shift + F10` ou botão `Run`).
+   - A aplicação será iniciada com o banco de dados Room e DataStore inicializados, permitindo navegar entre as abas **Produção**, **Novo Orçamento**, **Finanças** e **Estoque/OCR**.
 
 ## Próximos incrementos
 

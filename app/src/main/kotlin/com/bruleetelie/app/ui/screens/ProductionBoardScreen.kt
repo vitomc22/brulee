@@ -14,13 +14,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bruleetelie.app.ui.components.MetricStatCard
 import com.bruleetelie.app.ui.components.StatusPill
 import com.bruleetelie.app.ui.components.TactilePrimaryButton
 import com.bruleetelie.app.ui.theme.*
+import com.bruleetelie.domain.Money
 import com.bruleetelie.domain.ProductionOrder
 import com.bruleetelie.domain.ProductionStatus
+import com.bruleetelie.domain.ProductionStep
+import com.bruleetelie.domain.RecipeCosts
 
 @Composable
 fun ProductionBoardScreen(
@@ -296,6 +300,37 @@ fun ProductionBoardScreen(
         TomorrowOrderCard("#ORC-286", "Roberto Silveira", "Torta Sablée de Frutas Vermelhas", "Iniciar produção")
 
         Spacer(Modifier.height(16.dp))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ProductionBoardScreenPreview() {
+    BruleeTheme {
+        ProductionBoardScreen(
+            orders = listOf(
+                ProductionOrder(
+                    id = "preview-1",
+                    quoteId = "q1",
+                    quoteCode = "#ORC-284",
+                    customerName = "Ana Souza",
+                    productName = "40 Brigadeiros Gourmet",
+                    deliveryTimeFormatted = "16:00 (Hoje)",
+                    steps = listOf(
+                        ProductionStep("1", "Massa cozida e pesada", isCompleted = true),
+                        ProductionStep("2", "Boleamento finalizado", isCompleted = false, isCurrent = true),
+                        ProductionStep("3", "Ornamentação e acabamento", isCompleted = false),
+                        ProductionStep("4", "Embalagem cartonada e laço", isCompleted = false)
+                    ),
+                    status = ProductionStatus.InProgress,
+                    estimatedCosts = RecipeCosts(Money.fromReais("38.40"), Money.fromReais("50.00"), Money.fromReais("5.70"), Money.fromReais("4.50")),
+                    salePrice = Money.fromReais("149.90")
+                )
+            ),
+            onStepChecked = { _, _, _ -> },
+            onFinalizeOrder = {},
+            onNewQuoteClicked = {}
+        )
     }
 }
 

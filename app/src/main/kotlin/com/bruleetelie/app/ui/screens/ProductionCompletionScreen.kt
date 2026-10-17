@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bruleetelie.app.ui.components.StatusPill
 import com.bruleetelie.app.ui.components.TactilePrimaryButton
@@ -343,6 +344,29 @@ fun ProductionCompletionScreen(
         TactilePrimaryButton(
             text = "CONTINUAR PARA O PAINEL",
             onClick = onContinue
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ProductionCompletionScreenPreview() {
+    BruleeTheme {
+        ProductionCompletionScreen(
+            productName = "40 Brigadeiros Gourmet",
+            comparison = CostComparisonResult(
+                estimatedCosts = RecipeCosts(Money.fromReais("38.40"), Money.fromReais("50.00"), Money.fromReais("5.70"), Money.fromReais("4.50")),
+                actualCosts = RecipeCosts(Money.fromReais("35.00"), Money.fromReais("50.00"), Money.fromReais("5.00"), Money.fromReais("4.50")),
+                costDifference = Money.fromReais("3.60"),
+                isCostHigher = false,
+                salePrice = Money.fromReais("149.90"),
+                estimatedProfit = Money.fromReais("51.30"),
+                actualProfit = Money.fromReais("54.90"),
+                estimatedMarginPercent = java.math.BigDecimal("34.22"),
+                actualMarginPercent = java.math.BigDecimal("36.62"),
+                marginDifferencePercent = java.math.BigDecimal("2.40")
+            ),
+            onContinue = {}
         )
     }
 }
