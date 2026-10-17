@@ -594,7 +594,7 @@ private fun CustomerAndQuoteView(
                 StatusPill("#ORC-284", BruleePrimaryFixed, BruleePrimary)
             }
 
-            Divider(color = BruleeSurfaceContainerHigh)
+            HorizontalDivider(color = BruleeSurfaceContainerHigh)
 
             Text("Cliente: $customerName", fontWeight = FontWeight.SemiBold)
             Text(recipeName, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
