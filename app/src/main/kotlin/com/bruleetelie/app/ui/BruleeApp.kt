@@ -22,6 +22,7 @@ import com.bruleetelie.documents.DefaultDocumentGateway
 import com.bruleetelie.domain.CostComparisonResult
 import com.bruleetelie.domain.PricingEngine
 import com.bruleetelie.domain.ProductionOrder
+import kotlinx.coroutines.launch
 
 private enum class Destination(val label: String, val icon: String) {
     Production("Produção", "▤"),
@@ -48,12 +49,16 @@ fun BruleeApp() {
     val orders by repository.productionOrders.collectAsState()
     val sales by repository.completedSales.collectAsState()
     val settings by repository.settings.collectAsState()
+    val ingredients by repository.ingredients.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
     var destination by remember { mutableStateOf(Destination.Production) }
     var activeFlow by remember { mutableStateOf<ActiveFlow>(ActiveFlow.None) }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surface,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = { BruleeTopBar(destination) },
         bottomBar = {
             if (activeFlow == ActiveFlow.None) {
@@ -151,7 +156,28 @@ fun BruleeApp() {
 
                         Destination.Stock -> {
                             OcrReviewScreen(
-                                onFinishReview = { destination = Destination.Production }
+                                onSaveConfirmedItems = { confirmedItems ->
+                                    confirmedItems.forEach { item ->
+                                        val ingredient = ingredients.firstOrNull { it.name == item.matchedIngredient }
+                                        if (ingredient != null) {
+                                            repository.addPriceObservation(
+                                                ingredientId = ingredient.id,
+                                                supplierName = "Importação OCR",
+                                                pkgValue = item.packageQuantityValue,
+                                                pkgUnit = item.packageQuantityUnit,
+                                                pkgPriceCents = item.packagePriceCents,
+                                                unitPriceCents = item.normalizedUnitPriceCents,
+                                                source = "OCR"
+                                            )
+                                        }
+                                    }
+                                    destination = Destination.Production
+                                    coroutineScope.launch {
+                                        snackbarHostState.showSnackbar(
+                                            "${confirmedItems.size} observações de preço salvas"
+                                        )
+                                    }
+                                }
                             )
                         }
                     }

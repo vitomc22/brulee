@@ -6,6 +6,7 @@ import com.bruleetelie.data.db.IngredientEntity
 import com.bruleetelie.data.db.PriceObservationEntity
 import com.bruleetelie.domain.*
 import java.math.BigDecimal
+import java.util.UUID
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,6 +46,9 @@ class BruleeRepository(
 
     private val _ingredients = MutableStateFlow(initialIngredients())
     val ingredients: StateFlow<List<IngredientEntity>> = _ingredients.asStateFlow()
+
+    private val _priceObservations = MutableStateFlow<List<PriceObservationEntity>>(emptyList())
+    val priceObservations: StateFlow<List<PriceObservationEntity>> = _priceObservations.asStateFlow()
 
     init {
         if (database != null) {
@@ -92,8 +96,10 @@ class BruleeRepository(
         val db = database ?: return
 
         // Observe DataStore Settings
-        settingsDataStore?.settingsFlow?.collectLatest { newSettings ->
-            _settings.value = newSettings
+        scope.launch {
+            settingsDataStore?.settingsFlow?.collectLatest { newSettings ->
+                _settings.value = newSettings
+            }
         }
 
         // Observe Quotes
@@ -125,6 +131,12 @@ class BruleeRepository(
         scope.launch {
             db.ingredientDao().getAllIngredients().collectLatest { ingEntities ->
                 _ingredients.value = ingEntities
+            }
+        }
+
+        scope.launch {
+            db.priceObservationDao().getAllObservations().collectLatest { observations ->
+                _priceObservations.value = observations
             }
         }
     }
@@ -272,20 +284,24 @@ class BruleeRepository(
         pkgValue: String,
         pkgUnit: String,
         pkgPriceCents: Long,
-        unitPriceCents: Long
-    ) {
+        unitPriceCents: Long,
+        source: String = "MANUAL"
+    ): PriceObservationEntity {
         val obs = PriceObservationEntity(
-            id = "obs-${System.currentTimeMillis()}",
+            id = "obs-${UUID.randomUUID()}",
             ingredientId = ingredientId,
             supplierName = supplierName,
             packageQuantityValue = pkgValue,
             packageQuantityUnit = pkgUnit,
             packagePriceCents = pkgPriceCents,
-            normalizedUnitPriceCents = unitPriceCents
+            normalizedUnitPriceCents = unitPriceCents,
+            source = source
         )
+        _priceObservations.update { listOf(obs) + it }
         database?.let { db ->
             scope.launch { db.priceObservationDao().insertObservation(obs) }
         }
+        return obs
     }
 
     private companion object {

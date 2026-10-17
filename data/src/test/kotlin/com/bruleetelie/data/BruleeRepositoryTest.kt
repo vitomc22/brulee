@@ -107,6 +107,25 @@ class BruleeRepositoryTest {
     }
 
     @Test
+    fun `test OCR price observation is exposed in repository state`() {
+        val repo = BruleeRepository()
+
+        val observation = repo.addPriceObservation(
+            ingredientId = "ing-2",
+            supplierName = "Importação OCR",
+            pkgValue = "395",
+            pkgUnit = "g",
+            pkgPriceCents = 749,
+            unitPriceCents = 1896,
+            source = "OCR"
+        )
+
+        assertEquals(observation, repo.priceObservations.value.first())
+        assertEquals("OCR", observation.source)
+        assertEquals(749L, observation.packagePriceCents)
+    }
+
+    @Test
     fun `test updateSettings updates operating settings`() {
         val repo = BruleeRepository()
         val newSettings = OperatingSettings(

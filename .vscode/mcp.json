@@ -2,7 +2,7 @@
   "servers": {
     "ai-memory": {
       "type": "stdio",
-      "command": "ai-memory",
+      "command": "/home/victor/.local/lib/ai-memory/ai-memory",
       "args": [
         "mcp-bridge",
         "--no-session-id",
