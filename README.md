@@ -20,7 +20,17 @@ Esta fundação implementa o plano técnico e as camadas de dados e documentos:
 - `Money` em centavos e motor de precificação Pure Kotlin;
 - suíte completa de testes unitários (`:domain`, `:data`, `:documents`, `:app`).
 
-## Como testar a Interface (UI)
+## Solução de Erro de JVM do Gradle ("Incompatible Gradle JVM version")
+
+Se o Android Studio exibir o aviso:
+> *Incompatible Gradle JVM version. The project's Gradle version 8.12 is incompatible with the Gradle JVM version 25 currently selected to run Gradle build.*
+
+Basta clicar em **"Apply compatible Daemon JVM criteria and sync"** (Aplicar critérios de JVM do Daemon compatíveis e sincronizar) na barra amarela de notificação do Android Studio. O arquivo `gradle/gradle-daemon-jvm.properties` configurado no projeto solicitará automaticamente o uso de JDK 17/21 compatível.
+
+Alternativamente, no Android Studio:
+1. Vá em **Settings / Preferences** > **Build, Execution, Deployment** > **Build Tools** > **Gradle**.
+2. Em **Gradle JDK**, selecione um JDK 17 ou JDK 21 (como o JBR 17/21 ou Eclipse Temurin 17/21) em vez do Java 25.
+3. Clique em **Sync Project with Gradle Files**.
 
 1. **Através do Android Studio (Compose Previews)**:
    - Abra qualquer tela em `app/src/main/kotlin/com/bruleetelie/app/ui/screens/`.

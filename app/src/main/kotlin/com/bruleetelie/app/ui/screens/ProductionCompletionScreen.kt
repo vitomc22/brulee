@@ -20,6 +20,7 @@ import com.bruleetelie.app.ui.components.TactilePrimaryButton
 import com.bruleetelie.app.ui.theme.*
 import com.bruleetelie.domain.CostComparisonResult
 import com.bruleetelie.domain.Money
+import com.bruleetelie.domain.RecipeCosts
 
 @Composable
 fun ProductionCompletionScreen(
