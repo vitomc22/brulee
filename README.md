@@ -4,18 +4,21 @@ Aplicativo Android local-first para custos, precificação, orçamentos, produç
 
 ## Estado atual
 
-Esta fundação implementa o plano técnico e a camada de dados local-first:
+Esta fundação implementa o plano técnico e as camadas de dados e documentos:
 
 - projeto multi-módulo (`app`, `domain`, `data`, `documents`);
 - banco de dados Room SQLite (`BruleeDatabase`, DAOs, conversores, mappers imutáveis);
 - armazenamento de configurações operacionais via DataStore Preferences (`OperatingSettingsDataStore`);
 - repositório unificado e reativo (`BruleeRepository`) conectado ao Room e DataStore;
+- geradores de PDF (`DefaultPdfGenerator` para modelo limpo de Cliente e relatório detalhado Interno com auditoria de custos);
+- parser de cupom fiscal/OCR e casamento de ingredientes por alias (`ReceiptParser` & `IngredientMatcher`);
+- gerenciador de backup e restauração zip portátil com checksum SHA-256 (`BackupManager`);
 - design system Material 3 baseado na especificação Stitch;
 - shell operacional com Produção, Finanças, Pedidos e Estoque;
 - tela interativa de fila de produção;
 - dashboard financeiro inicial;
 - `Money` em centavos e motor de precificação Pure Kotlin;
-- suíte de testes unitários do domínio e repositório.
+- suíte completa de testes unitários (`:domain`, `:data`, `:documents`, `:app`).
 
 ## Abrir e executar
 
