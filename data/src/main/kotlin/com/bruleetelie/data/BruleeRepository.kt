@@ -1,13 +1,28 @@
 package com.bruleetelie.data
 
+import com.bruleetelie.data.datastore.OperatingSettingsDataStore
+import com.bruleetelie.data.db.BruleeDatabase
+import com.bruleetelie.data.db.IngredientEntity
+import com.bruleetelie.data.db.PriceObservationEntity
 import com.bruleetelie.domain.*
 import java.math.BigDecimal
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
-class BruleeRepository {
+class BruleeRepository(
+    private val database: BruleeDatabase? = null,
+    private val settingsDataStore: OperatingSettingsDataStore? = null,
+    private val externalScope: CoroutineScope? = null
+) {
+    private val scope = externalScope ?: CoroutineScope(Dispatchers.IO)
 
     private val _settings = MutableStateFlow(
         OperatingSettings(
@@ -28,7 +43,101 @@ class BruleeRepository {
     private val _completedSales = MutableStateFlow(initialSales())
     val completedSales: StateFlow<List<SaleSnapshot>> = _completedSales.asStateFlow()
 
+    private val _ingredients = MutableStateFlow(initialIngredients())
+    val ingredients: StateFlow<List<IngredientEntity>> = _ingredients.asStateFlow()
+
+    init {
+        if (database != null) {
+            scope.launch {
+                seedDatabaseIfEmpty()
+                observeDatabaseAndDataStore()
+            }
+        }
+    }
+
+    private suspend fun seedDatabaseIfEmpty() {
+        val db = database ?: return
+
+        // Seed Quotes if empty
+        val existingQuotes = db.quoteDao().getAllQuotes().first()
+        if (existingQuotes.isEmpty()) {
+            db.quoteDao().insertAll(initialQuotes().map { it.toEntity() })
+        }
+
+        // Seed Production Orders & Steps if empty
+        val existingOrders = db.productionOrderDao().getAllOrders().first()
+        if (existingOrders.isEmpty()) {
+            initialOrders().forEach { order ->
+                db.productionOrderDao().insertOrderWithSteps(
+                    order = order.toEntity(),
+                    steps = order.steps.mapIndexed { idx, step -> step.toEntity(order.id, idx) }
+                )
+            }
+        }
+
+        // Seed Sales if empty
+        val existingSales = db.saleSnapshotDao().getAllSales().first()
+        if (existingSales.isEmpty()) {
+            db.saleSnapshotDao().insertAllSales(initialSales().map { it.toEntity() })
+        }
+
+        // Seed Ingredients if empty
+        val existingIngredients = db.ingredientDao().getAllIngredients().first()
+        if (existingIngredients.isEmpty()) {
+            db.ingredientDao().insertAll(initialIngredients())
+        }
+    }
+
+    private suspend fun observeDatabaseAndDataStore() {
+        val db = database ?: return
+
+        // Observe DataStore Settings
+        settingsDataStore?.settingsFlow?.collectLatest { newSettings ->
+            _settings.value = newSettings
+        }
+
+        // Observe Quotes
+        scope.launch {
+            db.quoteDao().getAllQuotes().collectLatest { entities ->
+                _quotes.value = entities.map { it.toDomain() }
+            }
+        }
+
+        // Observe Orders
+        scope.launch {
+            db.productionOrderDao().getAllOrders().collectLatest { orderEntities ->
+                val orders = orderEntities.map { entity ->
+                    val steps = db.productionOrderDao().getStepsForOrderSync(entity.id)
+                    entity.toDomain(steps)
+                }
+                _productionOrders.value = orders
+            }
+        }
+
+        // Observe Sales
+        scope.launch {
+            db.saleSnapshotDao().getAllSales().collectLatest { salesEntities ->
+                _completedSales.value = salesEntities.map { it.toDomain() }
+            }
+        }
+
+        // Observe Ingredients
+        scope.launch {
+            db.ingredientDao().getAllIngredients().collectLatest { ingEntities ->
+                _ingredients.value = ingEntities
+            }
+        }
+    }
+
+    fun updateSettings(newSettings: OperatingSettings) {
+        _settings.value = newSettings
+        settingsDataStore?.let {
+            scope.launch { it.saveSettings(newSettings) }
+        }
+    }
+
     fun updateStepStatus(orderId: String, stepId: String, completed: Boolean) {
+        // Update local state first for immediate UI response
         _productionOrders.update { orders ->
             orders.map { order ->
                 if (order.id == orderId) {
@@ -40,6 +149,18 @@ class BruleeRepository {
                         status = if (updatedSteps.all { it.isCompleted }) ProductionStatus.Completed else ProductionStatus.InProgress
                     )
                 } else order
+            }
+        }
+
+        // Update Room if database is attached
+        database?.let { db ->
+            scope.launch {
+                db.productionOrderDao().updateStepCompletion(stepId, completed)
+                val order = _productionOrders.value.firstOrNull { it.id == orderId }
+                if (order != null) {
+                    val newStatus = if (order.steps.all { it.isCompleted }) ProductionStatus.Completed.name else ProductionStatus.InProgress.name
+                    db.productionOrderDao().updateOrderStatus(orderId, newStatus)
+                }
             }
         }
     }
@@ -70,11 +191,26 @@ class BruleeRepository {
         }
 
         _completedSales.update { it + snapshot }
+
+        // Persist to Room
+        database?.let { db ->
+            scope.launch {
+                val updatedOrder = order.copy(status = ProductionStatus.Completed, actualCosts = finalActualCost)
+                db.productionOrderDao().insertOrder(updatedOrder.toEntity())
+                db.saleSnapshotDao().insertSale(snapshot.toEntity())
+            }
+        }
+
         return snapshot
     }
 
     fun addQuote(quote: Quote) {
         _quotes.update { it + quote }
+        database?.let { db ->
+            scope.launch {
+                db.quoteDao().insertQuote(quote.toEntity())
+            }
+        }
     }
 
     fun approveQuote(quoteId: String): ProductionOrder? {
@@ -91,10 +227,10 @@ class BruleeRepository {
             productName = "${quote.unitsCount}x ${quote.productName}",
             deliveryTimeFormatted = quote.deliveryDate,
             steps = listOf(
-                ProductionStep("s1", "Massa cozida e pesada", isCompleted = false),
-                ProductionStep("s2", "Boleamento finalizado", isCompleted = false),
-                ProductionStep("s3", "Ornamentação e acabamento", isCompleted = false),
-                ProductionStep("s4", "Embalagem cartonada e laço", isCompleted = false)
+                ProductionStep("s1-${System.currentTimeMillis()}", "Massa cozida e pesada", isCompleted = false),
+                ProductionStep("s2-${System.currentTimeMillis()}", "Boleamento finalizado", isCompleted = false),
+                ProductionStep("s3-${System.currentTimeMillis()}", "Ornamentação e acabamento", isCompleted = false),
+                ProductionStep("s4-${System.currentTimeMillis()}", "Embalagem cartonada e laço", isCompleted = false)
             ),
             status = ProductionStatus.Pending,
             estimatedCosts = quote.pricing.costs,
@@ -102,10 +238,68 @@ class BruleeRepository {
         )
 
         _productionOrders.update { listOf(newOrder) + it }
+
+        database?.let { db ->
+            scope.launch {
+                db.quoteDao().updateStatus(quoteId, QuoteStatus.Approved.name)
+                db.productionOrderDao().insertOrderWithSteps(
+                    order = newOrder.toEntity(),
+                    steps = newOrder.steps.mapIndexed { idx, step -> step.toEntity(newOrder.id, idx) }
+                )
+            }
+        }
+
         return newOrder
     }
 
+    fun addIngredient(name: String, unitSymbol: String) {
+        val newIng = IngredientEntity(
+            id = "ing-${System.currentTimeMillis()}",
+            name = name,
+            defaultUnitSymbol = unitSymbol
+        )
+        _ingredients.update { it + newIng }
+        database?.let { db ->
+            scope.launch { db.ingredientDao().insertIngredient(newIng) }
+        }
+    }
+
+    fun addPriceObservation(
+        ingredientId: String,
+        supplierName: String,
+        pkgValue: String,
+        pkgUnit: String,
+        pkgPriceCents: Long,
+        unitPriceCents: Long
+    ) {
+        val obs = PriceObservationEntity(
+            id = "obs-${System.currentTimeMillis()}",
+            ingredientId = ingredientId,
+            supplierName = supplierName,
+            packageQuantityValue = pkgValue,
+            packageQuantityUnit = pkgUnit,
+            packagePriceCents = pkgPriceCents,
+            normalizedUnitPriceCents = unitPriceCents
+        )
+        database?.let { db ->
+            scope.launch { db.priceObservationDao().insertObservation(obs) }
+        }
+    }
+
     private companion object {
+        fun initialIngredients(): List<IngredientEntity> {
+            return listOf(
+                IngredientEntity("ing-1", "Chocolate em Pó 50%", "g"),
+                IngredientEntity("ing-2", "Leite Condensado 395g", "un"),
+                IngredientEntity("ing-3", "Creme de Leite 200g", "un"),
+                IngredientEntity("ing-4", "Manteiga Extra Sem Sal", "g"),
+                IngredientEntity("ing-5", "Pasta de Pistache Puro", "g"),
+                IngredientEntity("ing-6", "Farinha de Trigo Especial", "kg"),
+                IngredientEntity("ing-7", "Açúcar de Confeiteiro", "kg"),
+                IngredientEntity("ing-8", "Ovos Brancos Grandes", "dz")
+            )
+        }
+
         fun initialOrders(): List<ProductionOrder> {
             val brigadeiroCosts = RecipeCosts(
                 ingredients = Money.fromReais("38.40"),
@@ -129,10 +323,10 @@ class BruleeRepository {
                     productName = "40 Brigadeiros Gourmet (Pistache, Doce de Leite, Crème Brûlée)",
                     deliveryTimeFormatted = "16:00 (Hoje)",
                     steps = listOf(
-                        ProductionStep("1", "Massa cozida e pesada (18g cada)", isCompleted = true),
-                        ProductionStep("2", "Boleamento finalizado", isCompleted = true),
-                        ProductionStep("3", "Ornamentação e acabamento", isCompleted = false, isCurrent = true),
-                        ProductionStep("4", "Embalagem cartonada e laço", isCompleted = false)
+                        ProductionStep("s1-284", "Massa cozida e pesada (18g cada)", isCompleted = true),
+                        ProductionStep("s2-284", "Boleamento finalizado", isCompleted = true),
+                        ProductionStep("s3-284", "Ornamentação e acabamento", isCompleted = false, isCurrent = true),
+                        ProductionStep("s4-284", "Embalagem cartonada e laço", isCompleted = false)
                     ),
                     status = ProductionStatus.InProgress,
                     estimatedCosts = brigadeiroCosts,
@@ -146,10 +340,10 @@ class BruleeRepository {
                     productName = "Bolo Brûlée Red Velvet 2kg",
                     deliveryTimeFormatted = "18:30 (Hoje)",
                     steps = listOf(
-                        ProductionStep("1", "Massa assada e resfriada", isCompleted = true),
-                        ProductionStep("2", "Recheio no descanso", isCompleted = true),
-                        ProductionStep("3", "Montagem e prensagem", isCompleted = false, isCurrent = true),
-                        ProductionStep("4", "Decoração e flores naturais", isCompleted = false)
+                        ProductionStep("s1-282", "Massa assada e resfriada", isCompleted = true),
+                        ProductionStep("s2-282", "Recheio no descanso", isCompleted = true),
+                        ProductionStep("s3-282", "Montagem e prensagem", isCompleted = false, isCurrent = true),
+                        ProductionStep("s4-282", "Decoração e flores naturais", isCompleted = false)
                     ),
                     status = ProductionStatus.InProgress,
                     estimatedCosts = boloCosts,
@@ -163,10 +357,10 @@ class BruleeRepository {
                     productName = "Cento de Macarons Sortidos",
                     deliveryTimeFormatted = "14:00 (Amanhã)",
                     steps = listOf(
-                        ProductionStep("1", "Separar insumos e peneirar farinha", isCompleted = false),
-                        ProductionStep("2", "Macaronage e pingagem", isCompleted = false),
-                        ProductionStep("3", "Secagem de cascas e forno", isCompleted = false),
-                        ProductionStep("4", "Recheio e maturação 24h", isCompleted = false)
+                        ProductionStep("s1-285", "Separar insumos e peneirar farinha", isCompleted = false),
+                        ProductionStep("s2-285", "Macaronage e pingagem", isCompleted = false),
+                        ProductionStep("s3-285", "Secagem de cascas e forno", isCompleted = false),
+                        ProductionStep("s4-285", "Recheio e maturação 24h", isCompleted = false)
                     ),
                     status = ProductionStatus.Pending,
                     estimatedCosts = RecipeCosts(Money.fromReais("85.00"), Money.fromReais("70.00"), Money.fromReais("9.00"), Money.fromReais("12.00")),

@@ -11,9 +11,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
 import com.bruleetelie.app.ui.screens.*
 import com.bruleetelie.app.ui.theme.*
 import com.bruleetelie.data.BruleeRepository
+import com.bruleetelie.data.datastore.OperatingSettingsDataStore
+import com.bruleetelie.data.db.BruleeDatabase
 import com.bruleetelie.documents.DefaultDocumentGateway
 import com.bruleetelie.domain.CostComparisonResult
 import com.bruleetelie.domain.PricingEngine
@@ -33,7 +36,12 @@ private sealed interface ActiveFlow {
 
 @Composable
 fun BruleeApp() {
-    val repository = remember { BruleeRepository() }
+    val context = LocalContext.current.applicationContext
+    val repository = remember(context) {
+        val db = BruleeDatabase.getInstance(context)
+        val ds = OperatingSettingsDataStore(context)
+        BruleeRepository(database = db, settingsDataStore = ds)
+    }
     val documentGateway = remember { DefaultDocumentGateway() }
 
     val orders by repository.productionOrders.collectAsState()

@@ -94,4 +94,29 @@ class BruleeRepositoryTest {
         assertEquals(ProductionStatus.Pending, order.status)
         assertTrue(repo.productionOrders.value.any { it.quoteCode == "#ORC-999" })
     }
+
+    @Test
+    fun `test addIngredient adds ingredient to repository state`() {
+        val repo = BruleeRepository()
+        val initialCount = repo.ingredients.value.size
+        repo.addIngredient("Farinha de Amêndoas", "g")
+
+        val updatedIngredients = repo.ingredients.value
+        assertEquals(initialCount + 1, updatedIngredients.size)
+        assertTrue(updatedIngredients.any { it.name == "Farinha de Amêndoas" })
+    }
+
+    @Test
+    fun `test updateSettings updates operating settings`() {
+        val repo = BruleeRepository()
+        val newSettings = OperatingSettings(
+            hourlyLaborRate = Money.fromReais("30.00"),
+            gasCostPerHour = Money.fromReais("4.00"),
+            electricityCostPerHour = Money.fromReais("3.00"),
+            defaultMarginPercent = BigDecimal("40.00")
+        )
+        repo.updateSettings(newSettings)
+        assertEquals(3000L, repo.settings.value.hourlyLaborRate.cents)
+        assertEquals(BigDecimal("40.00"), repo.settings.value.defaultMarginPercent)
+    }
 }
