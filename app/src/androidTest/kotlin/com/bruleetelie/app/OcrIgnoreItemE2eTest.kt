@@ -19,13 +19,16 @@ class OcrIgnoreItemE2eTest {
     @Test
     fun ignoreDetectedItem_excludesItFromSavedPriceObservations() {
         composeRule.onNodeWithTag("nav_stock").performClick()
+        composeRule.onNodeWithTag("ocr_process_document")
+            .performScrollTo()
+            .performClick()
         composeRule.onNodeWithTag("ocr_ignore_2")
             .performScrollTo()
             .performClick()
 
         composeRule.onAllNodesWithText("LEITE CONDENS MOCA TP 395G").assertCountEquals(0)
 
-        listOf("3", "4").forEach { itemId ->
+        listOf("1", "3", "4").forEach { itemId ->
             composeRule.onNodeWithTag("ocr_confirm_$itemId")
                 .performScrollTo()
                 .performClick()

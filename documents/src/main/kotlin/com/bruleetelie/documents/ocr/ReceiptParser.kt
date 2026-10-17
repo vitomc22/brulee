@@ -8,7 +8,9 @@ data class ParsedReceiptItem(
     val rawDescription: String,
     val matchedIngredientName: String?,
     val confidence: ConfidenceLevel,
-    val totalPriceCents: Long
+    val totalPriceCents: Long,
+    val packageQuantityValue: String,
+    val packageQuantityUnit: String
 )
 
 data class ParsedReceipt(
@@ -23,8 +25,8 @@ class IngredientMatcher {
         val normalized = description.uppercase()
         return when {
             "LEITE COND" in normalized -> "Leite Condensado 395g" to ConfidenceLevel.HIGH
-            "MANTEIGA" in normalized -> "Manteiga 200g" to ConfidenceLevel.HIGH
-            "CHOCOLATE" in normalized -> "Chocolate em Pó 50% 1kg" to ConfidenceLevel.HIGH
+            "MANTEIGA" in normalized -> "Manteiga Extra Sem Sal" to ConfidenceLevel.HIGH
+            "CHOC" in normalized || "CACAU" in normalized -> "Chocolate em Pó 50%" to ConfidenceLevel.HIGH
             else -> null to ConfidenceLevel.LOW
         }
     }
@@ -34,13 +36,22 @@ class ReceiptParser(private val matcher: IngredientMatcher = IngredientMatcher()
     private val cnpjRegex = Regex("""\b\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}\b""")
     private val dateRegex = Regex("""\b\d{2}/\d{2}/\d{4}\b""")
     private val itemRegex = Regex("""^\s*\d+\s+(.+?)\s+R\$\s*([\d.,]+)\s*$""", RegexOption.IGNORE_CASE)
+    private val packageQuantityRegex = Regex("""(\d+(?:[.,]\d+)?)\s*(KG|G|ML|L|UN)\b""", RegexOption.IGNORE_CASE)
 
     fun parse(rawText: String): ParsedReceipt {
         val items = rawText.lineSequence().mapNotNull { line ->
             val result = itemRegex.matchEntire(line) ?: return@mapNotNull null
             val description = result.groupValues[1].trim()
             val (ingredient, confidence) = matcher.match(description)
-            ParsedReceiptItem(description, ingredient, confidence, parseCents(result.groupValues[2]))
+            val packageQuantity = packageQuantityRegex.find(description)
+            ParsedReceiptItem(
+                rawDescription = description,
+                matchedIngredientName = ingredient,
+                confidence = confidence,
+                totalPriceCents = parseCents(result.groupValues[2]),
+                packageQuantityValue = packageQuantity?.groupValues?.get(1)?.replace(',', '.') ?: "1",
+                packageQuantityUnit = packageQuantity?.groupValues?.get(2)?.lowercase() ?: "un"
+            )
         }.toList()
 
         return ParsedReceipt(

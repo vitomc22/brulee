@@ -22,6 +22,9 @@ class OcrItemEditingE2eTest {
     @Test
     fun editDetectedQuantityAndPrice_updatesItemBeforeConfirmation() {
         composeRule.onNodeWithTag("nav_stock").performClick()
+        composeRule.onNodeWithTag("ocr_process_document")
+            .performScrollTo()
+            .performClick()
         composeRule.onNodeWithTag("ocr_edit_2")
             .performScrollTo()
             .performClick()

@@ -19,9 +19,15 @@ import com.bruleetelie.data.BruleeRepository
 import com.bruleetelie.data.datastore.OperatingSettingsDataStore
 import com.bruleetelie.data.db.BruleeDatabase
 import com.bruleetelie.documents.DefaultDocumentGateway
+import com.bruleetelie.documents.ocr.ConfidenceLevel
+import com.bruleetelie.documents.ocr.ParsedReceiptItem
+import com.bruleetelie.documents.ocr.ReceiptParser
 import com.bruleetelie.domain.CostComparisonResult
 import com.bruleetelie.domain.PricingEngine
 import com.bruleetelie.domain.ProductionOrder
+import com.bruleetelie.domain.Money
+import java.math.BigDecimal
+import java.math.RoundingMode
 import kotlinx.coroutines.launch
 
 private enum class Destination(val label: String, val icon: String) {
@@ -45,6 +51,7 @@ fun BruleeApp() {
         BruleeRepository(database = db, settingsDataStore = ds)
     }
     val documentGateway = remember { DefaultDocumentGateway() }
+    val receiptParser = remember { ReceiptParser() }
 
     val orders by repository.productionOrders.collectAsState()
     val sales by repository.completedSales.collectAsState()
@@ -55,6 +62,7 @@ fun BruleeApp() {
 
     var destination by remember { mutableStateOf(Destination.Production) }
     var activeFlow by remember { mutableStateOf<ActiveFlow>(ActiveFlow.None) }
+    var ocrItems by remember { mutableStateOf<List<OcrItem>?>(null) }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surface,
@@ -155,8 +163,19 @@ fun BruleeApp() {
                         }
 
                         Destination.Stock -> {
-                            OcrReviewScreen(
-                                onSaveConfirmedItems = { confirmedItems ->
+                            val itemsToReview = ocrItems
+                            if (itemsToReview == null) {
+                                OcrCaptureScreen(
+                                    onProcessText = { rawText ->
+                                        ocrItems = receiptParser.parse(rawText).items.mapIndexed { index, item ->
+                                            item.toOcrItem(index + 1)
+                                        }
+                                    }
+                                )
+                            } else {
+                                OcrReviewScreen(
+                                    initialItems = itemsToReview,
+                                    onSaveConfirmedItems = { confirmedItems ->
                                     confirmedItems.forEach { item ->
                                         val ingredient = ingredients.firstOrNull { it.name == item.matchedIngredient }
                                         if (ingredient != null) {
@@ -171,6 +190,7 @@ fun BruleeApp() {
                                             )
                                         }
                                     }
+                                    ocrItems = null
                                     destination = Destination.Production
                                     coroutineScope.launch {
                                         snackbarHostState.showSnackbar(
@@ -178,13 +198,42 @@ fun BruleeApp() {
                                         )
                                     }
                                 }
-                            )
+                                )
+                            }
                         }
                     }
                 }
             }
         }
     }
+}
+
+private fun ParsedReceiptItem.toOcrItem(index: Int): OcrItem {
+    val quantity = packageQuantityValue.toBigDecimal()
+    val factor = if (packageQuantityUnit == "g" || packageQuantityUnit == "ml") {
+        BigDecimal("1000")
+    } else {
+        BigDecimal.ONE
+    }
+    val normalizedPrice = BigDecimal(totalPriceCents)
+        .multiply(factor)
+        .divide(quantity, 0, RoundingMode.HALF_UP)
+        .longValueExact()
+    return OcrItem(
+        id = index.toString(),
+        rawName = rawDescription,
+        matchedIngredient = matchedIngredientName ?: rawDescription,
+        packageQuantityValue = packageQuantityValue,
+        packageQuantityUnit = packageQuantityUnit,
+        packagePriceCents = totalPriceCents,
+        normalizedUnitPriceCents = normalizedPrice,
+        priceFormatted = Money.fromCents(totalPriceCents).format(),
+        confidence = when (confidence) {
+            ConfidenceLevel.HIGH -> "Alta"
+            ConfidenceLevel.MEDIUM -> "Média"
+            ConfidenceLevel.LOW -> "Baixa"
+        }
+    )
 }
 
 @Composable

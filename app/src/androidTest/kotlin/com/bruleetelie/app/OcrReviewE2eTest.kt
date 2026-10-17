@@ -19,13 +19,16 @@ class OcrReviewE2eTest {
     @Test
     fun reviewRequiresEveryOcrItemConfirmation_beforeReturningToProduction() {
         composeRule.onNodeWithTag("nav_stock").performClick()
+        composeRule.onNodeWithTag("ocr_process_document")
+            .performScrollTo()
+            .performClick()
 
         composeRule.onNodeWithText("Revisão Obrigatória").assertIsDisplayed()
         composeRule.onNodeWithTag("ocr_save_confirmed")
             .performScrollTo()
             .assertIsNotEnabled()
 
-        listOf("2", "3", "4").forEach { itemId ->
+        listOf("1", "2", "3", "4").forEach { itemId ->
             composeRule.onNodeWithTag("ocr_confirm_$itemId")
                 .performScrollTo()
                 .performClick()

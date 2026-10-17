@@ -40,15 +40,11 @@ data class OcrItem(
 
 @Composable
 fun OcrReviewScreen(
+    initialItems: List<OcrItem>,
     onSaveConfirmedItems: (List<OcrItem>) -> Unit
 ) {
-    val items = remember {
-        mutableStateListOf(
-            OcrItem("1", "CHOC NOBRE LEITE 1KG", "Chocolate em Pó 50%", "1", "kg", 3490, 3490, "R$ 34,90", "Alta (98%)", isConfirmed = true),
-            OcrItem("2", "LEITE CONDENS MOCA TP 395G", "Leite Condensado 395g", "395", "g", 749, 1896, "R$ 7,49", "Alta (96%)"),
-            OcrItem("3", "MANTEIGA EXTRA S SAL 200G", "Manteiga Extra Sem Sal", "200", "g", 1189, 5945, "R$ 11,89", "Média (85%)"),
-            OcrItem("4", "CACAU PO 100% 500G", "Chocolate em Pó 50%", "500", "g", 2990, 5980, "R$ 29,90", "Alta (94%)")
-        )
+    val items = remember(initialItems) {
+        mutableStateListOf<OcrItem>().apply { addAll(initialItems) }
     }
     val allItemsConfirmed = items.all(OcrItem::isConfirmed)
     var editingItemId by remember { mutableStateOf<String?>(null) }
@@ -265,6 +261,11 @@ private fun formatCents(cents: Long): String = "R$ ${centsToInput(cents)}"
 @Composable
 private fun OcrReviewScreenPreview() {
     BruleeTheme {
-        OcrReviewScreen(onSaveConfirmedItems = {})
+        OcrReviewScreen(
+            initialItems = listOf(
+                OcrItem("1", "CHOC NOBRE LEITE 1KG", "Chocolate em Pó 50%", "1", "kg", 3490, 3490, "R$ 34,90", "Alta")
+            ),
+            onSaveConfirmedItems = {}
+        )
     }
 }
