@@ -164,13 +164,15 @@ fun TactileSecondaryButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    icon: String? = null
+    icon: String? = null,
+    enabled: Boolean = true
 ) {
     FilledTonalButton(
         onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
             .height(50.dp),
+        enabled = enabled,
         shape = CircleShape,
         colors = ButtonDefaults.filledTonalButtonColors(
             containerColor = BruleeSecondaryContainer,

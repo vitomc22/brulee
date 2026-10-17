@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.bruleetelie.app.ui.components.StatusPill
 import com.bruleetelie.app.ui.components.StepProgressBar
@@ -40,7 +41,7 @@ fun NewQuoteWizardScreen(
     onSendWhatsApp: (Quote) -> Unit,
     onClose: () -> Unit
 ) {
-    var step by remember { mutableStateOf(WizardStep.CostSummaryAndPricing) }
+    var step by remember { mutableStateOf(WizardStep.RecipeName) }
 
     // State variables for the wizard
     var recipeName by remember { mutableStateOf("Brigadeiro Gourmet Tradicional") }
@@ -72,6 +73,10 @@ fun NewQuoteWizardScreen(
             )
         )
     }
+    var ingredientName by remember { mutableStateOf("") }
+    var packageQuantity by remember { mutableStateOf("") }
+    var packagePrice by remember { mutableStateOf("") }
+    var usedQuantity by remember { mutableStateOf("") }
 
     var times by remember {
         mutableStateOf(
@@ -151,14 +156,66 @@ fun NewQuoteWizardScreen(
                     value = recipeName,
                     onValueChange = { recipeName = it },
                     label = { Text("Nome da Receita") },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().testTag("recipe_name"),
                     shape = CircleShape
                 )
-                TactilePrimaryButton(text = "CONTINUAR", onClick = { step = WizardStep.Ingredients })
+                TactilePrimaryButton(
+                    text = "CONTINUAR",
+                    onClick = { step = WizardStep.Ingredients },
+                    modifier = Modifier.testTag("recipe_continue")
+                )
             }
 
             WizardStep.Ingredients -> {
                 Text("Ingredientes da Receita", style = MaterialTheme.typography.headlineMedium)
+                OutlinedTextField(
+                    value = ingredientName,
+                    onValueChange = { ingredientName = it },
+                    label = { Text("Nome do ingrediente") },
+                    modifier = Modifier.fillMaxWidth().testTag("ingredient_name")
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedTextField(
+                        value = packageQuantity,
+                        onValueChange = { packageQuantity = it },
+                        label = { Text("Qtd. pacote (g)") },
+                        modifier = Modifier.weight(1f).testTag("ingredient_package_quantity")
+                    )
+                    OutlinedTextField(
+                        value = packagePrice,
+                        onValueChange = { packagePrice = it },
+                        label = { Text("Preço pacote") },
+                        modifier = Modifier.weight(1f).testTag("ingredient_package_price")
+                    )
+                }
+                OutlinedTextField(
+                    value = usedQuantity,
+                    onValueChange = { usedQuantity = it },
+                    label = { Text("Quantidade usada (g)") },
+                    modifier = Modifier.fillMaxWidth().testTag("ingredient_used_quantity")
+                )
+                val canAddIngredient = ingredientName.isNotBlank() &&
+                    packageQuantity.toBigDecimalOrNull()?.signum() == 1 &&
+                    packagePrice.replace(',', '.').toBigDecimalOrNull()?.signum() == 1 &&
+                    usedQuantity.toBigDecimalOrNull()?.signum() == 1
+                TactileSecondaryButton(
+                    text = "ADICIONAR INGREDIENTE",
+                    enabled = canAddIngredient,
+                    modifier = Modifier.testTag("ingredient_add"),
+                    onClick = {
+                        ingredients += RecipeIngredientItem(
+                            id = "ingredient-${System.currentTimeMillis()}",
+                            name = ingredientName.trim(),
+                            packageQuantity = Quantity.grams(packageQuantity.toBigDecimal()),
+                            packagePrice = Money.fromReais(packagePrice),
+                            usedQuantity = Quantity.grams(usedQuantity.toBigDecimal())
+                        )
+                        ingredientName = ""
+                        packageQuantity = ""
+                        packagePrice = ""
+                        usedQuantity = ""
+                    }
+                )
                 ingredients.forEach { item ->
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
@@ -189,7 +246,8 @@ fun NewQuoteWizardScreen(
                 }
                 TactilePrimaryButton(
                     text = "CONTINUAR PARA CUSTOS OPERACIONAIS",
-                    onClick = { step = WizardStep.OperationalCosts }
+                    onClick = { step = WizardStep.OperationalCosts },
+                    modifier = Modifier.testTag("ingredients_continue")
                 )
             }
 
@@ -212,7 +270,8 @@ fun NewQuoteWizardScreen(
                 }
                 TactilePrimaryButton(
                     text = "CALCULAR CUSTO TOTAL",
-                    onClick = { step = WizardStep.CostSummaryAndPricing }
+                    onClick = { step = WizardStep.CostSummaryAndPricing },
+                    modifier = Modifier.testTag("costs_calculate")
                 )
             }
 
@@ -463,7 +522,8 @@ private fun CostSummaryAndPricingView(
     TactilePrimaryButton(
         text = "AVANÇAR PARA ORÇAMENTO",
         onClick = onAdvance,
-        icon = "→"
+        icon = "→",
+        modifier = Modifier.testTag("quote_advance")
     )
 }
 
@@ -537,7 +597,7 @@ private fun CustomerAndQuoteView(
                 value = customerName,
                 onValueChange = onCustomerNameChanged,
                 label = { Text("Nome do Cliente") },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().testTag("customer_name"),
                 shape = CircleShape
             )
 
@@ -551,7 +611,7 @@ private fun CustomerAndQuoteView(
                 value = customerPhone,
                 onValueChange = onCustomerPhoneChanged,
                 label = { Text("Telefone / WhatsApp") },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().testTag("customer_phone"),
                 shape = CircleShape
             )
 
@@ -559,7 +619,7 @@ private fun CustomerAndQuoteView(
                 value = deliveryDate,
                 onValueChange = onDeliveryDateChanged,
                 label = { Text("Data de Entrega Desejada") },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().testTag("delivery_date"),
                 shape = CircleShape
             )
         }
@@ -631,7 +691,8 @@ private fun CustomerAndQuoteView(
     TactileSecondaryButton(
         text = "Marcar como Aprovado (Adicionar à Produção)",
         onClick = onApproveOrder,
-        icon = "✓"
+        icon = "✓",
+        modifier = Modifier.testTag("quote_approve")
     )
 }
 

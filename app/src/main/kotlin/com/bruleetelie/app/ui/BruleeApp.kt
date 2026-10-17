@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import com.bruleetelie.app.ui.screens.*
 import com.bruleetelie.app.ui.theme.*
 import com.bruleetelie.data.BruleeRepository
@@ -63,6 +64,7 @@ fun BruleeApp() {
                     Destination.entries.forEach { item ->
                         val isSelected = destination == item
                         NavigationBarItem(
+                            modifier = Modifier.testTag("nav_${item.name.lowercase()}"),
                             selected = isSelected,
                             onClick = { destination = item },
                             icon = {
