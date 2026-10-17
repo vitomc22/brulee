@@ -18,7 +18,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.bruleetelie.app.ui.components.StatusPill
 import com.bruleetelie.app.ui.components.TactilePrimaryButton
+import com.bruleetelie.app.ui.components.TactileSecondaryButton
 import com.bruleetelie.app.ui.theme.*
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 data class OcrItem(
     val id: String,
@@ -48,6 +51,9 @@ fun OcrReviewScreen(
         )
     }
     val allItemsConfirmed = items.all(OcrItem::isConfirmed)
+    var editingItemId by remember { mutableStateOf<String?>(null) }
+    var editedQuantity by remember { mutableStateOf("") }
+    var editedPrice by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -89,7 +95,9 @@ fun OcrReviewScreen(
         // Scanned Items
         items.forEachIndexed { index, item ->
             Surface(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("ocr_item_${item.id}"),
                 color = BruleeSurfaceContainerLowest,
                 shape = RoundedCornerShape(20.dp),
                 shadowElevation = 1.dp
@@ -142,10 +150,74 @@ fun OcrReviewScreen(
                         }
 
                         FilledTonalButton(
-                            onClick = {},
-                            modifier = Modifier.weight(1f),
+                            onClick = {
+                                editingItemId = item.id
+                                editedQuantity = item.packageQuantityValue
+                                editedPrice = centsToInput(item.packagePriceCents)
+                            },
+                            modifier = Modifier
+                                .weight(1f)
+                                .testTag("ocr_edit_${item.id}"),
                             shape = CircleShape
                         ) { Text("Editar") }
+                    }
+
+                    TextButton(
+                        onClick = {
+                            if (editingItemId == item.id) editingItemId = null
+                            items.removeAt(index)
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .testTag("ocr_ignore_${item.id}")
+                    ) {
+                        Text("IGNORAR ITEM")
+                    }
+
+                    if (editingItemId == item.id) {
+                        OutlinedTextField(
+                            value = editedQuantity,
+                            onValueChange = { editedQuantity = it },
+                            label = { Text("Quantidade (${item.packageQuantityUnit})") },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag("ocr_edit_quantity_${item.id}")
+                        )
+                        OutlinedTextField(
+                            value = editedPrice,
+                            onValueChange = { editedPrice = it },
+                            label = { Text("Preço do pacote") },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag("ocr_edit_price_${item.id}")
+                        )
+
+                        val parsedQuantity = editedQuantity.replace(',', '.').toBigDecimalOrNull()
+                        val parsedPriceCents = parsePriceCents(editedPrice)
+                        val canSaveEdit = parsedQuantity != null && parsedQuantity.signum() == 1 &&
+                            parsedPriceCents != null && parsedPriceCents > 0
+
+                        TactileSecondaryButton(
+                            text = "SALVAR CORREÇÃO",
+                            enabled = canSaveEdit,
+                            modifier = Modifier.testTag("ocr_save_edit_${item.id}"),
+                            onClick = {
+                                val quantity = requireNotNull(parsedQuantity)
+                                val priceCents = requireNotNull(parsedPriceCents)
+                                items[index] = item.copy(
+                                    packageQuantityValue = quantity.stripTrailingZeros().toPlainString(),
+                                    packagePriceCents = priceCents,
+                                    normalizedUnitPriceCents = normalizedUnitPrice(
+                                        packagePriceCents = priceCents,
+                                        packageQuantity = quantity,
+                                        packageUnit = item.packageQuantityUnit
+                                    ),
+                                    priceFormatted = formatCents(priceCents),
+                                    isConfirmed = false
+                                )
+                                editingItemId = null
+                            }
+                        )
                     }
                 }
             }
@@ -159,6 +231,35 @@ fun OcrReviewScreen(
         )
     }
 }
+
+private fun parsePriceCents(value: String): Long? = runCatching {
+    value.trim().replace(".", "").replace(',', '.')
+        .toBigDecimal()
+        .movePointRight(2)
+        .setScale(0, RoundingMode.HALF_UP)
+        .longValueExact()
+}.getOrNull()
+
+private fun normalizedUnitPrice(
+    packagePriceCents: Long,
+    packageQuantity: BigDecimal,
+    packageUnit: String
+): Long {
+    val normalizationFactor = if (packageUnit == "g" || packageUnit == "ml") {
+        BigDecimal("1000")
+    } else {
+        BigDecimal.ONE
+    }
+    return BigDecimal(packagePriceCents)
+        .multiply(normalizationFactor)
+        .divide(packageQuantity, 0, RoundingMode.HALF_UP)
+        .longValueExact()
+}
+
+private fun centsToInput(cents: Long): String =
+    BigDecimal(cents).movePointLeft(2).setScale(2).toPlainString().replace('.', ',')
+
+private fun formatCents(cents: Long): String = "R$ ${centsToInput(cents)}"
 
 @Preview(showBackground = true)
 @Composable

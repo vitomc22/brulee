@@ -5,6 +5,8 @@ import com.bruleetelie.documents.backup.BackupManager
 import com.bruleetelie.documents.ocr.ConfidenceLevel
 import com.bruleetelie.documents.ocr.IngredientMatcher
 import com.bruleetelie.documents.ocr.ReceiptParser
+import com.bruleetelie.documents.ocr.DuplicateReceiptResult
+import com.bruleetelie.documents.ocr.ReceiptDuplicateDetector
 import com.bruleetelie.documents.pdf.DefaultPdfGenerator
 import com.bruleetelie.documents.pdf.PdfTemplateType
 import com.bruleetelie.domain.*
@@ -106,6 +108,37 @@ class DocumentsModuleTests {
 
         assertTrue(parsed.checksumSha256.isNotBlank())
     }
+
+    @Test
+    fun `test duplicate detector identifies exact checksum`() {
+        val detector = ReceiptDuplicateDetector()
+        val receipt = receiptParser.parse(sampleReceiptText())
+
+        assertEquals(DuplicateReceiptResult.NewReceipt, detector.checkAndRegister(receipt))
+        assertEquals(DuplicateReceiptResult.ExactChecksum, detector.checkAndRegister(receipt))
+    }
+
+    @Test
+    fun `test duplicate detector identifies same purchase despite OCR whitespace changes`() {
+        val detector = ReceiptDuplicateDetector()
+        val first = receiptParser.parse(sampleReceiptText())
+        val rescanned = receiptParser.parse("\n${sampleReceiptText()}\n")
+
+        assertEquals(DuplicateReceiptResult.NewReceipt, detector.checkAndRegister(first))
+        assertEquals(
+            DuplicateReceiptResult.MatchingReceiptDetails,
+            detector.checkAndRegister(rescanned)
+        )
+    }
+
+    private fun sampleReceiptText(): String = """
+        SUPERMERCADO DOCE AÇÚCAR
+        CNPJ: 12.345.678/0001-90
+        DATA: 15/10/2026
+        1 LEITE COND MOCOCA 395G R$ 6,50
+        2 MANTEIGA EXTRA 200G R$ 11,90
+        TOTAL R$ 18,40
+    """.trimIndent()
 
     @Test
     fun `test backup manager creates valid zip and verifies integrity`() {
