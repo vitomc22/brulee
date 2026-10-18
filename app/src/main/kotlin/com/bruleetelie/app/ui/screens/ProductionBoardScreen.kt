@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bruleetelie.app.ui.components.MetricStatCard
@@ -149,7 +150,7 @@ fun ProductionBoardScreen(
         // Active Orders
         orders.forEach { order ->
             ElevatedCard(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().testTag("production_order_${order.id}"),
                 shape = RoundedCornerShape(28.dp),
                 colors = CardDefaults.elevatedCardColors(containerColor = BruleeSurfaceContainerLowest),
                 elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
@@ -245,6 +246,7 @@ fun ProductionBoardScreen(
                                     ) {
                                         Checkbox(
                                             checked = step.isCompleted,
+                                            modifier = Modifier.testTag("production_step_${order.id}_${step.id}"),
                                             onCheckedChange = { checked ->
                                                 onStepChecked(order.id, step.id, checked)
                                             },
@@ -269,7 +271,8 @@ fun ProductionBoardScreen(
                     // CTA to finalize order and launch lesson XP screen
                     TactilePrimaryButton(
                         text = "✓  Finalizar Pedido",
-                        onClick = { onFinalizeOrder(order) }
+                        onClick = { onFinalizeOrder(order) },
+                        modifier = Modifier.testTag("production_finalize_${order.id}")
                     )
                 }
             }
