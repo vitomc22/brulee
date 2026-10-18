@@ -253,6 +253,50 @@ fun NewQuoteWizardScreen(
 
             WizardStep.OperationalCosts -> {
                 Text("Tempos e Complexidade", style = MaterialTheme.typography.headlineMedium)
+                OutlinedTextField(
+                    value = times.prepTime.value.stripTrailingZeros().toPlainString(),
+                    onValueChange = { value ->
+                        value.replace(',', '.').toBigDecimalOrNull()?.takeIf { it.signum() >= 0 }?.let {
+                            times = times.copy(prepTime = Quantity.minutes(it))
+                        }
+                    },
+                    label = { Text("Preparo ativo (minutos)") },
+                    modifier = Modifier.fillMaxWidth().testTag("operational_prep_minutes")
+                )
+                OutlinedTextField(
+                    value = times.cookTime.value.stripTrailingZeros().toPlainString(),
+                    onValueChange = { value ->
+                        value.replace(',', '.').toBigDecimalOrNull()?.takeIf { it.signum() >= 0 }?.let {
+                            times = times.copy(cookTime = Quantity.minutes(it))
+                        }
+                    },
+                    label = { Text("Cocção / forno (minutos)") },
+                    modifier = Modifier.fillMaxWidth().testTag("operational_cook_minutes")
+                )
+                OutlinedTextField(
+                    value = times.decorationTime.value.stripTrailingZeros().toPlainString(),
+                    onValueChange = { value ->
+                        value.replace(',', '.').toBigDecimalOrNull()?.takeIf { it.signum() >= 0 }?.let {
+                            times = times.copy(decorationTime = Quantity.minutes(it))
+                        }
+                    },
+                    label = { Text("Decoração ativa (minutos)") },
+                    modifier = Modifier.fillMaxWidth().testTag("operational_decoration_minutes")
+                )
+                Text("Fonte de energia", style = MaterialTheme.typography.labelLarge)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    EnergySource.entries.forEach { source ->
+                        FilterChip(
+                            selected = times.energySource == source,
+                            onClick = { times = times.copy(energySource = source) },
+                            label = { Text(source.label) },
+                            modifier = Modifier.weight(1f).testTag("energy_${source.name.lowercase()}")
+                        )
+                    }
+                }
                 // Complexity Selection
                 Text("Complexidade da Produção", style = MaterialTheme.typography.labelLarge)
                 Row(

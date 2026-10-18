@@ -16,6 +16,9 @@ class BackupScreenE2eTest {
     fun backupActionsAreAvailableFromNavigation() {
         composeRule.onNodeWithTag("nav_backup").performClick()
         composeRule.onNodeWithTag("backup_screen").assertIsDisplayed()
+        composeRule.onNodeWithTag("settings_hourly_labor_rate").assertIsDisplayed()
+        composeRule.onNodeWithTag("settings_gas_rate").assertIsDisplayed()
+        composeRule.onNodeWithTag("settings_electricity_rate").assertIsDisplayed()
         composeRule.onNodeWithTag("settings_revenue_goal").assertIsDisplayed()
         composeRule.onNodeWithTag("backup_export").performScrollTo().assertIsDisplayed()
         composeRule.onNodeWithTag("backup_restore").performScrollTo().assertIsDisplayed()

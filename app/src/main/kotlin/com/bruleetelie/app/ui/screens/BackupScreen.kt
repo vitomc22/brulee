@@ -40,6 +40,48 @@ fun BackupScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text("Configurações e backup", style = MaterialTheme.typography.headlineMedium)
+        var laborRate by remember(settings.hourlyLaborRate) {
+            mutableStateOf(settings.hourlyLaborRate.toBigDecimal().toPlainString())
+        }
+        OutlinedTextField(
+            value = laborRate,
+            onValueChange = { value ->
+                laborRate = value
+                runCatching { Money.fromReais(value) }.getOrNull()?.let {
+                    onSettingsChanged(settings.copy(hourlyLaborRate = it))
+                }
+            },
+            label = { Text("Valor da hora de trabalho") },
+            modifier = Modifier.fillMaxWidth().testTag("settings_hourly_labor_rate")
+        )
+        var gasRate by remember(settings.gasCostPerHour) {
+            mutableStateOf(settings.gasCostPerHour.toBigDecimal().toPlainString())
+        }
+        OutlinedTextField(
+            value = gasRate,
+            onValueChange = { value ->
+                gasRate = value
+                runCatching { Money.fromReais(value) }.getOrNull()?.let {
+                    onSettingsChanged(settings.copy(gasCostPerHour = it))
+                }
+            },
+            label = { Text("Custo do gás por hora") },
+            modifier = Modifier.fillMaxWidth().testTag("settings_gas_rate")
+        )
+        var electricityRate by remember(settings.electricityCostPerHour) {
+            mutableStateOf(settings.electricityCostPerHour.toBigDecimal().toPlainString())
+        }
+        OutlinedTextField(
+            value = electricityRate,
+            onValueChange = { value ->
+                electricityRate = value
+                runCatching { Money.fromReais(value) }.getOrNull()?.let {
+                    onSettingsChanged(settings.copy(electricityCostPerHour = it))
+                }
+            },
+            label = { Text("Custo da energia por hora") },
+            modifier = Modifier.fillMaxWidth().testTag("settings_electricity_rate")
+        )
         var goal by remember(settings.monthlyRevenueGoal) {
             mutableStateOf(settings.monthlyRevenueGoal.toBigDecimal().toPlainString())
         }

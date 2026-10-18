@@ -53,6 +53,15 @@ class CanonicalWizardCostE2eTest {
             .performClick()
 
         // Step 3: Operational costs / times
+        composeRule.onNodeWithTag("operational_prep_minutes").performTextClearance()
+        composeRule.onNodeWithTag("operational_prep_minutes").performTextInput("45")
+        composeRule.onNodeWithTag("operational_cook_minutes").performTextClearance()
+        composeRule.onNodeWithTag("operational_cook_minutes").performTextInput("45")
+        composeRule.onNodeWithTag("operational_decoration_minutes").performTextClearance()
+        composeRule.onNodeWithTag("operational_decoration_minutes").performTextInput("30")
+        composeRule.onNodeWithTag("energy_both")
+            .performScrollTo()
+            .assertIsDisplayed()
         composeRule.onNodeWithTag("costs_calculate")
             .performScrollTo()
             .performClick()
