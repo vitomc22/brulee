@@ -77,6 +77,8 @@ fun NewQuoteWizardScreen(
     var packageQuantity by remember { mutableStateOf("") }
     var packagePrice by remember { mutableStateOf("") }
     var usedQuantity by remember { mutableStateOf("") }
+    var packageUnit by remember { mutableStateOf(UnitOfMeasure.Gram) }
+    var usedUnit by remember { mutableStateOf(UnitOfMeasure.Gram) }
 
     var times by remember {
         mutableStateOf(
@@ -188,16 +190,42 @@ fun NewQuoteWizardScreen(
                         modifier = Modifier.weight(1f).testTag("ingredient_package_price")
                     )
                 }
+                Text("Unidade da compra", style = MaterialTheme.typography.labelMedium)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    listOf(UnitOfMeasure.Gram, UnitOfMeasure.Kilogram, UnitOfMeasure.Milliliter, UnitOfMeasure.Liter).forEach { unit ->
+                        FilterChip(
+                            selected = packageUnit == unit,
+                            onClick = { packageUnit = unit },
+                            label = { Text(unit.symbol) },
+                            modifier = Modifier.testTag("package_unit_${unit.symbol.lowercase()}")
+                        )
+                    }
+                }
                 OutlinedTextField(
                     value = usedQuantity,
                     onValueChange = { usedQuantity = it },
                     label = { Text("Quantidade usada (g)") },
                     modifier = Modifier.fillMaxWidth().testTag("ingredient_used_quantity")
                 )
+                Text("Unidade usada", style = MaterialTheme.typography.labelMedium)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    listOf(UnitOfMeasure.Gram, UnitOfMeasure.Kilogram, UnitOfMeasure.Milliliter, UnitOfMeasure.Liter).forEach { unit ->
+                        FilterChip(
+                            selected = usedUnit == unit,
+                            onClick = { usedUnit = unit },
+                            label = { Text(unit.symbol) },
+                            modifier = Modifier.testTag("used_unit_${unit.symbol.lowercase()}")
+                        )
+                    }
+                }
+                val parsedPackageQuantity = packageQuantity.replace(',', '.').toBigDecimalOrNull()
+                val parsedPackagePrice = packagePrice.replace(',', '.').toBigDecimalOrNull()
+                val parsedUsedQuantity = usedQuantity.replace(',', '.').toBigDecimalOrNull()
                 val canAddIngredient = ingredientName.isNotBlank() &&
-                    packageQuantity.toBigDecimalOrNull()?.signum() == 1 &&
-                    packagePrice.replace(',', '.').toBigDecimalOrNull()?.signum() == 1 &&
-                    usedQuantity.toBigDecimalOrNull()?.signum() == 1
+                    parsedPackageQuantity?.signum() == 1 &&
+                    parsedPackagePrice?.signum() == 1 &&
+                    parsedUsedQuantity?.signum() != -1 &&
+                    packageUnit.dimension == usedUnit.dimension
                 TactileSecondaryButton(
                     text = "ADICIONAR INGREDIENTE",
                     enabled = canAddIngredient,
@@ -206,14 +234,16 @@ fun NewQuoteWizardScreen(
                         ingredients += RecipeIngredientItem(
                             id = "ingredient-${System.currentTimeMillis()}",
                             name = ingredientName.trim(),
-                            packageQuantity = Quantity.grams(packageQuantity.toBigDecimal()),
+                            packageQuantity = Quantity(parsedPackageQuantity!!, packageUnit),
                             packagePrice = Money.fromReais(packagePrice),
-                            usedQuantity = Quantity.grams(usedQuantity.toBigDecimal())
+                            usedQuantity = Quantity(parsedUsedQuantity!!, usedUnit)
                         )
                         ingredientName = ""
                         packageQuantity = ""
                         packagePrice = ""
                         usedQuantity = ""
+                        packageUnit = UnitOfMeasure.Gram
+                        usedUnit = UnitOfMeasure.Gram
                     }
                 )
                 ingredients.forEach { item ->
