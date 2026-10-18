@@ -591,6 +591,7 @@ private fun CostSummaryAndPricingView(
                     )
                     Text(
                         pricing.salePrice.format(),
+                        modifier = Modifier.testTag("price_sale_value"),
                         style = MaterialTheme.typography.displaySmall,
                         fontWeight = FontWeight.Bold,
                         color = BruleePrimary
@@ -605,6 +606,7 @@ private fun CostSummaryAndPricingView(
                     Spacer(Modifier.height(4.dp))
                     Text(
                         "Lucro: ${pricing.profit.format()}",
+                        modifier = Modifier.testTag("price_profit_value"),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = BruleePrimary
@@ -624,21 +626,21 @@ private fun CostSummaryAndPricingView(
             ) {
                 Button(
                     onClick = { onPriceChanged(pricing.salePrice - Money.fromReais("5.00")) },
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f).testTag("price_decrease_5"),
                     shape = CircleShape,
                     colors = ButtonDefaults.buttonColors(containerColor = BruleeSurfaceContainerHigh, contentColor = BruleeOnSurface)
                 ) { Text("- R$ 5") }
 
                 Button(
                     onClick = { onPriceChanged(pricing.salePrice + Money.fromReais("5.00")) },
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f).testTag("price_increase_5"),
                     shape = CircleShape,
                     colors = ButtonDefaults.buttonColors(containerColor = BruleeSurfaceContainerHigh, contentColor = BruleeOnSurface)
                 ) { Text("+ R$ 5") }
 
                 Button(
                     onClick = { onPriceChanged(pricing.salePrice + Money.fromReais("10.00")) },
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f).testTag("price_increase_10"),
                     shape = CircleShape,
                     colors = ButtonDefaults.buttonColors(containerColor = BruleeSecondaryContainer, contentColor = BruleeOnSecondaryContainer)
                 ) { Text("+ R$ 10") }
