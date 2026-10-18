@@ -107,11 +107,12 @@ fun NewQuoteWizardScreen(
 
     // Interactive sale price
     var customSalePrice by remember { mutableStateOf<Money?>(null) }
-    val pricingResult = remember(calculatedCosts, customSalePrice) {
+    var targetMarginPercent by remember { mutableStateOf(operatingSettings.defaultMarginPercent) }
+    val pricingResult = remember(calculatedCosts, customSalePrice, targetMarginPercent) {
         if (customSalePrice != null) {
             PricingEngine.fromSalePrice(calculatedCosts, customSalePrice!!)
         } else {
-            PricingEngine.fromTargetMargin(calculatedCosts, operatingSettings.defaultMarginPercent)
+            PricingEngine.fromTargetMargin(calculatedCosts, targetMarginPercent)
         }
     }
 
@@ -408,6 +409,10 @@ fun NewQuoteWizardScreen(
                     costs = calculatedCosts,
                     pricing = pricingResult,
                     onPriceChanged = { customSalePrice = it },
+                    onMarginChanged = {
+                        targetMarginPercent = it
+                        customSalePrice = null
+                    },
                     onAdvance = { step = WizardStep.CustomerAndQuote }
                 )
             }
@@ -472,6 +477,7 @@ private fun CostSummaryAndPricingView(
     costs: RecipeCosts,
     pricing: PricingResult,
     onPriceChanged: (Money) -> Unit,
+    onMarginChanged: (BigDecimal) -> Unit,
     onAdvance: () -> Unit
 ) {
     // Mascot Narrative Banner
@@ -618,6 +624,34 @@ private fun CostSummaryAndPricingView(
                 "Ajustar Preço de Venda (tempo real):",
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            var manualPriceText by remember(pricing.salePrice) {
+                mutableStateOf(pricing.salePrice.toBigDecimal().toPlainString())
+            }
+            var marginText by remember(pricing.marginPercent) {
+                mutableStateOf(pricing.marginPercent.setScale(2).toPlainString())
+            }
+            OutlinedTextField(
+                value = manualPriceText,
+                onValueChange = { value ->
+                    manualPriceText = value
+                    value.replace(',', '.').toBigDecimalOrNull()?.let { onPriceChanged(Money.fromReais(it)) }
+                },
+                label = { Text("Preço manual") },
+                modifier = Modifier.fillMaxWidth().testTag("price_manual_input"),
+                singleLine = true
+            )
+            OutlinedTextField(
+                value = marginText,
+                onValueChange = { value ->
+                    marginText = value
+                    value.replace(',', '.').toBigDecimalOrNull()?.takeIf { it >= BigDecimal.ZERO && it < BigDecimal("100") }?.let(onMarginChanged)
+                },
+                label = { Text("Margem alvo (%)") },
+                modifier = Modifier.fillMaxWidth().testTag("price_margin_input"),
+                singleLine = true,
+                supportingText = { Text("Use um valor entre 0 e 99,99") }
             )
 
             Row(
