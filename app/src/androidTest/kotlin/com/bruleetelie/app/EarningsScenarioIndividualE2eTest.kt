@@ -4,6 +4,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import org.junit.Rule
@@ -38,5 +39,15 @@ class EarningsScenarioIndividualE2eTest {
     @Test fun earnE2e021_reopenKeepsMetrics() { finance(); composeRule.onNodeWithTag("nav_production").performClick(); finance(); composeRule.onNodeWithTag("finance_revenue").assertIsDisplayed() }
     @Test fun earnE2e022_backupFlowIsAvailable() { composeRule.onNodeWithTag("nav_backup").performClick(); composeRule.onNodeWithTag("backup_export").performScrollTo().assertIsDisplayed() }
     @Test fun earnE2e023_csvExportActionIsAvailable() { finance(); composeRule.onNodeWithText("Exportar CSV para Web").performScrollTo().assertIsDisplayed() }
+    @Test fun earnE2e024_revenueProfitChartIsAvailable() {
+        finance()
+        composeRule.onNodeWithTag("finance_revenue_profit_chart").performScrollTo().assertIsDisplayed()
+    }
+    @Test fun earnE2e025_chartHasAccessibleDescription() {
+        finance()
+        composeRule.onNodeWithContentDescription("Gráfico de receita e lucro por venda")
+            .performScrollTo()
+            .assertIsDisplayed()
+    }
     @Test fun earnE2e024_insufficientValuesAreNotNaN() { finance(); composeRule.onNodeWithText("NaN").assertDoesNotExist(); composeRule.onNodeWithText("Infinity").assertDoesNotExist() }
 }

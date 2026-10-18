@@ -20,6 +20,7 @@ class TrendBlockE2eTest {
             .performScrollTo()
             .assertIsDisplayed()
         composeRule.onNodeWithTag("finance_price_trend_status")
+            .performScrollTo()
             .assertIsDisplayed()
     }
 
@@ -29,7 +30,9 @@ class TrendBlockE2eTest {
         composeRule.onNodeWithTag("finance_filter_30_days").performClick()
         composeRule.onNodeWithTag("finance_filter_month").performClick()
         composeRule.onNodeWithText("Ouro do Ateliê").performScrollTo().assertIsDisplayed()
-        composeRule.onNodeWithTag("finance_price_trend_alert").assertIsDisplayed()
+        composeRule.onNodeWithTag("finance_price_trend_alert")
+            .performScrollTo()
+            .assertIsDisplayed()
     }
 
     @Test
@@ -45,6 +48,8 @@ class TrendBlockE2eTest {
         composeRule.onNodeWithTag("nav_finance").performClick()
         composeRule.onNodeWithTag("nav_production").performClick()
         composeRule.onNodeWithTag("nav_finance").performClick()
-        composeRule.onNodeWithTag("finance_price_trend_status").assertIsDisplayed()
+        composeRule.onNodeWithTag("finance_price_trend_status")
+            .performScrollTo()
+            .assertIsDisplayed()
     }
 }

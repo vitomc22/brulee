@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -162,52 +163,44 @@ fun BruleeApp() {
         ProductionWidgetProvider.updateSnapshot(context, orders, sales)
     }
 
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.surface,
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        topBar = { BruleeTopBar(uiState.destination) },
-        bottomBar = {
+    NavigationSuiteScaffold(
+        navigationSuiteItems = {
             if (uiState.activeFlow == ActiveFlow.None) {
-                NavigationBar(
-                    containerColor = BruleeSurfaceContainerLowest,
-                    tonalElevation = 4.dp
-                ) {
-                    Destination.entries.forEach { item ->
-                        val isSelected = uiState.destination == item
-                        NavigationBarItem(
-                            modifier = Modifier.testTag("nav_${item.name.lowercase()}"),
-                            selected = isSelected,
-                            onClick = { appViewModel.navigate(item) },
-                            icon = {
-                                Text(
-                                    item.icon,
-                                    style = MaterialTheme.typography.titleLarge,
-                                    color = if (isSelected) BruleePrimary else MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            },
-                            label = {
-                                Text(
-                                    item.label,
-                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                    style = MaterialTheme.typography.labelSmall
-                                )
-                            },
-                            colors = NavigationBarItemDefaults.colors(
-                                indicatorColor = BruleePrimaryFixed,
-                                selectedIconColor = BruleePrimary,
-                                selectedTextColor = BruleePrimary
-                            ),
-                        )
-                    }
+                Destination.entries.forEach { item ->
+                    val isSelected = uiState.destination == item
+                    item(
+                        modifier = Modifier.testTag("nav_${item.name.lowercase()}"),
+                        selected = isSelected,
+                        onClick = { appViewModel.navigate(item) },
+                        icon = {
+                            Text(
+                                item.icon,
+                                style = MaterialTheme.typography.titleLarge,
+                                color = if (isSelected) BruleePrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        },
+                        label = {
+                            Text(
+                                item.label,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                style = MaterialTheme.typography.labelSmall
+                            )
+                        }
+                    )
                 }
             }
-        },
-    ) { padding ->
-        Box(
-            Modifier
-                .padding(padding)
-                .fillMaxSize()
-        ) {
+        }
+    ) {
+        Scaffold(
+            containerColor = MaterialTheme.colorScheme.surface,
+            snackbarHost = { SnackbarHost(snackbarHostState) },
+            topBar = { BruleeTopBar(uiState.destination) }
+        ) { padding ->
+            Box(
+                Modifier
+                    .padding(padding)
+                    .fillMaxSize()
+            ) {
             when (val flow = uiState.activeFlow) {
                 is ActiveFlow.OrderCompleted -> {
                     ProductionCompletionScreen(
@@ -362,6 +355,7 @@ fun BruleeApp() {
                         }
                     }
                 }
+            }
             }
         }
     }

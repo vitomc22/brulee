@@ -16,6 +16,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import com.bruleetelie.app.ui.components.MetricStatCard
 import com.bruleetelie.app.ui.components.StatusPill
 import com.bruleetelie.app.ui.theme.*
@@ -29,15 +31,10 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.concurrent.TimeUnit
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisGuidelineComponent
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisLabelComponent
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisLineComponent
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottomAxis
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStartAxis
-import com.patrykandpatrick.vico.compose.cartesian.chart.rememberCartesianChart
+import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
-import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModel
-import com.patrykandpatrick.vico.compose.cartesian.data.LineCartesianLayerModel
+import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModel
+import com.patrykandpatrick.vico.core.cartesian.data.LineCartesianLayerModel
 
 @Composable
 fun FinanceDashboardScreen(
@@ -178,7 +175,10 @@ fun FinanceDashboardScreen(
         }
 
         Surface(
-            modifier = Modifier.fillMaxWidth().testTag("finance_revenue_profit_chart"),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("finance_revenue_profit_chart")
+                .semantics { contentDescription = "Gráfico de receita e lucro por venda" },
             color = BruleeSurfaceContainerLowest,
             shape = RoundedCornerShape(24.dp),
             shadowElevation = 1.dp
@@ -190,16 +190,7 @@ fun FinanceDashboardScreen(
                 } else {
                     CartesianChartHost(
                         chart = rememberCartesianChart(
-                            rememberLineCartesianLayer(),
-                            startAxis = rememberStartAxis(
-                                guideline = rememberAxisGuidelineComponent(),
-                                label = rememberAxisLabelComponent(),
-                                axis = rememberAxisLineComponent()
-                            ),
-                            bottomAxis = rememberBottomAxis(
-                                label = rememberAxisLabelComponent(),
-                                axis = rememberAxisLineComponent()
-                            )
+                            rememberLineCartesianLayer()
                         ),
                         model = chartModel,
                         modifier = Modifier.fillMaxWidth().height(220.dp)

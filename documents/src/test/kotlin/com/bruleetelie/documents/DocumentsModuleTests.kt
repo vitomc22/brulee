@@ -131,6 +131,35 @@ class DocumentsModuleTests {
         )
     }
 
+    @Test
+    fun `receipt parser remains bounded for a large OCR payload`() {
+        val payload = buildString {
+            appendLine("SUPERMERCADO DOCE AÇÚCAR")
+            appendLine("CNPJ: 12.345.678/0001-90")
+            repeat(2_000) { index ->
+                appendLine("${index + 1} LEITE COND MOCOCA 395G R$ 6,50")
+                appendLine("ruído OCR sem item estruturado")
+            }
+        }
+
+        val parsed = receiptParser.parse(payload)
+
+        assertEquals(2_000, parsed.items.size)
+        assertEquals("12.345.678/0001-90", parsed.cnpj)
+        assertEquals(64, parsed.checksumSha256.length)
+    }
+
+    @Test
+    fun `customer PDF text stays private with a large notes payload`() {
+        val largeNotesQuote = sampleQuote.copy(notes = "nota ".repeat(20_000))
+
+        val customerDocument = pdfGenerator.buildCustomerPdfDocument(largeNotesQuote)
+
+        assertTrue(customerDocument.length > 100_000)
+        assertFalse(customerDocument.contains("INGREDIENTS_COST"))
+        assertFalse(customerDocument.contains("MARGIN_PERCENT"))
+    }
+
     private fun sampleReceiptText(): String = """
         SUPERMERCADO DOCE AÇÚCAR
         CNPJ: 12.345.678/0001-90
