@@ -79,6 +79,7 @@ fun NewQuoteWizardScreen(
     var usedQuantity by remember { mutableStateOf("") }
     var packageUnit by remember { mutableStateOf(UnitOfMeasure.Gram) }
     var usedUnit by remember { mutableStateOf(UnitOfMeasure.Gram) }
+    var editingIngredientId by remember { mutableStateOf<String?>(null) }
 
     var times by remember {
         mutableStateOf(
@@ -240,18 +241,27 @@ fun NewQuoteWizardScreen(
                     parsedPackagePrice?.signum() == 1 &&
                     parsedUsedQuantity?.signum() != -1 &&
                     packageUnit.dimension == usedUnit.dimension
+                val duplicateIngredient = ingredients.any { it.name.equals(ingredientName.trim(), ignoreCase = true) && it.id != editingIngredientId }
+                if (ingredientName.isNotBlank() && (parsedPackagePrice == null || parsedPackagePrice.signum() <= 0)) {
+                    Text("Informe um preço de compra válido para calcular o custo.", modifier = Modifier.testTag("ingredient_validation"), color = MaterialTheme.colorScheme.error)
+                } else if (duplicateIngredient) {
+                    Text("Ingrediente já adicionado. Edite a linha existente ou use outro nome.", modifier = Modifier.testTag("ingredient_duplicate"), color = MaterialTheme.colorScheme.error)
+                }
                 TactileSecondaryButton(
-                    text = "ADICIONAR INGREDIENTE",
-                    enabled = canAddIngredient,
+                    text = if (editingIngredientId == null) "ADICIONAR INGREDIENTE" else "SALVAR INGREDIENTE",
+                    enabled = canAddIngredient && !duplicateIngredient,
                     modifier = Modifier.testTag("ingredient_add"),
                     onClick = {
-                        ingredients += RecipeIngredientItem(
-                            id = "ingredient-${System.currentTimeMillis()}",
+                        val updated = RecipeIngredientItem(
+                            id = editingIngredientId ?: "ingredient-${System.currentTimeMillis()}",
                             name = ingredientName.trim(),
                             packageQuantity = Quantity(parsedPackageQuantity!!, packageUnit),
                             packagePrice = Money.fromReais(packagePrice),
                             usedQuantity = Quantity(parsedUsedQuantity!!, usedUnit)
                         )
+                        val existingIndex = ingredients.indexOfFirst { it.id == editingIngredientId }
+                        if (existingIndex >= 0) ingredients[existingIndex] = updated else ingredients += updated
+                        editingIngredientId = null
                         ingredientName = ""
                         packageQuantity = ""
                         packagePrice = ""
@@ -260,6 +270,18 @@ fun NewQuoteWizardScreen(
                         usedUnit = UnitOfMeasure.Gram
                     }
                 )
+                if (editingIngredientId != null) {
+                    TextButton(
+                        onClick = {
+                            editingIngredientId = null
+                            ingredientName = ""
+                            packageQuantity = ""
+                            packagePrice = ""
+                            usedQuantity = ""
+                        },
+                        modifier = Modifier.testTag("ingredient_cancel_edit")
+                    ) { Text("Cancelar edição") }
+                }
                 ingredients.forEach { item ->
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
@@ -297,7 +319,7 @@ fun NewQuoteWizardScreen(
                                     usedQuantity = item.usedQuantity.value.stripTrailingZeros().toPlainString()
                                     packageUnit = item.packageQuantity.unit
                                     usedUnit = item.usedQuantity.unit
-                                    ingredients.remove(item)
+                                    editingIngredientId = item.id
                                 },
                                 modifier = Modifier.testTag("ingredient_edit")
                             ) { Text("Editar") }

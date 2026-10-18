@@ -126,4 +126,37 @@ class CanonicalWizardCostE2eTest {
         composeRule.onNodeWithText("NaN").assertDoesNotExist()
         composeRule.onNodeWithText("Infinity").assertDoesNotExist()
     }
+
+    @Test
+    fun cost026_cancelEditKeepsOriginalIngredient() {
+        composeRule.onNodeWithTag("nav_wizard").performClick()
+        composeRule.onNodeWithTag("recipe_continue").performClick()
+        composeRule.onAllNodesWithTag("ingredient_edit")[0].performClick()
+        composeRule.onNodeWithTag("ingredient_used_quantity").performTextClearance()
+        composeRule.onNodeWithTag("ingredient_used_quantity").performTextInput("999")
+        composeRule.onNodeWithTag("ingredient_cancel_edit").performClick()
+        composeRule.onNodeWithText("Chocolate Nobre 50%").assertIsDisplayed()
+        composeRule.onNodeWithTag("ingredients_continue").performScrollTo().performClick()
+        composeRule.onNodeWithTag("costs_calculate").performScrollTo().performClick()
+        composeRule.onNodeWithTag("cost_summary_screen").performScrollTo().assertIsDisplayed()
+    }
+
+    @Test
+    fun cost028_duplicateIngredientShowsDecisionMessage() {
+        composeRule.onNodeWithTag("nav_wizard").performClick()
+        composeRule.onNodeWithTag("recipe_continue").performClick()
+        composeRule.onNodeWithTag("ingredient_name").performTextInput("Chocolate Nobre 50%")
+        composeRule.onNodeWithTag("ingredient_package_quantity").performTextInput("1000")
+        composeRule.onNodeWithTag("ingredient_package_price").performTextInput("60,00")
+        composeRule.onNodeWithTag("ingredient_used_quantity").performTextInput("100")
+        composeRule.onNodeWithTag("ingredient_duplicate").assertIsDisplayed()
+    }
+
+    @Test
+    fun cost029_missingPriceExplainsWhyCostCannotBeCalculated() {
+        composeRule.onNodeWithTag("nav_wizard").performClick()
+        composeRule.onNodeWithTag("recipe_continue").performClick()
+        composeRule.onNodeWithTag("ingredient_name").performTextInput("Ingrediente sem preço")
+        composeRule.onNodeWithTag("ingredient_validation").assertIsDisplayed()
+    }
 }
