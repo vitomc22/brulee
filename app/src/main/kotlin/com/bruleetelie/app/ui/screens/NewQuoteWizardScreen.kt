@@ -240,7 +240,7 @@ fun NewQuoteWizardScreen(
                 val canAddIngredient = ingredientName.isNotBlank() &&
                     parsedPackageQuantity?.signum() == 1 &&
                     parsedPackagePrice?.signum() == 1 &&
-                    parsedUsedQuantity?.signum() != -1 &&
+                    parsedUsedQuantity?.signum() == 1 &&
                     packageUnit.dimension == usedUnit.dimension
                 val duplicateIngredient = ingredients.any { it.name.equals(ingredientName.trim(), ignoreCase = true) && it.id != editingIngredientId }
                 if (ingredientName.isNotBlank() && (parsedPackagePrice == null || parsedPackagePrice.signum() <= 0)) {
