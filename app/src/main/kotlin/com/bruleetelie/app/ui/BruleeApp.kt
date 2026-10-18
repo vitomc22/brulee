@@ -14,6 +14,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.IntentSenderRequest
@@ -169,7 +171,9 @@ fun BruleeApp() {
                 Destination.entries.forEach { item ->
                     val isSelected = uiState.destination == item
                     item(
-                        modifier = Modifier.testTag("nav_${item.name.lowercase()}"),
+                        modifier = Modifier
+                            .testTag("nav_${item.name.lowercase()}")
+                            .semantics { contentDescription = "Navegação ${item.label}" },
                         selected = isSelected,
                         onClick = { appViewModel.navigate(item) },
                         icon = {

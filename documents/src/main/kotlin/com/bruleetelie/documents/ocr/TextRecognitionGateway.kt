@@ -35,9 +35,13 @@ class MlKitTextRecognitionGateway : TextRecognitionGateway {
                             OcrLine(line.text, page, line.boundingBox?.toShortString())
                         }
                     }
+                    recognizer.close()
                     continuation.resume(OcrResult(lines))
                 }
-                .addOnFailureListener { error -> continuation.resumeWithException(error) }
+                .addOnFailureListener { error ->
+                    recognizer.close()
+                    continuation.resumeWithException(error)
+                }
             continuation.invokeOnCancellation { recognizer.close() }
         }
     }

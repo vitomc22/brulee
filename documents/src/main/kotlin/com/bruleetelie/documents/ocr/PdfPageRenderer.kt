@@ -35,9 +35,12 @@ class PdfPageRenderer {
                         val height = (page.height * width / page.width).coerceAtMost(3200)
                         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
                         bitmap.eraseColor(android.graphics.Color.WHITE)
-                        page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-                        onPage(index, bitmap)
-                        bitmap.recycle()
+                        try {
+                            page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+                            onPage(index, bitmap)
+                        } finally {
+                            bitmap.recycle()
+                        }
                     }
                 }
             }

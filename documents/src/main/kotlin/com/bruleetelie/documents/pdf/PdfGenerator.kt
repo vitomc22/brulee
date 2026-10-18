@@ -1,6 +1,7 @@
 package com.bruleetelie.documents.pdf
 
 import android.graphics.Paint
+import android.graphics.Typeface
 import android.graphics.pdf.PdfDocument
 import com.bruleetelie.domain.Quote
 import java.io.File
@@ -29,25 +30,69 @@ class DefaultPdfGenerator {
         appendLine("MARGIN_PERCENT=${quote.pricing.marginPercent}%")
     }
 
-    /** Writes a real, shareable Android PDF while keeping the text representation for audits/tests. */
+    /** Writes a paginated, shareable Android PDF while keeping the text representation for audits/tests. */
     fun writePdf(quote: Quote, output: File, template: PdfTemplateType = PdfTemplateType.CUSTOMER) {
         output.parentFile?.mkdirs()
-        val content = if (template == PdfTemplateType.CUSTOMER) {
-            buildCustomerPdfDocument(quote)
-        } else {
-            buildInternalPdfDocument(quote)
-        }
+        val content = if (template == PdfTemplateType.CUSTOMER) buildCustomerPdfDocument(quote)
+        else buildInternalPdfDocument(quote)
         val document = PdfDocument()
         try {
-            val page = document.startPage(PdfDocument.PageInfo.Builder(595, 842, 1).create())
-            val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply { textSize = 14f }
-            content.lineSequence().forEachIndexed { index, line ->
-                page.canvas.drawText(line, 40f, 60f + index * 24f, paint)
+            val bodyPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                textSize = 14f
+                typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
             }
-            document.finishPage(page)
+            val titlePaint = Paint(bodyPaint).apply {
+                textSize = 18f
+                typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            }
+            val pageWidth = 595
+            val pageHeight = 842
+            val margin = 40f
+            val lines = content.lineSequence()
+                .flatMap { wrap(it, bodyPaint, (pageWidth - 2 * margin).toInt()).asSequence() }
+                .toList()
+            var pageNumber = 1
+            var page = document.startPage(PdfDocument.PageInfo.Builder(pageWidth, pageHeight, pageNumber).create())
+            var y = 88f
+
+            fun drawHeader() {
+                page.canvas.drawText("BRÛLÉE TELIE", margin, 42f, titlePaint)
+                page.canvas.drawLine(margin, 54f, pageWidth - margin, 54f, bodyPaint)
+            }
+
+            fun finishPage() {
+                page.canvas.drawText("Página $pageNumber", margin, pageHeight - 24f, bodyPaint)
+                document.finishPage(page)
+            }
+
+            drawHeader()
+            lines.forEach { line ->
+                if (y > pageHeight - 58f) {
+                    finishPage()
+                    pageNumber += 1
+                    page = document.startPage(PdfDocument.PageInfo.Builder(pageWidth, pageHeight, pageNumber).create())
+                    y = 88f
+                    drawHeader()
+                }
+                page.canvas.drawText(line, margin, y, bodyPaint)
+                y += 22f
+            }
+            finishPage()
             output.outputStream().use(document::writeTo)
         } finally {
             document.close()
         }
+    }
+
+    private fun wrap(value: String, paint: Paint, maxWidth: Int): List<String> {
+        if (value.isEmpty()) return listOf("")
+        val result = mutableListOf<String>()
+        var remaining = value
+        while (remaining.isNotEmpty()) {
+            val count = paint.breakText(remaining, true, maxWidth.toFloat(), null).coerceAtLeast(1)
+            result += remaining.substring(0, count)
+            remaining = remaining.substring(count)
+        }
+        return result
     }
 }

@@ -4,7 +4,7 @@ import com.bruleetelie.domain.SaleSnapshot
 
 object SalesCsvExporter {
     fun export(sales: List<SaleSnapshot>): String = buildString {
-        appendLine("id;codigo;produto;cliente;preco_venda_centavos;custo_real_centavos;lucro_centavos;margem_percentual;data_conclusao")
+        appendLine("id,codigo,produto,cliente,preco_venda_centavos,custo_real_centavos,lucro_centavos,margem_percentual,data_conclusao")
         sales.forEach { sale ->
             appendLine(listOf(
                 sale.id,
@@ -16,10 +16,12 @@ object SalesCsvExporter {
                 sale.profit.cents,
                 sale.marginPercent.toPlainString(),
                 sale.completedAtMillis
-            ).joinToString(";") { escape(it.toString()) })
+            ).joinToString(",") { escape(it.toString()) })
         }
     }
 
     private fun escape(value: String): String =
-        if (value.any { it == ';' || it == '"' || it == '\n' }) "\"${value.replace("\"", "\"\"")}\"" else value
+        if (value.any { it == ',' || it == '"' || it == '\r' || it == '\n' }) {
+            "\"${value.replace("\"", "\"\"")}\""
+        } else value
 }

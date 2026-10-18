@@ -26,9 +26,28 @@ class StartupBenchmark {
         setupBlock = { pressHome() }
     ) {
         startActivityAndWait()
-        device.wait(Until.hasObject(By.text("Finanças")), 5_000)
-        device.findObject(By.text("Finanças"))?.click()
+        check(device.wait(Until.hasObject(By.desc("Navegação Finanças")), 5_000)) {
+            "Navegação Finanças não ficou disponível"
+        }
+        device.findObject(By.desc("Navegação Finanças")).click()
         device.waitForIdle()
         device.swipe(device.displayWidth / 2, device.displayHeight * 3 / 4, device.displayWidth / 2, device.displayHeight / 4, 20)
+    }
+
+    @Test
+    fun coldStartupAndQuoteWizard() = benchmarkRule.measureRepeated(
+        packageName = "com.bruleetelie.app",
+        metrics = listOf(StartupTimingMetric(), FrameTimingMetric()),
+        compilationMode = CompilationMode.Partial(),
+        startupMode = StartupMode.COLD,
+        iterations = 5,
+        setupBlock = { pressHome() }
+    ) {
+        startActivityAndWait()
+        check(device.wait(Until.hasObject(By.desc("Navegação Novo Orçamento")), 5_000)) {
+            "Navegação Novo Orçamento não ficou disponível"
+        }
+        device.findObject(By.desc("Navegação Novo Orçamento")).click()
+        device.waitForIdle()
     }
 }

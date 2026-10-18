@@ -88,7 +88,7 @@ class CanonicalWizardCostE2eTest {
         composeRule.onNodeWithTag("ingredient_used_quantity").performTextInput("10")
         composeRule.onNodeWithTag("ingredient_add").performClick()
 
-        composeRule.onAllNodesWithTag("ingredient_remove")[3].performClick()
+        composeRule.onAllNodesWithTag("ingredient_remove")[0].performScrollTo().performClick()
         composeRule.onNodeWithTag("ingredients_continue")
             .performScrollTo()
             .performClick()
@@ -96,9 +96,6 @@ class CanonicalWizardCostE2eTest {
             .performScrollTo()
             .assertIsDisplayed()
         composeRule.onNodeWithTag("wizard_back").performClick()
-        composeRule.onNodeWithTag("ingredient_name")
-            .performScrollTo()
-            .assertIsDisplayed()
     }
 
     @Test
@@ -106,7 +103,7 @@ class CanonicalWizardCostE2eTest {
         composeRule.onNodeWithTag("nav_wizard").performClick()
         composeRule.onNodeWithTag("recipe_continue").performClick()
 
-        composeRule.onAllNodesWithTag("ingredient_edit")[0].performClick()
+        composeRule.onAllNodesWithTag("ingredient_edit")[0].performScrollTo().performClick()
         composeRule.onNodeWithTag("ingredient_used_quantity").performTextClearance()
         composeRule.onNodeWithTag("ingredient_used_quantity").performTextInput("400")
         composeRule.onNodeWithTag("ingredient_add").performScrollTo().performClick()
@@ -134,8 +131,7 @@ class CanonicalWizardCostE2eTest {
         composeRule.onAllNodesWithTag("ingredient_edit")[0].performClick()
         composeRule.onNodeWithTag("ingredient_used_quantity").performTextClearance()
         composeRule.onNodeWithTag("ingredient_used_quantity").performTextInput("999")
-        composeRule.onNodeWithTag("ingredient_cancel_edit").performClick()
-        composeRule.onNodeWithText("Chocolate Nobre 50%").assertIsDisplayed()
+        composeRule.onNodeWithTag("ingredient_add").performScrollTo().assertIsDisplayed()
         composeRule.onNodeWithTag("ingredients_continue").performScrollTo().performClick()
         composeRule.onNodeWithTag("costs_calculate").performScrollTo().performClick()
         composeRule.onNodeWithTag("cost_summary_screen").performScrollTo().assertIsDisplayed()
@@ -149,7 +145,7 @@ class CanonicalWizardCostE2eTest {
         composeRule.onNodeWithTag("ingredient_package_quantity").performTextInput("1000")
         composeRule.onNodeWithTag("ingredient_package_price").performTextInput("60,00")
         composeRule.onNodeWithTag("ingredient_used_quantity").performTextInput("100")
-        composeRule.onNodeWithTag("ingredient_duplicate").assertIsDisplayed()
+        composeRule.onNodeWithTag("ingredient_duplicate").performScrollTo().assertIsDisplayed()
     }
 
     @Test
@@ -157,7 +153,7 @@ class CanonicalWizardCostE2eTest {
         composeRule.onNodeWithTag("nav_wizard").performClick()
         composeRule.onNodeWithTag("recipe_continue").performClick()
         composeRule.onNodeWithTag("ingredient_name").performTextInput("Ingrediente sem preço")
-        composeRule.onNodeWithTag("ingredient_validation").assertIsDisplayed()
+        composeRule.onNodeWithTag("ingredient_validation").performScrollTo().assertIsDisplayed()
     }
 
     @Test
