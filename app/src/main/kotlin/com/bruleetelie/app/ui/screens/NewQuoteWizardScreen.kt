@@ -289,6 +289,18 @@ fun NewQuoteWizardScreen(
                                 onClick = { ingredients.remove(item) },
                                 modifier = Modifier.testTag("ingredient_remove")
                             ) { Text("Excluir") }
+                            TextButton(
+                                onClick = {
+                                    ingredientName = item.name
+                                    packageQuantity = item.packageQuantity.value.stripTrailingZeros().toPlainString()
+                                    packagePrice = item.packagePrice.toBigDecimal().toPlainString()
+                                    usedQuantity = item.usedQuantity.value.stripTrailingZeros().toPlainString()
+                                    packageUnit = item.packageQuantity.unit
+                                    usedUnit = item.usedQuantity.unit
+                                    ingredients.remove(item)
+                                },
+                                modifier = Modifier.testTag("ingredient_edit")
+                            ) { Text("Editar") }
                         }
                     }
                 }

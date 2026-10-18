@@ -100,4 +100,30 @@ class CanonicalWizardCostE2eTest {
             .performScrollTo()
             .assertIsDisplayed()
     }
+
+    @Test
+    fun cost025_backAndEditIngredientQuantityRecalculates() {
+        composeRule.onNodeWithTag("nav_wizard").performClick()
+        composeRule.onNodeWithTag("recipe_continue").performClick()
+
+        composeRule.onAllNodesWithTag("ingredient_edit")[0].performClick()
+        composeRule.onNodeWithTag("ingredient_used_quantity").performTextClearance()
+        composeRule.onNodeWithTag("ingredient_used_quantity").performTextInput("400")
+        composeRule.onNodeWithTag("ingredient_add").performScrollTo().performClick()
+        composeRule.onNodeWithTag("ingredients_continue").performScrollTo().performClick()
+        composeRule.onNodeWithTag("costs_calculate").performScrollTo().performClick()
+        composeRule.onNodeWithTag("cost_summary_screen").performScrollTo().assertIsDisplayed()
+    }
+
+    @Test
+    fun cost027_removingIngredientKeepsCostSummaryStable() {
+        composeRule.onNodeWithTag("nav_wizard").performClick()
+        composeRule.onNodeWithTag("recipe_continue").performClick()
+        composeRule.onAllNodesWithTag("ingredient_remove")[1].performClick()
+        composeRule.onNodeWithTag("ingredients_continue").performScrollTo().performClick()
+        composeRule.onNodeWithTag("costs_calculate").performScrollTo().performClick()
+        composeRule.onNodeWithTag("cost_summary_screen").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithText("NaN").assertDoesNotExist()
+        composeRule.onNodeWithText("Infinity").assertDoesNotExist()
+    }
 }
