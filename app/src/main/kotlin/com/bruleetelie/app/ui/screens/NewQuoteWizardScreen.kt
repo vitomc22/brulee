@@ -39,6 +39,7 @@ fun NewQuoteWizardScreen(
     operatingSettings: OperatingSettings,
     onQuoteApproved: (Quote) -> Unit,
     onSendWhatsApp: (Quote) -> Unit,
+    onSharePdf: (Quote) -> Unit,
     onClose: () -> Unit
 ) {
     var step by remember { mutableStateOf(WizardStep.RecipeName) }
@@ -442,6 +443,20 @@ fun NewQuoteWizardScreen(
                         onSendWhatsApp(quote)
                         step = WizardStep.SentSuccess
                     },
+                    onSharePdf = {
+                        val quote = Quote(
+                            id = "quote-${System.currentTimeMillis()}",
+                            code = "#ORC-284",
+                            customer = Customer("c-${System.currentTimeMillis()}", customerName, customerPhone),
+                            productName = recipeName,
+                            productSubtitle = "Produzido artesanalmente com ingredientes nobres",
+                            unitsCount = recipeYield,
+                            pricing = pricingResult,
+                            deliveryDate = deliveryDate,
+                            status = QuoteStatus.Draft
+                        )
+                        onSharePdf(quote)
+                    },
                     onApproveOrder = {
                         val quote = Quote(
                             id = "quote-${System.currentTimeMillis()}",
@@ -733,6 +748,7 @@ private fun CustomerAndQuoteView(
     onDeliveryDateChanged: (String) -> Unit,
     pricing: PricingResult,
     onSendWhatsApp: () -> Unit,
+    onSharePdf: () -> Unit,
     onApproveOrder: () -> Unit
 ) {
     Text(
@@ -853,6 +869,13 @@ private fun CustomerAndQuoteView(
     )
 
     TactileSecondaryButton(
+        text = "GERAR E COMPARTILHAR PDF",
+        onClick = onSharePdf,
+        icon = "▣",
+        modifier = Modifier.testTag("quote_share_pdf")
+    )
+
+    TactileSecondaryButton(
         text = "Marcar como Aprovado (Adicionar à Produção)",
         onClick = onApproveOrder,
         icon = "✓",
@@ -901,6 +924,7 @@ private fun NewQuoteWizardScreenPreview() {
             operatingSettings = OperatingSettings(),
             onQuoteApproved = {},
             onSendWhatsApp = {},
+            onSharePdf = {},
             onClose = {}
         )
     }

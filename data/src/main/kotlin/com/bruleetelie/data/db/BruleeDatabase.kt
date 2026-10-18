@@ -93,6 +93,9 @@ abstract class BruleeDatabase : RoomDatabase() {
             }
         }
 
+        internal val ALL_MIGRATIONS: Array<Migration> =
+            arrayOf(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
+
         @Volatile
         private var INSTANCE: BruleeDatabase? = null
 

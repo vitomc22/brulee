@@ -28,6 +28,16 @@ import com.bruleetelie.domain.SaleSnapshot
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.concurrent.TimeUnit
+import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisGuidelineComponent
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisLabelComponent
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisLineComponent
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottomAxis
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStartAxis
+import com.patrykandpatrick.vico.compose.cartesian.chart.rememberCartesianChart
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModel
+import com.patrykandpatrick.vico.compose.cartesian.data.LineCartesianLayerModel
 
 @Composable
 fun FinanceDashboardScreen(
@@ -37,7 +47,7 @@ fun FinanceDashboardScreen(
     ingredientNames: Map<String, String>,
     fixedCosts: Money = Money.Zero,
     revenueGoal: Money = Money.Zero,
-    onExportPdf: () -> Unit
+    onExportCsv: () -> Unit
 ) {
     var selectedFilter by remember { mutableStateOf("Este mês") }
     val now = System.currentTimeMillis()
@@ -75,6 +85,15 @@ fun FinanceDashboardScreen(
     val rankings = filteredSales.sortedWith(
         compareByDescending<SaleSnapshot> { it.profit.cents }.thenBy { it.productName }
     )
+    val chartSales = filteredSales.sortedBy { it.completedAtMillis }
+    val chartModel = remember(chartSales) {
+        CartesianChartModel(
+            LineCartesianLayerModel.build {
+                series(chartSales.map { it.salePrice.cents / 100.0 })
+                series(chartSales.map { it.profit.cents / 100.0 })
+            }
+        )
+    }
     val priceAlerts = priceObservations
         .groupBy { it.ingredientId }
         .mapNotNull { (ingredientId, observations) ->
@@ -155,6 +174,38 @@ fun FinanceDashboardScreen(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+            }
+        }
+
+        Surface(
+            modifier = Modifier.fillMaxWidth().testTag("finance_revenue_profit_chart"),
+            color = BruleeSurfaceContainerLowest,
+            shape = RoundedCornerShape(24.dp),
+            shadowElevation = 1.dp
+        ) {
+            Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text("Receita e lucro por venda", fontWeight = FontWeight.Bold)
+                if (chartSales.isEmpty()) {
+                    Text("Sem dados suficientes para o gráfico", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                } else {
+                    CartesianChartHost(
+                        chart = rememberCartesianChart(
+                            rememberLineCartesianLayer(),
+                            startAxis = rememberStartAxis(
+                                guideline = rememberAxisGuidelineComponent(),
+                                label = rememberAxisLabelComponent(),
+                                axis = rememberAxisLineComponent()
+                            ),
+                            bottomAxis = rememberBottomAxis(
+                                label = rememberAxisLabelComponent(),
+                                axis = rememberAxisLineComponent()
+                            )
+                        ),
+                        model = chartModel,
+                        modifier = Modifier.fillMaxWidth().height(220.dp)
+                    )
+                }
+                Text("Linha 1: receita · Linha 2: lucro", style = MaterialTheme.typography.labelSmall)
             }
         }
 
@@ -307,7 +358,7 @@ fun FinanceDashboardScreen(
 
         // Export Report Button
         Button(
-            onClick = onExportPdf,
+            onClick = onExportCsv,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(54.dp),
@@ -318,8 +369,8 @@ fun FinanceDashboardScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text("📄")
-                Text("Exportar dados para Web", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
+                Text("▤")
+                Text("Exportar CSV para Web", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
             }
         }
     }
@@ -366,7 +417,7 @@ private fun FinanceDashboardScreenPreview() {
             priceObservations = emptyList(),
             ingredientNames = emptyMap(),
             revenueGoal = Money.Zero,
-            onExportPdf = {}
+            onExportCsv = {}
         )
     }
 }

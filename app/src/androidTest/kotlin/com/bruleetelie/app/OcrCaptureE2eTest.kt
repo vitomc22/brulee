@@ -31,4 +31,16 @@ class OcrCaptureE2eTest {
             .performScrollTo()
             .assertIsDisplayed()
     }
+
+    @Test
+    fun realDocumentScannerAction_isAvailableBeforeManualFallback() {
+        composeRule.onNodeWithTag("nav_stock").performClick()
+
+        composeRule.onNodeWithTag("ocr_scan_document")
+            .performScrollTo()
+            .assertIsDisplayed()
+        composeRule.onNodeWithTag("ocr_process_document")
+            .performScrollTo()
+            .assertIsDisplayed()
+    }
 }

@@ -40,7 +40,7 @@ class PriceScenarioIndividualE2eTest {
     @Test fun priceE2e010_negativeMarginIsBlocked() { openPricing(); composeRule.onNodeWithTag("price_margin_input").performScrollTo().performTextClearance(); composeRule.onNodeWithTag("price_margin_input").performTextInput("-10"); composeRule.onNodeWithText("Margem: 35.00%", substring = false).assertIsDisplayed() }
     @Test fun priceE2e011_zeroCostDoesNotProduceInvalidNumber() { openPricing(); composeRule.onNodeWithText("NaN").assertDoesNotExist(); composeRule.onNodeWithText("Infinity").assertDoesNotExist() }
     @Test fun priceE2e012_suggestedPriceRoundingIsFinite() { openPricing(); composeRule.onNodeWithTag("price_sale_value").performScrollTo().assertIsDisplayed(); composeRule.onNodeWithText("NaN").assertDoesNotExist() }
-    @Test fun priceE2e013_finalPriceCanAdvanceToQuote() { openPricing(); composeRule.onNodeWithTag("quote_advance").performScrollTo().performClick(); composeRule.onNodeWithTag("customer_name").assertIsDisplayed() }
+    @Test fun priceE2e013_finalPriceCanAdvanceToQuote() { openPricing(); composeRule.onNodeWithTag("quote_advance").performScrollTo().performClick(); composeRule.onNodeWithTag("customer_name").performScrollTo().assertIsDisplayed() }
     @Test fun priceE2e014_approvedQuoteUsesDisplayedPrice() { openPricing(); pricingVisible(); composeRule.onNodeWithTag("quote_advance").performScrollTo().performClick(); composeRule.onNodeWithTag("quote_approve").performScrollTo().assertIsDisplayed() }
     @Test fun priceE2e015_newMarginAffectsCurrentCalculation() { openPricing(); composeRule.onNodeWithTag("price_margin_input").performScrollTo().performTextClearance(); composeRule.onNodeWithTag("price_margin_input").performTextInput("40"); composeRule.onNodeWithTag("price_sale_value").assertIsDisplayed() }
     @Test fun priceE2e016_costEditCanRecalculatePrice() { openPricing(); composeRule.onNodeWithTag("wizard_back").performClick(); composeRule.onNodeWithTag("costs_calculate").performScrollTo().performClick(); pricingVisible() }
@@ -50,4 +50,9 @@ class PriceScenarioIndividualE2eTest {
     @Test fun priceE2e020_invalidCurrencyInputDoesNotCrash() { openPricing(); composeRule.onNodeWithTag("price_manual_input").performScrollTo().performTextClearance(); composeRule.onNodeWithTag("price_manual_input").performTextInput("abc"); composeRule.onNodeWithText("NaN").assertDoesNotExist() }
     @Test fun priceE2e021_suggestedPriceIsAvailableOffline() { openPricing(); pricingVisible(); composeRule.onNodeWithText("Infinity").assertDoesNotExist() }
     @Test fun priceE2e022_quotePriceIsAvailableForDocuments() { openPricing(); composeRule.onNodeWithTag("price_sale_value").performScrollTo().assertIsDisplayed() }
+    @Test fun priceE2e023_customerQuoteCanGeneratePdf() {
+        openPricing()
+        composeRule.onNodeWithTag("quote_advance").performScrollTo().performClick()
+        composeRule.onNodeWithTag("quote_share_pdf").performScrollTo().assertIsDisplayed()
+    }
 }

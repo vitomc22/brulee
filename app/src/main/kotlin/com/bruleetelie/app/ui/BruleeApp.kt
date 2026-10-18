@@ -16,21 +16,24 @@ import androidx.compose.ui.platform.testTag
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.IntentSenderRequest
+import androidx.hilt.navigation.compose.hiltViewModel
 import android.app.Activity
 import com.bruleetelie.app.widget.ProductionWidgetProvider
 import com.bruleetelie.app.backup.AppBackupManager
 import com.bruleetelie.app.analytics.AnalyticsJsonExporter
+import com.bruleetelie.app.analytics.SalesCsvExporter
 import com.bruleetelie.app.documents.MlKitDocumentScannerGateway
+import com.bruleetelie.app.sharing.ShareFile
 import com.bruleetelie.app.ui.screens.*
 import com.bruleetelie.app.ui.theme.*
-import com.bruleetelie.data.BruleeRepository
-import com.bruleetelie.data.datastore.OperatingSettingsDataStore
-import com.bruleetelie.data.db.BruleeDatabase
 import com.bruleetelie.documents.DefaultDocumentGateway
 import com.bruleetelie.documents.ocr.ConfidenceLevel
 import com.bruleetelie.documents.ocr.ParsedReceiptItem
 import com.bruleetelie.documents.ocr.ReceiptParser
 import com.bruleetelie.documents.ocr.MlKitTextRecognitionGateway
+import com.bruleetelie.documents.ocr.PdfPageRenderer
+import com.bruleetelie.documents.pdf.DefaultPdfGenerator
+import com.bruleetelie.documents.pdf.PdfTemplateType
 import com.bruleetelie.domain.CostComparisonResult
 import com.bruleetelie.domain.PricingEngine
 import com.bruleetelie.domain.ProductionOrder
@@ -38,35 +41,24 @@ import com.bruleetelie.domain.Money
 import com.bruleetelie.domain.AchievementEngine
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.io.File
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.launch
-
-private enum class Destination(val label: String, val icon: String) {
-    Production("Produção", "▤"),
-    Wizard("Novo Orçamento", "➕"),
-    Finance("Finanças", "▣"),
-    Stock("Estoque", "📷"),
-    Backup("Backup", "↥"),
-    Shopping("Compras", "🛒")
-}
-
-private sealed interface ActiveFlow {
-    data object None : ActiveFlow
-    data class OrderCompleted(val order: ProductionOrder, val comparison: CostComparisonResult) : ActiveFlow
-}
 
 @Composable
 fun BruleeApp() {
     val activityContext = LocalContext.current
     val context = activityContext.applicationContext
-    val repository = remember(context) {
-        val db = BruleeDatabase.getInstance(context)
-        val ds = OperatingSettingsDataStore(context)
-        BruleeRepository(database = db, settingsDataStore = ds)
-    }
+    val appViewModel: BruleeAppViewModel = hiltViewModel()
+    val repository = appViewModel.repository
+    val uiState by appViewModel.uiState.collectAsState()
     val documentGateway = remember { DefaultDocumentGateway() }
     val receiptParser = remember { ReceiptParser() }
     val scannerGateway = remember { MlKitDocumentScannerGateway() }
     val textRecognitionGateway = remember { MlKitTextRecognitionGateway() }
+    val pdfPageRenderer = remember { PdfPageRenderer() }
+    val pdfGenerator = remember { DefaultPdfGenerator() }
 
     val orders by repository.productionOrders.collectAsState()
     val sales by repository.completedSales.collectAsState()
@@ -112,16 +104,30 @@ fun BruleeApp() {
                 context.contentResolver.openOutputStream(uri, "wt")?.bufferedWriter()?.use { it.write(json) }
                     ?: error("Não foi possível abrir o arquivo")
             }.onSuccess {
+                ShareFile.shareUri(context, uri, "application/json", "Compartilhar dados analíticos")
                 snackbarHostState.showSnackbar("Dados exportados para a interface Web")
             }.onFailure {
                 snackbarHostState.showSnackbar("Falha ao exportar dados: ${it.message}")
             }
         }
     }
+    val exportSalesCsv = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument("text/csv")
+    ) { uri ->
+        if (uri != null) coroutineScope.launch {
+            runCatching {
+                val csv = SalesCsvExporter.export(sales)
+                context.contentResolver.openOutputStream(uri, "wt")?.bufferedWriter()?.use { it.write(csv) }
+                    ?: error("Não foi possível abrir o arquivo")
+            }.onSuccess {
+                ShareFile.shareUri(context, uri, "text/csv", "Compartilhar vendas em CSV")
+                snackbarHostState.showSnackbar("CSV exportado com sucesso")
+            }.onFailure {
+                snackbarHostState.showSnackbar("Falha ao exportar CSV: ${it.message}")
+            }
+        }
+    }
 
-    var destination by remember { mutableStateOf(Destination.Production) }
-    var activeFlow by remember { mutableStateOf<ActiveFlow>(ActiveFlow.None) }
-    var ocrItems by remember { mutableStateOf<List<OcrItem>?>(null) }
     val scannerLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult()
     ) { result ->
@@ -129,14 +135,24 @@ fun BruleeApp() {
             coroutineScope.launch {
                 runCatching {
                     val scan = scannerGateway.parseResult(result.data)
-                    require(scan.imageUris.isNotEmpty()) { "Nenhuma página de imagem foi capturada" }
-                    val recognized = scan.imageUris.mapIndexed { index, uri ->
+                    val imageUris = if (scan.imageUris.isNotEmpty()) {
+                        scan.imageUris
+                    } else if (scan.pdfUri != null) {
+                        withContext(Dispatchers.IO) {
+                            val cache = File(context.cacheDir, "ocr-pdf-${System.currentTimeMillis()}")
+                            pdfPageRenderer.renderToFiles(context, scan.pdfUri, cache)
+                        }
+                    } else {
+                        emptyList()
+                    }
+                    require(imageUris.isNotEmpty()) { "Nenhuma página de imagem ou PDF foi capturada" }
+                    val recognized = imageUris.mapIndexed { index, uri ->
                         textRecognitionGateway.recognize(context, uri, index).text
                     }.joinToString("\n")
                     receiptParser.parse(recognized).items.mapIndexed { index, item ->
                         item.toOcrItem(index + 1)
                     }
-                }.onSuccess { ocrItems = it }
+                }.onSuccess { appViewModel.setOcrItems(it) }
                     .onFailure { snackbarHostState.showSnackbar("Falha ao ler documento: ${it.message}") }
             }
         }
@@ -149,19 +165,19 @@ fun BruleeApp() {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surface,
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        topBar = { BruleeTopBar(destination) },
+        topBar = { BruleeTopBar(uiState.destination) },
         bottomBar = {
-            if (activeFlow == ActiveFlow.None) {
+            if (uiState.activeFlow == ActiveFlow.None) {
                 NavigationBar(
                     containerColor = BruleeSurfaceContainerLowest,
                     tonalElevation = 4.dp
                 ) {
                     Destination.entries.forEach { item ->
-                        val isSelected = destination == item
+                        val isSelected = uiState.destination == item
                         NavigationBarItem(
                             modifier = Modifier.testTag("nav_${item.name.lowercase()}"),
                             selected = isSelected,
-                            onClick = { destination = item },
+                            onClick = { appViewModel.navigate(item) },
                             icon = {
                                 Text(
                                     item.icon,
@@ -192,7 +208,7 @@ fun BruleeApp() {
                 .padding(padding)
                 .fillMaxSize()
         ) {
-            when (val flow = activeFlow) {
+            when (val flow = uiState.activeFlow) {
                 is ActiveFlow.OrderCompleted -> {
                     ProductionCompletionScreen(
                         productName = flow.order.productName,
@@ -201,11 +217,11 @@ fun BruleeApp() {
                         profitableStreak = AchievementEngine.profitableSalesStreak(sales),
                         soundsEnabled = settings.soundsEnabled,
                         reducedMotion = settings.reducedMotion,
-                        onContinue = { activeFlow = ActiveFlow.None }
+                        onContinue = { appViewModel.closeActiveFlow() }
                     )
                 }
                 ActiveFlow.None -> {
-                    when (destination) {
+                    when (uiState.destination) {
                         Destination.Production -> {
                             ProductionBoardScreen(
                                 orders = orders,
@@ -220,9 +236,9 @@ fun BruleeApp() {
                                         salePrice = order.salePrice
                                     )
                                     repository.completeOrder(order.id, order.actualCosts)
-                                    activeFlow = ActiveFlow.OrderCompleted(order, comparison)
+                                    appViewModel.showOrderCompleted(order, comparison)
                                 },
-                                onNewQuoteClicked = { destination = Destination.Wizard }
+                                onNewQuoteClicked = { appViewModel.navigate(Destination.Wizard) }
                             )
                         }
 
@@ -232,12 +248,32 @@ fun BruleeApp() {
                                 onQuoteApproved = { quote ->
                                     repository.addQuote(quote)
                                     repository.approveQuote(quote.id)
-                                    destination = Destination.Production
+                                    appViewModel.navigate(Destination.Production)
                                 },
                                 onSendWhatsApp = { quote ->
                                     repository.addQuote(quote)
                                 },
-                                onClose = { destination = Destination.Production }
+                                onSharePdf = { quote ->
+                                    coroutineScope.launch {
+                                        runCatching {
+                                            val directory = File(context.cacheDir, "shared")
+                                            directory.mkdirs()
+                                            val file = File(directory, "orcamento-${quote.id}.pdf")
+                                            withContext(Dispatchers.IO) {
+                                                pdfGenerator.writePdf(quote, file, PdfTemplateType.CUSTOMER)
+                                            }
+                                            ShareFile.shareUri(
+                                                context,
+                                                ShareFile.uriForFile(context, file),
+                                                "application/pdf",
+                                                "Compartilhar orçamento em PDF"
+                                            )
+                                        }.onFailure {
+                                            snackbarHostState.showSnackbar("Falha ao gerar PDF: ${it.message}")
+                                        }
+                                    }
+                                },
+                                onClose = { appViewModel.navigate(Destination.Production) }
                             )
                         }
 
@@ -249,18 +285,18 @@ fun BruleeApp() {
                                 ingredientNames = ingredients.associate { it.id to it.name },
                                 fixedCosts = settings.monthlyFixedCosts,
                                 revenueGoal = settings.monthlyRevenueGoal,
-                                onExportPdf = { exportAnalytics.launch("brulee-telie-analytics.json") }
+                                onExportCsv = { exportSalesCsv.launch("brulee-telie-vendas.csv") }
                             )
                         }
 
                         Destination.Stock -> {
-                            val itemsToReview = ocrItems
+                            val itemsToReview = uiState.ocrItems
                             if (itemsToReview == null) {
                                 OcrCaptureScreen(
                                     onProcessText = { rawText ->
-                                        ocrItems = receiptParser.parse(rawText).items.mapIndexed { index, item ->
+                                        appViewModel.setOcrItems(receiptParser.parse(rawText).items.mapIndexed { index, item ->
                                             item.toOcrItem(index + 1)
-                                        }
+                                        })
                                     },
                                     onScanRequested = {
                                         val activity = activityContext as? Activity
@@ -295,8 +331,8 @@ fun BruleeApp() {
                                             )
                                         }
                                     }
-                                    ocrItems = null
-                                    destination = Destination.Production
+                                    appViewModel.setOcrItems(null)
+                                    appViewModel.navigate(Destination.Production)
                                     coroutineScope.launch {
                                         snackbarHostState.showSnackbar(
                                             "${confirmedItems.size} observações de preço salvas"

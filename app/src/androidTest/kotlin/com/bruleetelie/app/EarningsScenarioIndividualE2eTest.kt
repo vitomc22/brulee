@@ -37,6 +37,6 @@ class EarningsScenarioIndividualE2eTest {
     @Test fun earnE2e020_timezoneBoundaryDoesNotCrash() { finance(); metric("FATURAMENTO TOTAL") }
     @Test fun earnE2e021_reopenKeepsMetrics() { finance(); composeRule.onNodeWithTag("nav_production").performClick(); finance(); composeRule.onNodeWithTag("finance_revenue").assertIsDisplayed() }
     @Test fun earnE2e022_backupFlowIsAvailable() { composeRule.onNodeWithTag("nav_backup").performClick(); composeRule.onNodeWithTag("backup_export").performScrollTo().assertIsDisplayed() }
-    @Test fun earnE2e023_pdfExportActionIsAvailable() { finance(); composeRule.onNodeWithText("Exportar dados para Web").performScrollTo().assertIsDisplayed() }
+    @Test fun earnE2e023_csvExportActionIsAvailable() { finance(); composeRule.onNodeWithText("Exportar CSV para Web").performScrollTo().assertIsDisplayed() }
     @Test fun earnE2e024_insufficientValuesAreNotNaN() { finance(); composeRule.onNodeWithText("NaN").assertDoesNotExist(); composeRule.onNodeWithText("Infinity").assertDoesNotExist() }
 }
