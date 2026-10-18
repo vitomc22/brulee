@@ -28,7 +28,7 @@ class EarningsBlockE2eTest {
         composeRule.onNodeWithTag("nav_finance").performClick()
         composeRule.onNodeWithText("FATURAMENTO TOTAL").assertIsDisplayed()
         composeRule.onNodeWithText("Lucro líquido").performScrollTo().assertIsDisplayed()
-        composeRule.onNodeWithText("vendas concluídas no período").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithText("vendas concluídas no período", substring = true).performScrollTo().assertIsDisplayed()
     }
 
     @Test
