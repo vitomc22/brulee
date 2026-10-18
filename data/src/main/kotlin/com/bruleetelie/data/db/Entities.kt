@@ -188,3 +188,134 @@ data class ShoppingItemEntity(
     val isPurchased: Boolean = false,
     val createdAtMillis: Long = System.currentTimeMillis()
 )
+
+@Entity(tableName = "suppliers")
+data class SupplierEntity(
+    @PrimaryKey val id: String,
+    val name: String,
+    val document: String = "",
+    val phone: String = "",
+    val notes: String = "",
+    val createdAtMillis: Long = System.currentTimeMillis(),
+    val updatedAtMillis: Long = System.currentTimeMillis()
+)
+
+@Entity(
+    tableName = "purchases",
+    foreignKeys = [
+        ForeignKey(entity = SupplierEntity::class, parentColumns = ["id"], childColumns = ["supplierId"], onDelete = ForeignKey.SET_NULL)
+    ],
+    indices = [Index(value = ["supplierId"])]
+)
+data class PurchaseEntity(
+    @PrimaryKey val id: String,
+    val supplierId: String? = null,
+    val purchaseDateMillis: Long,
+    val totalCents: Long,
+    val documentImportId: String? = null,
+    val notes: String = "",
+    val createdAtMillis: Long = System.currentTimeMillis()
+)
+
+@Entity(
+    tableName = "purchase_items",
+    foreignKeys = [
+        ForeignKey(entity = PurchaseEntity::class, parentColumns = ["id"], childColumns = ["purchaseId"], onDelete = ForeignKey.CASCADE),
+        ForeignKey(entity = IngredientEntity::class, parentColumns = ["id"], childColumns = ["ingredientId"], onDelete = ForeignKey.SET_NULL)
+    ],
+    indices = [Index(value = ["purchaseId"]), Index(value = ["ingredientId"])]
+)
+data class PurchaseItemEntity(
+    @PrimaryKey val id: String,
+    val purchaseId: String,
+    val ingredientId: String? = null,
+    val descriptionOriginal: String,
+    val quantity: String,
+    val unit: String,
+    val normalizedQuantity: String,
+    val totalCents: Long,
+    val normalizedUnitPriceCents: Long,
+    val createdAtMillis: Long = System.currentTimeMillis()
+)
+
+@Entity(
+    tableName = "payments",
+    foreignKeys = [
+        ForeignKey(entity = SaleSnapshotEntity::class, parentColumns = ["id"], childColumns = ["saleId"], onDelete = ForeignKey.CASCADE)
+    ],
+    indices = [Index(value = ["saleId"])]
+)
+data class PaymentEntity(
+    @PrimaryKey val id: String,
+    val saleId: String,
+    val amountCents: Long,
+    val method: String,
+    val paidAtMillis: Long? = null,
+    val status: String,
+    val notes: String = "",
+    val createdAtMillis: Long = System.currentTimeMillis()
+)
+
+@Entity(tableName = "expenses")
+data class ExpenseEntity(
+    @PrimaryKey val id: String,
+    val category: String,
+    val description: String,
+    val amountCents: Long,
+    val expenseDateMillis: Long,
+    val isFixed: Boolean,
+    val notes: String = "",
+    val createdAtMillis: Long = System.currentTimeMillis()
+)
+
+@Entity(tableName = "cost_resources")
+data class CostResourceEntity(
+    @PrimaryKey val id: String,
+    val type: String,
+    val name: String,
+    val unit: String,
+    val defaultRateCents: Long,
+    val active: Boolean = true,
+    val createdAtMillis: Long = System.currentTimeMillis(),
+    val updatedAtMillis: Long = System.currentTimeMillis()
+)
+
+@Entity(tableName = "document_imports")
+data class DocumentImportEntity(
+    @PrimaryKey val id: String,
+    val sourceUri: String,
+    val sha256: String,
+    val supplierName: String = "",
+    val documentNumber: String = "",
+    val importedAtMillis: Long = System.currentTimeMillis()
+)
+
+@Entity(tableName = "quote_status_history", indices = [Index(value = ["quoteId"])] )
+data class QuoteStatusHistoryEntity(
+    @PrimaryKey val id: String,
+    val quoteId: String,
+    val previousStatus: String?,
+    val newStatus: String,
+    val changedAtMillis: Long = System.currentTimeMillis(),
+    val reason: String = ""
+)
+
+@Entity(tableName = "production_status_history", indices = [Index(value = ["productionOrderId"])] )
+data class ProductionStatusHistoryEntity(
+    @PrimaryKey val id: String,
+    val productionOrderId: String,
+    val previousStatus: String?,
+    val newStatus: String,
+    val changedAtMillis: Long = System.currentTimeMillis(),
+    val reason: String = ""
+)
+
+@Entity(tableName = "payment_status_history", indices = [Index(value = ["paymentId"])] )
+data class PaymentStatusHistoryEntity(
+    @PrimaryKey val id: String,
+    val paymentId: String,
+    val previousStatus: String?,
+    val newStatus: String,
+    val changedAtMillis: Long = System.currentTimeMillis(),
+    val reason: String = ""
+)

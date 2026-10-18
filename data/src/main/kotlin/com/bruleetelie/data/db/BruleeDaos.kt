@@ -119,3 +119,73 @@ interface ShoppingItemDao {
     @Query("DELETE FROM shopping_items WHERE id = :id")
     suspend fun deleteItem(id: String)
 }
+
+@Dao
+interface SupplierDao {
+    @Query("SELECT * FROM suppliers ORDER BY name ASC")
+    fun getAll(): Flow<List<SupplierEntity>>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(value: SupplierEntity)
+}
+
+@Dao
+interface PurchaseDao {
+    @Query("SELECT * FROM purchases ORDER BY purchaseDateMillis DESC")
+    fun getAll(): Flow<List<PurchaseEntity>>
+    @Query("SELECT * FROM purchase_items WHERE purchaseId = :purchaseId ORDER BY createdAtMillis ASC")
+    fun getItems(purchaseId: String): Flow<List<PurchaseItemEntity>>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPurchase(value: PurchaseEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertItems(values: List<PurchaseItemEntity>)
+}
+
+@Dao
+interface PaymentDao {
+    @Query("SELECT * FROM payments WHERE saleId = :saleId ORDER BY createdAtMillis ASC")
+    fun getForSale(saleId: String): Flow<List<PaymentEntity>>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(value: PaymentEntity)
+}
+
+@Dao
+interface ExpenseDao {
+    @Query("SELECT * FROM expenses ORDER BY expenseDateMillis DESC")
+    fun getAll(): Flow<List<ExpenseEntity>>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(value: ExpenseEntity)
+}
+
+@Dao
+interface CostResourceDao {
+    @Query("SELECT * FROM cost_resources WHERE active = 1 ORDER BY name ASC")
+    fun getActive(): Flow<List<CostResourceEntity>>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(value: CostResourceEntity)
+}
+
+@Dao
+interface DocumentImportDao {
+    @Query("SELECT * FROM document_imports ORDER BY importedAtMillis DESC")
+    fun getAll(): Flow<List<DocumentImportEntity>>
+    @Query("SELECT * FROM document_imports WHERE sha256 = :sha256 LIMIT 1")
+    suspend fun findBySha256(sha256: String): DocumentImportEntity?
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(value: DocumentImportEntity)
+}
+
+@Dao
+interface StatusHistoryDao {
+    @Query("SELECT * FROM quote_status_history WHERE quoteId = :quoteId ORDER BY changedAtMillis ASC")
+    fun quoteHistory(quoteId: String): Flow<List<QuoteStatusHistoryEntity>>
+    @Query("SELECT * FROM production_status_history WHERE productionOrderId = :orderId ORDER BY changedAtMillis ASC")
+    fun productionHistory(orderId: String): Flow<List<ProductionStatusHistoryEntity>>
+    @Query("SELECT * FROM payment_status_history WHERE paymentId = :paymentId ORDER BY changedAtMillis ASC")
+    fun paymentHistory(paymentId: String): Flow<List<PaymentStatusHistoryEntity>>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertQuote(value: QuoteStatusHistoryEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertProduction(value: ProductionStatusHistoryEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPayment(value: PaymentStatusHistoryEntity)
+}
