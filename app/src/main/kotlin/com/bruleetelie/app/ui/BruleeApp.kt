@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import android.app.Activity
+import com.bruleetelie.app.widget.ProductionWidgetProvider
 import com.bruleetelie.app.backup.AppBackupManager
 import com.bruleetelie.app.analytics.AnalyticsJsonExporter
 import com.bruleetelie.app.ui.screens.*
@@ -31,6 +32,7 @@ import com.bruleetelie.domain.CostComparisonResult
 import com.bruleetelie.domain.PricingEngine
 import com.bruleetelie.domain.ProductionOrder
 import com.bruleetelie.domain.Money
+import com.bruleetelie.domain.AchievementEngine
 import java.math.BigDecimal
 import java.math.RoundingMode
 import kotlinx.coroutines.launch
@@ -40,7 +42,8 @@ private enum class Destination(val label: String, val icon: String) {
     Wizard("Novo Orçamento", "➕"),
     Finance("Finanças", "▣"),
     Stock("Estoque", "📷"),
-    Backup("Backup", "↥")
+    Backup("Backup", "↥"),
+    Shopping("Compras", "🛒")
 }
 
 private sealed interface ActiveFlow {
@@ -66,6 +69,7 @@ fun BruleeApp() {
     val ingredients by repository.ingredients.collectAsState()
     val priceObservations by repository.priceObservations.collectAsState()
     val quotes by repository.quotes.collectAsState()
+    val shoppingItems by repository.shoppingItems.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     val backupManager = remember(context) { AppBackupManager(context) }
@@ -113,6 +117,10 @@ fun BruleeApp() {
     var destination by remember { mutableStateOf(Destination.Production) }
     var activeFlow by remember { mutableStateOf<ActiveFlow>(ActiveFlow.None) }
     var ocrItems by remember { mutableStateOf<List<OcrItem>?>(null) }
+
+    LaunchedEffect(orders, sales) {
+        ProductionWidgetProvider.updateSnapshot(context, orders, sales)
+    }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surface,
@@ -165,6 +173,10 @@ fun BruleeApp() {
                     ProductionCompletionScreen(
                         productName = flow.order.productName,
                         comparison = flow.comparison,
+                        salesStreak = AchievementEngine.salesStreak(sales),
+                        profitableStreak = AchievementEngine.profitableSalesStreak(sales),
+                        soundsEnabled = settings.soundsEnabled,
+                        reducedMotion = settings.reducedMotion,
                         onContinue = { activeFlow = ActiveFlow.None }
                     )
                 }
@@ -265,6 +277,15 @@ fun BruleeApp() {
                                 onRestore = { restoreBackup.launch(arrayOf("application/zip", "application/octet-stream")) }
                             )
                         }
+
+                        Destination.Shopping -> {
+                            ShoppingListScreen(
+                                items = shoppingItems,
+                                onAdd = { name, quantity -> repository.addShoppingItem(name, quantity) },
+                                onPurchasedChanged = repository::setShoppingItemPurchased,
+                                onDelete = repository::deleteShoppingItem
+                            )
+                        }
                     }
                 }
             }
@@ -339,6 +360,7 @@ private fun BruleeTopBar(destination: Destination) {
                         Destination.Finance -> "Gestão Financeira"
                         Destination.Stock -> "Estoque & OCR"
                         Destination.Backup -> "Backup"
+                        Destination.Shopping -> "Lista de Compras"
                     },
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold

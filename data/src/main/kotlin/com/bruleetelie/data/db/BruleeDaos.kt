@@ -104,3 +104,18 @@ interface PriceObservationDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertObservation(observation: PriceObservationEntity)
 }
+
+@Dao
+interface ShoppingItemDao {
+    @Query("SELECT * FROM shopping_items ORDER BY isPurchased ASC, createdAtMillis DESC")
+    fun getAllItems(): Flow<List<ShoppingItemEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertItem(item: ShoppingItemEntity)
+
+    @Query("UPDATE shopping_items SET isPurchased = :isPurchased WHERE id = :id")
+    suspend fun updatePurchased(id: String, isPurchased: Boolean)
+
+    @Query("DELETE FROM shopping_items WHERE id = :id")
+    suspend fun deleteItem(id: String)
+}

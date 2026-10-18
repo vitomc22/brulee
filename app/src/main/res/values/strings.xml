@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Brûlée Telie</string>
+    <string name="widget_description">Resumo da produção e do faturamento</string>
+</resources>

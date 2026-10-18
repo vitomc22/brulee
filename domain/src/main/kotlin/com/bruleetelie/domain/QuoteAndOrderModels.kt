@@ -92,3 +92,11 @@ data class SaleSnapshot(
     val activeProductionMinutes: Int = 0,
     val completedAtMillis: Long = System.currentTimeMillis()
 )
+
+data class ShoppingItem(
+    val id: String,
+    val name: String,
+    val quantity: String,
+    val isPurchased: Boolean = false,
+    val createdAtMillis: Long = System.currentTimeMillis()
+)

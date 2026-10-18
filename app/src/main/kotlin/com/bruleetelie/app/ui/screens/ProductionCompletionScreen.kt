@@ -8,12 +8,24 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.scaleIn
+import android.media.AudioManager
+import android.media.ToneGenerator
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.bruleetelie.app.ui.components.StatusPill
 import com.bruleetelie.app.ui.components.TactilePrimaryButton
@@ -26,8 +38,23 @@ import com.bruleetelie.domain.RecipeCosts
 fun ProductionCompletionScreen(
     productName: String = "Brigadeiro Gourmet Tradicional",
     comparison: CostComparisonResult,
+    salesStreak: Int = 0,
+    profitableStreak: Int = 0,
+    soundsEnabled: Boolean = false,
+    reducedMotion: Boolean = false,
     onContinue: () -> Unit
 ) {
+    var reveal by remember { mutableStateOf(reducedMotion) }
+    LaunchedEffect(reducedMotion) { reveal = true }
+    DisposableEffect(soundsEnabled) {
+        val tone = if (soundsEnabled) ToneGenerator(AudioManager.STREAM_NOTIFICATION, 45) else null
+        tone?.startTone(ToneGenerator.TONE_PROP_ACK, 180)
+        onDispose { tone?.release() }
+    }
+    AnimatedVisibility(
+        visible = reveal,
+        enter = if (reducedMotion) fadeIn(initialAlpha = 1f) else fadeIn() + scaleIn(initialScale = 0.96f)
+    ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -61,7 +88,8 @@ fun ProductionCompletionScreen(
                             color = BruleeOnSecondaryContainer
                         )
                         Text(
-                            "7 dias seguidos!",
+                            if (salesStreak == 1) "1 dia seguido!" else "$salesStreak dias seguidos!",
+                            modifier = Modifier.testTag("completion_sales_streak"),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = BruleeOnSecondaryContainer
@@ -334,7 +362,12 @@ fun ProductionCompletionScreen(
                 }
                 Column {
                     Text("Streak de Precisão", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                    Text("12 receitas sem prejuízo", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(
+                        "$profitableStreak receitas sem prejuízo",
+                        modifier = Modifier.testTag("completion_profitable_streak"),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             }
         }
@@ -346,6 +379,7 @@ fun ProductionCompletionScreen(
             text = "CONTINUAR PARA O PAINEL",
             onClick = onContinue
         )
+    }
     }
 }
 

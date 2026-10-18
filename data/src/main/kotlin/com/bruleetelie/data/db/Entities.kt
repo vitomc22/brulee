@@ -179,3 +179,12 @@ data class PriceObservationEntity(
     val purchaseDateMillis: Long = System.currentTimeMillis(),
     val source: String = "MANUAL"
 )
+
+@Entity(tableName = "shopping_items")
+data class ShoppingItemEntity(
+    @PrimaryKey val id: String,
+    val name: String,
+    val quantity: String,
+    val isPurchased: Boolean = false,
+    val createdAtMillis: Long = System.currentTimeMillis()
+)

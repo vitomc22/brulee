@@ -4,6 +4,7 @@ import com.bruleetelie.data.datastore.OperatingSettingsDataStore
 import com.bruleetelie.data.db.BruleeDatabase
 import com.bruleetelie.data.db.IngredientEntity
 import com.bruleetelie.data.db.PriceObservationEntity
+import com.bruleetelie.data.db.ShoppingItemEntity
 import com.bruleetelie.domain.*
 import java.math.BigDecimal
 import java.util.UUID
@@ -49,6 +50,9 @@ class BruleeRepository(
 
     private val _priceObservations = MutableStateFlow<List<PriceObservationEntity>>(emptyList())
     val priceObservations: StateFlow<List<PriceObservationEntity>> = _priceObservations.asStateFlow()
+
+    private val _shoppingItems = MutableStateFlow<List<ShoppingItem>>(emptyList())
+    val shoppingItems: StateFlow<List<ShoppingItem>> = _shoppingItems.asStateFlow()
 
     init {
         if (database != null) {
@@ -137,6 +141,12 @@ class BruleeRepository(
         scope.launch {
             db.priceObservationDao().getAllObservations().collectLatest { observations ->
                 _priceObservations.value = observations
+            }
+        }
+
+        scope.launch {
+            db.shoppingItemDao().getAllItems().collectLatest { items ->
+                _shoppingItems.value = items.map { it.toDomain() }
             }
         }
     }
@@ -302,6 +312,32 @@ class BruleeRepository(
             scope.launch { db.priceObservationDao().insertObservation(obs) }
         }
         return obs
+    }
+
+    fun addShoppingItem(name: String, quantity: String): ShoppingItem? {
+        val cleanName = name.trim()
+        val cleanQuantity = quantity.trim()
+        if (cleanName.isEmpty() || cleanQuantity.isEmpty()) return null
+        val item = ShoppingItem(
+            id = "shopping-${UUID.randomUUID()}",
+            name = cleanName,
+            quantity = cleanQuantity
+        )
+        _shoppingItems.update { listOf(item) + it }
+        database?.let { db -> scope.launch { db.shoppingItemDao().insertItem(item.toEntity()) } }
+        return item
+    }
+
+    fun setShoppingItemPurchased(id: String, purchased: Boolean) {
+        _shoppingItems.update { items ->
+            items.map { if (it.id == id) it.copy(isPurchased = purchased) else it }
+        }
+        database?.let { db -> scope.launch { db.shoppingItemDao().updatePurchased(id, purchased) } }
+    }
+
+    fun deleteShoppingItem(id: String) {
+        _shoppingItems.update { items -> items.filterNot { it.id == id } }
+        database?.let { db -> scope.launch { db.shoppingItemDao().deleteItem(id) } }
     }
 
     private companion object {

@@ -138,4 +138,25 @@ class BruleeRepositoryTest {
         assertEquals(3000L, repo.settings.value.hourlyLaborRate.cents)
         assertEquals(BigDecimal("40.00"), repo.settings.value.defaultMarginPercent)
     }
+
+    @Test
+    fun `shopping list supports add check and delete`() {
+        val repo = BruleeRepository()
+        val item = repo.addShoppingItem("Chocolate", "2 kg")
+
+        assertNotNull(item)
+        assertEquals("Chocolate", repo.shoppingItems.value.single().name)
+        repo.setShoppingItemPurchased(item!!.id, true)
+        assertTrue(repo.shoppingItems.value.single().isPurchased)
+        repo.deleteShoppingItem(item.id)
+        assertTrue(repo.shoppingItems.value.isEmpty())
+    }
+
+    @Test
+    fun `shopping list rejects incomplete items`() {
+        val repo = BruleeRepository()
+        assertEquals(null, repo.addShoppingItem("", "2 kg"))
+        assertEquals(null, repo.addShoppingItem("Chocolate", " "))
+        assertTrue(repo.shoppingItems.value.isEmpty())
+    }
 }

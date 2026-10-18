@@ -181,3 +181,19 @@ fun SaleSnapshotEntity.toDomain(): SaleSnapshot {
         completedAtMillis = completedAtMillis
     )
 }
+
+fun ShoppingItem.toEntity(): ShoppingItemEntity = ShoppingItemEntity(
+    id = id,
+    name = name,
+    quantity = quantity,
+    isPurchased = isPurchased,
+    createdAtMillis = createdAtMillis
+)
+
+fun ShoppingItemEntity.toDomain(): ShoppingItem = ShoppingItem(
+    id = id,
+    name = name,
+    quantity = quantity,
+    isPurchased = isPurchased,
+    createdAtMillis = createdAtMillis
+)

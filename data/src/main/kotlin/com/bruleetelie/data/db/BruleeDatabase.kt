@@ -19,9 +19,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         ProductionOrderEntity::class,
         ProductionStepEntity::class,
         SaleSnapshotEntity::class,
-        PriceObservationEntity::class
+        PriceObservationEntity::class,
+        ShoppingItemEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(BruleeConverters::class)
@@ -32,12 +33,23 @@ abstract class BruleeDatabase : RoomDatabase() {
     abstract fun productionOrderDao(): ProductionOrderDao
     abstract fun saleSnapshotDao(): SaleSnapshotDao
     abstract fun priceObservationDao(): PriceObservationDao
+    abstract fun shoppingItemDao(): ShoppingItemDao
 
     companion object {
         private val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL(
                     "ALTER TABLE sale_snapshots ADD COLUMN activeProductionMinutes INTEGER NOT NULL DEFAULT 0"
+                )
+            }
+        }
+
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS shopping_items (" +
+                        "id TEXT NOT NULL PRIMARY KEY, name TEXT NOT NULL, quantity TEXT NOT NULL, " +
+                        "isPurchased INTEGER NOT NULL DEFAULT 0, createdAtMillis INTEGER NOT NULL)"
                 )
             }
         }
@@ -52,7 +64,7 @@ abstract class BruleeDatabase : RoomDatabase() {
                     BruleeDatabase::class.java,
                     "brulee_telie.db"
                 )
-                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                     .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
