@@ -22,6 +22,7 @@ kotlin {
 dependencies {
     implementation(project(":domain"))
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.mlkit.text.recognition)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
 }

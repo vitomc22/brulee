@@ -30,7 +30,10 @@ DATA: 15/10/2026
 TOTAL R$ 84,18"""
 
 @Composable
-fun OcrCaptureScreen(onProcessText: (String) -> Unit) {
+fun OcrCaptureScreen(
+    onProcessText: (String) -> Unit,
+    onScanRequested: () -> Unit = {}
+) {
     var rawText by remember { mutableStateOf(SAMPLE_RECEIPT_OCR_TEXT) }
 
     Column(
@@ -44,6 +47,12 @@ fun OcrCaptureScreen(onProcessText: (String) -> Unit) {
         Text(
             "Cole o texto reconhecido pelo scanner ou por um PDF para revisar os itens antes de atualizar preços.",
             style = MaterialTheme.typography.bodyMedium
+        )
+        TactilePrimaryButton(
+            text = "ESCANEAR NOTA",
+            enabled = true,
+            onClick = onScanRequested,
+            modifier = Modifier.testTag("ocr_scan_document")
         )
         OutlinedTextField(
             value = rawText,

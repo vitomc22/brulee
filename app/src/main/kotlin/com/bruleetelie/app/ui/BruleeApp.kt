@@ -15,10 +15,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.IntentSenderRequest
 import android.app.Activity
 import com.bruleetelie.app.widget.ProductionWidgetProvider
 import com.bruleetelie.app.backup.AppBackupManager
 import com.bruleetelie.app.analytics.AnalyticsJsonExporter
+import com.bruleetelie.app.documents.MlKitDocumentScannerGateway
 import com.bruleetelie.app.ui.screens.*
 import com.bruleetelie.app.ui.theme.*
 import com.bruleetelie.data.BruleeRepository
@@ -28,6 +30,7 @@ import com.bruleetelie.documents.DefaultDocumentGateway
 import com.bruleetelie.documents.ocr.ConfidenceLevel
 import com.bruleetelie.documents.ocr.ParsedReceiptItem
 import com.bruleetelie.documents.ocr.ReceiptParser
+import com.bruleetelie.documents.ocr.MlKitTextRecognitionGateway
 import com.bruleetelie.domain.CostComparisonResult
 import com.bruleetelie.domain.PricingEngine
 import com.bruleetelie.domain.ProductionOrder
@@ -62,6 +65,8 @@ fun BruleeApp() {
     }
     val documentGateway = remember { DefaultDocumentGateway() }
     val receiptParser = remember { ReceiptParser() }
+    val scannerGateway = remember { MlKitDocumentScannerGateway() }
+    val textRecognitionGateway = remember { MlKitTextRecognitionGateway() }
 
     val orders by repository.productionOrders.collectAsState()
     val sales by repository.completedSales.collectAsState()
@@ -117,6 +122,25 @@ fun BruleeApp() {
     var destination by remember { mutableStateOf(Destination.Production) }
     var activeFlow by remember { mutableStateOf<ActiveFlow>(ActiveFlow.None) }
     var ocrItems by remember { mutableStateOf<List<OcrItem>?>(null) }
+    val scannerLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartIntentSenderForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            coroutineScope.launch {
+                runCatching {
+                    val scan = scannerGateway.parseResult(result.data)
+                    require(scan.imageUris.isNotEmpty()) { "Nenhuma página de imagem foi capturada" }
+                    val recognized = scan.imageUris.mapIndexed { index, uri ->
+                        textRecognitionGateway.recognize(context, uri, index).text
+                    }.joinToString("\n")
+                    receiptParser.parse(recognized).items.mapIndexed { index, item ->
+                        item.toOcrItem(index + 1)
+                    }
+                }.onSuccess { ocrItems = it }
+                    .onFailure { snackbarHostState.showSnackbar("Falha ao ler documento: ${it.message}") }
+            }
+        }
+    }
 
     LaunchedEffect(orders, sales) {
         ProductionWidgetProvider.updateSnapshot(context, orders, sales)
@@ -236,6 +260,20 @@ fun BruleeApp() {
                                     onProcessText = { rawText ->
                                         ocrItems = receiptParser.parse(rawText).items.mapIndexed { index, item ->
                                             item.toOcrItem(index + 1)
+                                        }
+                                    },
+                                    onScanRequested = {
+                                        val activity = activityContext as? Activity
+                                        if (activity == null) {
+                                            coroutineScope.launch { snackbarHostState.showSnackbar("Câmera indisponível neste contexto") }
+                                        } else {
+                                            scannerGateway.createScanIntent(activity)
+                                                .addOnSuccessListener { intentSender ->
+                                                    scannerLauncher.launch(IntentSenderRequest.Builder(intentSender).build())
+                                                }
+                                                .addOnFailureListener { error ->
+                                                    coroutineScope.launch { snackbarHostState.showSnackbar("Scanner indisponível: ${error.message}") }
+                                                }
                                         }
                                     }
                                 )

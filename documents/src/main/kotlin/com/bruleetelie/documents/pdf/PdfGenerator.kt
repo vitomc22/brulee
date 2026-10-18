@@ -1,6 +1,9 @@
 package com.bruleetelie.documents.pdf
 
+import android.graphics.Paint
+import android.graphics.pdf.PdfDocument
 import com.bruleetelie.domain.Quote
+import java.io.File
 
 enum class PdfTemplateType { CUSTOMER, INTERNAL }
 
@@ -24,5 +27,27 @@ class DefaultPdfGenerator {
         appendLine("PACKAGING_COST=${quote.pricing.costs.packaging.toBigDecimal()}")
         appendLine("PROFIT=${quote.pricing.profit.toBigDecimal()}")
         appendLine("MARGIN_PERCENT=${quote.pricing.marginPercent}%")
+    }
+
+    /** Writes a real, shareable Android PDF while keeping the text representation for audits/tests. */
+    fun writePdf(quote: Quote, output: File, template: PdfTemplateType = PdfTemplateType.CUSTOMER) {
+        output.parentFile?.mkdirs()
+        val content = if (template == PdfTemplateType.CUSTOMER) {
+            buildCustomerPdfDocument(quote)
+        } else {
+            buildInternalPdfDocument(quote)
+        }
+        val document = PdfDocument()
+        try {
+            val page = document.startPage(PdfDocument.PageInfo.Builder(595, 842, 1).create())
+            val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply { textSize = 14f }
+            content.lineSequence().forEachIndexed { index, line ->
+                page.canvas.drawText(line, 40f, 60f + index * 24f, paint)
+            }
+            document.finishPage(page)
+            output.outputStream().use(document::writeTo)
+        } finally {
+            document.close()
+        }
     }
 }
