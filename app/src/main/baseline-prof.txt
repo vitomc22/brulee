@@ -1,0 +1,3 @@
+HSPLcom/bruleetelie/app/MainActivity;-><init>()V
+HSPLcom/bruleetelie/app/MainActivity;->onCreate(Landroid/os/Bundle;)V
+HSPLcom/bruleetelie/app/ui/BruleeAppKt;->BruleeApp(Landroidx/compose/runtime/Composer;I)V

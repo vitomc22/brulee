@@ -88,5 +88,7 @@ data class SaleSnapshot(
     val profit: Money,
     val marginPercent: BigDecimal,
     val completedAtFormatted: String,
-    val paymentStatus: PaymentStatus = PaymentStatus.Paid
+    val paymentStatus: PaymentStatus = PaymentStatus.Paid,
+    val activeProductionMinutes: Int = 0,
+    val completedAtMillis: Long = System.currentTimeMillis()
 )

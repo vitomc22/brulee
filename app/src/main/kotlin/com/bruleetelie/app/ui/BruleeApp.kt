@@ -13,6 +13,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import android.app.Activity
+import com.bruleetelie.app.backup.AppBackupManager
+import com.bruleetelie.app.analytics.AnalyticsJsonExporter
 import com.bruleetelie.app.ui.screens.*
 import com.bruleetelie.app.ui.theme.*
 import com.bruleetelie.data.BruleeRepository
@@ -34,7 +39,8 @@ private enum class Destination(val label: String, val icon: String) {
     Production("Produção", "▤"),
     Wizard("Novo Orçamento", "➕"),
     Finance("Finanças", "▣"),
-    Stock("Estoque", "📷")
+    Stock("Estoque", "📷"),
+    Backup("Backup", "↥")
 }
 
 private sealed interface ActiveFlow {
@@ -44,7 +50,8 @@ private sealed interface ActiveFlow {
 
 @Composable
 fun BruleeApp() {
-    val context = LocalContext.current.applicationContext
+    val activityContext = LocalContext.current
+    val context = activityContext.applicationContext
     val repository = remember(context) {
         val db = BruleeDatabase.getInstance(context)
         val ds = OperatingSettingsDataStore(context)
@@ -57,8 +64,51 @@ fun BruleeApp() {
     val sales by repository.completedSales.collectAsState()
     val settings by repository.settings.collectAsState()
     val ingredients by repository.ingredients.collectAsState()
+    val priceObservations by repository.priceObservations.collectAsState()
+    val quotes by repository.quotes.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
+    val backupManager = remember(context) { AppBackupManager(context) }
+    val exportBackup = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument("application/zip")
+    ) { uri ->
+        if (uri != null) coroutineScope.launch {
+            runCatching { backupManager.export(uri) }
+                .onSuccess { snackbarHostState.showSnackbar("Backup exportado com sucesso") }
+                .onFailure { snackbarHostState.showSnackbar("Falha ao exportar: ${it.message}") }
+        }
+    }
+    val restoreBackup = rememberLauncherForActivityResult(
+        ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        if (uri != null) coroutineScope.launch {
+            runCatching { backupManager.restore(uri) }
+                .onSuccess {
+                    snackbarHostState.showSnackbar("Backup restaurado; recarregando aplicativo")
+                    (activityContext as? Activity)?.recreate()
+                }
+                .onFailure { snackbarHostState.showSnackbar("Backup inválido: ${it.message}") }
+        }
+    }
+    val exportAnalytics = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument("application/json")
+    ) { uri ->
+        if (uri != null) coroutineScope.launch {
+            runCatching {
+                val json = AnalyticsJsonExporter.export(
+                    sales = sales,
+                    observations = priceObservations,
+                    ingredientNames = ingredients.associate { it.id to it.name }
+                )
+                context.contentResolver.openOutputStream(uri, "wt")?.bufferedWriter()?.use { it.write(json) }
+                    ?: error("Não foi possível abrir o arquivo")
+            }.onSuccess {
+                snackbarHostState.showSnackbar("Dados exportados para a interface Web")
+            }.onFailure {
+                snackbarHostState.showSnackbar("Falha ao exportar dados: ${it.message}")
+            }
+        }
+    }
 
     var destination by remember { mutableStateOf(Destination.Production) }
     var activeFlow by remember { mutableStateOf<ActiveFlow>(ActiveFlow.None) }
@@ -158,7 +208,12 @@ fun BruleeApp() {
                         Destination.Finance -> {
                             FinanceDashboardScreen(
                                 sales = sales,
-                                onExportPdf = { /* Export handled via DocumentGateway */ }
+                                quotes = quotes,
+                                priceObservations = priceObservations,
+                                ingredientNames = ingredients.associate { it.id to it.name },
+                                fixedCosts = settings.monthlyFixedCosts,
+                                revenueGoal = settings.monthlyRevenueGoal,
+                                onExportPdf = { exportAnalytics.launch("brulee-telie-analytics.json") }
                             )
                         }
 
@@ -200,6 +255,15 @@ fun BruleeApp() {
                                 }
                                 )
                             }
+                        }
+
+                        Destination.Backup -> {
+                            BackupScreen(
+                                settings = settings,
+                                onSettingsChanged = repository::updateSettings,
+                                onExport = { exportBackup.launch("brulee-telie-backup.zip") },
+                                onRestore = { restoreBackup.launch(arrayOf("application/zip", "application/octet-stream")) }
+                            )
                         }
                     }
                 }
@@ -274,6 +338,7 @@ private fun BruleeTopBar(destination: Destination) {
                         Destination.Wizard -> "Novo Orçamento"
                         Destination.Finance -> "Gestão Financeira"
                         Destination.Stock -> "Estoque & OCR"
+                        Destination.Backup -> "Backup"
                     },
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold

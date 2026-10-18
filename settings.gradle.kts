@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "BruleeTelie"
-include(":app", ":domain", ":data", ":documents")
+include(":app", ":domain", ":data", ":documents", ":benchmark")

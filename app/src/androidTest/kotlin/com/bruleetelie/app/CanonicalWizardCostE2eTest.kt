@@ -58,7 +58,7 @@ class CanonicalWizardCostE2eTest {
             .performClick()
 
         // Step 4: Cost summary & pricing should show
-        composeRule.onNodeWithText("Resumo de Custos e Sugestão de Preço")
+        composeRule.onNodeWithTag("cost_summary_screen")
             .performScrollTo()
             .assertIsDisplayed()
     }

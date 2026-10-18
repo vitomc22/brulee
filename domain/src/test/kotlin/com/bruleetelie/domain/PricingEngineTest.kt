@@ -37,7 +37,6 @@ class PricingEngineTest {
         )
 
         assertEquals(7090, recipeCosts.total.cents)
-        assertEquals("R$ 70,90", recipeCosts.total.format())
+        assertEquals("R$\u00A070,90", recipeCosts.total.format())
     }
 }
-

@@ -163,6 +163,7 @@ data class SaleSnapshotEntity(
     val marginPercent: String,
     val completedAtFormatted: String,
     val paymentStatus: String,
+    val activeProductionMinutes: Int = 0,
     val completedAtMillis: Long = System.currentTimeMillis()
 )
 

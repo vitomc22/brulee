@@ -350,7 +350,9 @@ private fun CostSummaryAndPricingView(
 ) {
     // Mascot Narrative Banner
     Surface(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag("cost_summary_screen"),
         color = BruleeSurfaceContainerLow,
         shape = RoundedCornerShape(24.dp)
     ) {

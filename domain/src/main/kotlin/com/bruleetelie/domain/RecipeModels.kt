@@ -20,7 +20,11 @@ data class OperatingSettings(
     val hourlyLaborRate: Money = Money.fromReais("25.00"),
     val gasCostPerHour: Money = Money.fromReais("3.20"),
     val electricityCostPerHour: Money = Money.fromReais("2.50"),
-    val defaultMarginPercent: BigDecimal = BigDecimal("35.00")
+    val defaultMarginPercent: BigDecimal = BigDecimal("35.00"),
+    val monthlyFixedCosts: Money = Money.Zero,
+    val monthlyRevenueGoal: Money = Money.Zero,
+    val soundsEnabled: Boolean = true,
+    val reducedMotion: Boolean = false
 )
 
 data class OperationalTimes(

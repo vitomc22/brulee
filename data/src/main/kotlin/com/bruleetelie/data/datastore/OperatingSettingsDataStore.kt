@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.bruleetelie.domain.Money
 import com.bruleetelie.domain.OperatingSettings
@@ -22,6 +23,10 @@ class OperatingSettingsDataStore(private val context: Context) {
         val GAS_COST_PER_HOUR_CENTS = longPreferencesKey("gas_cost_per_hour_cents")
         val ELECTRICITY_COST_PER_HOUR_CENTS = longPreferencesKey("electricity_cost_per_hour_cents")
         val DEFAULT_MARGIN_PERCENT = stringPreferencesKey("default_margin_percent")
+        val MONTHLY_FIXED_COSTS_CENTS = longPreferencesKey("monthly_fixed_costs_cents")
+        val MONTHLY_REVENUE_GOAL_CENTS = longPreferencesKey("monthly_revenue_goal_cents")
+        val SOUNDS_ENABLED = booleanPreferencesKey("sounds_enabled")
+        val REDUCED_MOTION = booleanPreferencesKey("reduced_motion")
     }
 
     val settingsFlow: Flow<OperatingSettings> = context.dataStore.data.map { prefs ->
@@ -34,7 +39,11 @@ class OperatingSettingsDataStore(private val context: Context) {
             hourlyLaborRate = Money(laborCents),
             gasCostPerHour = Money(gasCents),
             electricityCostPerHour = Money(elecCents),
-            defaultMarginPercent = BigDecimal(marginStr)
+            defaultMarginPercent = BigDecimal(marginStr),
+            monthlyFixedCosts = Money(prefs[Keys.MONTHLY_FIXED_COSTS_CENTS] ?: 0L),
+            monthlyRevenueGoal = Money(prefs[Keys.MONTHLY_REVENUE_GOAL_CENTS] ?: 0L),
+            soundsEnabled = prefs[Keys.SOUNDS_ENABLED] ?: true,
+            reducedMotion = prefs[Keys.REDUCED_MOTION] ?: false
         )
     }
 
@@ -44,6 +53,10 @@ class OperatingSettingsDataStore(private val context: Context) {
             prefs[Keys.GAS_COST_PER_HOUR_CENTS] = settings.gasCostPerHour.cents
             prefs[Keys.ELECTRICITY_COST_PER_HOUR_CENTS] = settings.electricityCostPerHour.cents
             prefs[Keys.DEFAULT_MARGIN_PERCENT] = settings.defaultMarginPercent.toPlainString()
+            prefs[Keys.MONTHLY_FIXED_COSTS_CENTS] = settings.monthlyFixedCosts.cents
+            prefs[Keys.MONTHLY_REVENUE_GOAL_CENTS] = settings.monthlyRevenueGoal.cents
+            prefs[Keys.SOUNDS_ENABLED] = settings.soundsEnabled
+            prefs[Keys.REDUCED_MOTION] = settings.reducedMotion
         }
     }
 }

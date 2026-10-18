@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Brûlée Telie — Análises</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div><span class="eyebrow">BRÛLÉE TELIE</span><h1>Painel financeiro</h1></div>
+    <label class="import">Importar dados <input id="import-file" type="file" accept="application/json"></label>
+  </header>
+  <nav aria-label="Seções">
+    <button data-view="dashboard" aria-current="page">Dashboard</button>
+    <button data-view="history">Histórico</button>
+    <button data-view="ranking">Ranking</button>
+    <button data-view="analysis">Análises</button>
+  </nav>
+  <main>
+    <section id="dashboard" class="view active" aria-labelledby="dashboard-title">
+      <h2 id="dashboard-title">Visão geral</h2>
+      <div id="metrics" class="metric-grid"></div>
+      <article class="panel"><h3>Receita e lucro</h3><svg id="revenue-chart" viewBox="0 0 720 240" role="img" aria-label="Gráfico de receita e lucro"></svg></article>
+    </section>
+    <section id="history" class="view" aria-labelledby="history-title">
+      <h2 id="history-title">Histórico de vendas</h2>
+      <div class="table-wrap"><table><thead><tr><th>Data</th><th>Produto</th><th>Receita</th><th>Custo real</th><th>Lucro</th></tr></thead><tbody id="history-body"></tbody></table></div>
+    </section>
+    <section id="ranking" class="view" aria-labelledby="ranking-title">
+      <h2 id="ranking-title">Ranking de receitas</h2><ol id="ranking-list" class="ranking"></ol>
+    </section>
+    <section id="analysis" class="view" aria-labelledby="analysis-title">
+      <h2 id="analysis-title">Análises</h2>
+      <div class="panel"><h3>Tendências de preço</h3><ul id="trend-list"></ul></div>
+      <div class="panel"><h3>Previsto × real</h3><div id="deviation-summary"></div></div>
+    </section>
+    <p id="empty" class="empty">Importe o JSON analítico exportado pelo aplicativo para começar.</p>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

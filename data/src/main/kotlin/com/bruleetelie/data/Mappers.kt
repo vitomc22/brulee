@@ -151,7 +151,9 @@ fun SaleSnapshot.toEntity(): SaleSnapshotEntity {
         profitCents = profit.cents,
         marginPercent = marginPercent.toPlainString(),
         completedAtFormatted = completedAtFormatted,
-        paymentStatus = paymentStatus.name
+        paymentStatus = paymentStatus.name,
+        activeProductionMinutes = activeProductionMinutes,
+        completedAtMillis = completedAtMillis
     )
 }
 
@@ -174,6 +176,8 @@ fun SaleSnapshotEntity.toDomain(): SaleSnapshot {
         profit = Money(profitCents),
         marginPercent = BigDecimal(marginPercent),
         completedAtFormatted = completedAtFormatted,
-        paymentStatus = status
+        paymentStatus = status,
+        activeProductionMinutes = activeProductionMinutes,
+        completedAtMillis = completedAtMillis
     )
 }

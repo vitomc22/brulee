@@ -15,21 +15,82 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.testTag
 import com.bruleetelie.app.ui.components.MetricStatCard
 import com.bruleetelie.app.ui.components.StatusPill
 import com.bruleetelie.app.ui.theme.*
+import com.bruleetelie.data.db.PriceObservationEntity
+import com.bruleetelie.domain.FinancialAnalysisEngine
+import com.bruleetelie.domain.Money
+import com.bruleetelie.domain.Quote
+import com.bruleetelie.domain.QuoteStatus
 import com.bruleetelie.domain.SaleSnapshot
+import java.math.BigDecimal
+import java.math.RoundingMode
+import java.util.concurrent.TimeUnit
 
 @Composable
 fun FinanceDashboardScreen(
     sales: List<SaleSnapshot>,
+    quotes: List<Quote>,
+    priceObservations: List<PriceObservationEntity>,
+    ingredientNames: Map<String, String>,
+    fixedCosts: Money = Money.Zero,
+    revenueGoal: Money = Money.Zero,
     onExportPdf: () -> Unit
 ) {
     var selectedFilter by remember { mutableStateOf("Este mês") }
+    val now = System.currentTimeMillis()
+    val cutoff = if (selectedFilter == "30 dias") {
+        now - TimeUnit.DAYS.toMillis(30)
+    } else {
+        val calendar = java.util.Calendar.getInstance().apply {
+            set(java.util.Calendar.DAY_OF_MONTH, 1)
+            set(java.util.Calendar.HOUR_OF_DAY, 0)
+            set(java.util.Calendar.MINUTE, 0)
+            set(java.util.Calendar.SECOND, 0)
+            set(java.util.Calendar.MILLISECOND, 0)
+        }
+        calendar.timeInMillis
+    }
+    val filteredSales = sales.filter { it.completedAtMillis >= cutoff }
+    val activeHours = filteredSales.sumOf { it.activeProductionMinutes }
+        .toBigDecimal()
+        .divide(BigDecimal(60), 4, RoundingMode.HALF_EVEN)
+    val eligibleQuotes = quotes.count { it.status != QuoteStatus.Draft }
+    val approvedQuotes = quotes.count {
+        it.status == QuoteStatus.Approved || it.status == QuoteStatus.ConvertedToSale
+    }
+    val metrics = FinancialAnalysisEngine.calculateSummary(
+        sales = filteredSales,
+        totalProductionHours = activeHours,
+        approvedQuotesCount = approvedQuotes,
+        totalEligibleQuotesCount = eligibleQuotes
+    )
+    val breakEven = FinancialAnalysisEngine.calculateBreakEven(
+        fixedCosts = fixedCosts,
+        totalRevenue = metrics.totalRevenue,
+        totalVariableCosts = metrics.totalCost
+    )
+    val rankings = filteredSales.sortedWith(
+        compareByDescending<SaleSnapshot> { it.profit.cents }.thenBy { it.productName }
+    )
+    val priceAlerts = priceObservations
+        .groupBy { it.ingredientId }
+        .mapNotNull { (ingredientId, observations) ->
+            val lastTwo = observations.sortedByDescending { it.purchaseDateMillis }.take(2)
+            if (lastTwo.size < 2) null else FinancialAnalysisEngine.analyzePriceVariation(
+                ingredientName = ingredientNames[ingredientId] ?: ingredientId,
+                oldPrice = Money(lastTwo[1].normalizedUnitPriceCents),
+                newPrice = Money(lastTwo[0].normalizedUnitPriceCents)
+            )
+        }
+        .sortedByDescending { it.variationPercent }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .testTag("finance_dashboard")
             .verticalScroll(rememberScrollState())
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -80,16 +141,33 @@ fun FinanceDashboardScreen(
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    "R$ 8.420,00",
+                    metrics.totalRevenue.format(),
+                    modifier = Modifier.testTag("finance_revenue"),
                     style = MaterialTheme.typography.displaySmall,
                     fontWeight = FontWeight.Bold,
                     color = BruleePrimary
                 )
                 Text(
-                    "+18% comparado a Setembro (R$ 7.135,00)",
+                    "${metrics.salesCount} vendas concluídas no período",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+            }
+        }
+
+        if (revenueGoal.cents > 0L) {
+            val goalProgress = (metrics.totalRevenue.cents.toFloat() / revenueGoal.cents.toFloat())
+                .coerceIn(0f, 1f)
+            Surface(
+                modifier = Modifier.fillMaxWidth().testTag("finance_revenue_goal"),
+                color = BruleeSurfaceContainerLowest,
+                shape = RoundedCornerShape(20.dp)
+            ) {
+                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text("Meta mensal", fontWeight = FontWeight.Bold)
+                    LinearProgressIndicator(progress = { goalProgress }, modifier = Modifier.fillMaxWidth())
+                    Text("${metrics.totalRevenue.format()} de ${revenueGoal.format()}")
+                }
             }
         }
 
@@ -101,20 +179,61 @@ fun FinanceDashboardScreen(
             MetricStatCard(
                 icon = "↗",
                 label = "Lucro líquido",
-                value = "R$ 3.190,00",
+                value = metrics.totalProfit.format(),
                 modifier = Modifier.weight(1f),
                 iconBackground = BruleePrimaryFixed
             )
             MetricStatCard(
                 icon = "👩‍🍳",
-                label = "Mão de obra",
-                value = "R$ 1.750,00",
+                label = "Custo total",
+                value = metrics.totalCost.format(),
+                modifier = Modifier.weight(1f),
+                iconBackground = BruleeSecondaryFixed
+            )
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            MetricStatCard(
+                icon = "◎",
+                label = "Ticket médio",
+                value = metrics.averageTicket.format(),
+                modifier = Modifier.weight(1f),
+                iconBackground = BruleePrimaryFixed
+            )
+            MetricStatCard(
+                icon = "%",
+                label = "Conversão",
+                value = "${metrics.conversionRatePercent.stripTrailingZeros().toPlainString()}%",
+                modifier = Modifier.weight(1f),
+                iconBackground = BruleeSecondaryFixed
+            )
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            MetricStatCard(
+                icon = "⏱",
+                label = "Lucro/hora",
+                value = if (activeHours.signum() == 0) "Sem horas" else metrics.profitPerHour.format(),
+                modifier = Modifier.weight(1f),
+                iconBackground = BruleePrimaryFixed
+            )
+            MetricStatCard(
+                icon = "≋",
+                label = "Ponto de equilíbrio",
+                value = if (fixedCosts == Money.Zero) "Não configurado" else breakEven.breakEvenRevenue.format(),
                 modifier = Modifier.weight(1f),
                 iconBackground = BruleeSecondaryFixed
             )
         }
 
         // Smart Reajuste Alert
+        val primaryAlert = priceAlerts.firstOrNull { it.isIncrease }
         Surface(
             modifier = Modifier.fillMaxWidth(),
             color = Color(0xFFFFEBC6),
@@ -131,23 +250,27 @@ fun FinanceDashboardScreen(
                 ) {
                     Text("⚠", color = BruleeSecondary)
                     Text(
-                        "Alerta: reajuste sugerido",
+                        if (primaryAlert == null) "Preços dos insumos estáveis" else "Alerta: reajuste sugerido",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = BruleeOnSecondaryContainer
                     )
                 }
                 Text(
-                    "Macaron Francês de Pistache teve impacto de 32% no quilo da farinha de amêndoas nos últimos 30 dias.",
+                    if (primaryAlert == null) {
+                        "Cadastre ao menos duas compras do mesmo ingrediente para acompanhar tendências."
+                    } else {
+                        "${primaryAlert.ingredientName} subiu ${primaryAlert.variationPercent.stripTrailingZeros().toPlainString()}% entre as duas últimas compras."
+                    },
                     style = MaterialTheme.typography.bodyMedium,
                     color = BruleeOnSecondaryContainer
                 )
-                Button(
-                    onClick = {},
-                    colors = ButtonDefaults.buttonColors(containerColor = BruleeSecondary),
-                    shape = CircleShape
-                ) {
-                    Text("Aplicar Preço Sugerido", fontWeight = FontWeight.Bold)
+                if (primaryAlert != null) {
+                    Text(
+                        "${primaryAlert.oldPrice.format()} → ${primaryAlert.newPrice.format()}",
+                        fontWeight = FontWeight.Bold,
+                        color = BruleeOnSecondaryContainer
+                    )
                 }
             }
         }
@@ -159,9 +282,22 @@ fun FinanceDashboardScreen(
             fontWeight = FontWeight.Bold
         )
 
-        ProfitabilityRankingRow("1", "Brigadeiro Crème Brûlée", "71,8%", "R$ 107,60")
-        ProfitabilityRankingRow("2", "Bolo Nozes & Baba de Moça", "62,7%", "R$ 137,90")
-        ProfitabilityRankingRow("3", "Caixa Telie Degustação", "61,1%", "R$ 41,60")
+        if (rankings.isEmpty()) {
+            Text(
+                "Nenhuma venda concluída neste período.",
+                modifier = Modifier.testTag("finance_empty_state"),
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        } else {
+            rankings.take(10).forEachIndexed { index, sale ->
+                ProfitabilityRankingRow(
+                    rank = (index + 1).toString(),
+                    name = sale.productName,
+                    margin = "${sale.marginPercent.stripTrailingZeros().toPlainString()}%",
+                    profit = sale.profit.format()
+                )
+            }
+        }
 
         Spacer(Modifier.height(8.dp))
 
@@ -179,7 +315,7 @@ fun FinanceDashboardScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text("📄")
-                Text("Exportar Relatório PDF", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
+                Text("Exportar dados para Web", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
             }
         }
     }
@@ -222,6 +358,10 @@ private fun FinanceDashboardScreenPreview() {
     BruleeTheme {
         FinanceDashboardScreen(
             sales = emptyList(),
+            quotes = emptyList(),
+            priceObservations = emptyList(),
+            ingredientNames = emptyMap(),
+            revenueGoal = Money.Zero,
             onExportPdf = {}
         )
     }

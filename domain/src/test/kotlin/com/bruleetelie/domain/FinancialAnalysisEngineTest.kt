@@ -48,8 +48,8 @@ class FinancialAnalysisEngineTest {
         val be = FinancialAnalysisEngine.calculateBreakEven(fixed, rev, varCost)
         assertEquals(fixed, be.fixedCosts)
         // Contribution margin = 3000 / 5000 = 60% (0.6)
-        // Break-even revenue = 1000 / 0.6 = 1667
-        assertEquals(Money.fromReais("1667.00"), be.breakEvenRevenue)
+        // Break-even revenue = 1000 / 0.6 = 1666.67 (rounded up to cents)
+        assertEquals(Money.fromReais("1666.67"), be.breakEvenRevenue)
     }
 
     @Test
@@ -62,5 +62,37 @@ class FinancialAnalysisEngineTest {
         assertEquals("Chocolate", alert.ingredientName)
         assertEquals(true, alert.isIncrease)
         assertEquals(BigDecimal("20.00"), alert.variationPercent)
+    }
+
+    @Test
+    fun `large sales history remains exact`() {
+        val sales = (1..10_000).map { index ->
+            SaleSnapshot(
+                id = "sale-$index",
+                orderId = "order-$index",
+                quoteCode = "#$index",
+                customerName = "Cliente $index",
+                productName = "Receita ${index % 50}",
+                salePrice = Money(10_000),
+                estimatedCost = Money(4_000),
+                actualCost = Money(4_500),
+                profit = Money(5_500),
+                marginPercent = BigDecimal("55.00"),
+                completedAtFormatted = "Hoje",
+                activeProductionMinutes = 60
+            )
+        }
+
+        val summary = FinancialAnalysisEngine.calculateSummary(
+            sales = sales,
+            totalProductionHours = BigDecimal("10000"),
+            approvedQuotesCount = 10_000,
+            totalEligibleQuotesCount = 10_000
+        )
+
+        assertEquals(Money(100_000_000), summary.totalRevenue)
+        assertEquals(Money(45_000_000), summary.totalCost)
+        assertEquals(Money(55_000_000), summary.totalProfit)
+        assertEquals(Money(5_500), summary.profitPerHour)
     }
 }
