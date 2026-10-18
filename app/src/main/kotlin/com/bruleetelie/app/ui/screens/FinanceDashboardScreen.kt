@@ -85,6 +85,7 @@ fun FinanceDashboardScreen(
                 newPrice = Money(lastTwo[0].normalizedUnitPriceCents)
             )
         }
+        .filter { it.variationPercent >= BigDecimal("10.00") }
         .sortedByDescending { it.variationPercent }
 
     Column(
@@ -108,6 +109,7 @@ fun FinanceDashboardScreen(
         // Filter chips
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             FilterChip(
+                modifier = Modifier.testTag("finance_filter_month"),
                 selected = selectedFilter == "Este mês",
                 onClick = { selectedFilter = "Este mês" },
                 label = { Text("Este mês (Outubro)") },
@@ -117,6 +119,7 @@ fun FinanceDashboardScreen(
                 )
             )
             FilterChip(
+                modifier = Modifier.testTag("finance_filter_30_days"),
                 selected = selectedFilter == "30 dias",
                 onClick = { selectedFilter = "30 dias" },
                 label = { Text("Últimos 30 dias") }
@@ -125,7 +128,7 @@ fun FinanceDashboardScreen(
 
         // Faturamento Total Hero Card
         Surface(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().testTag("finance_price_trend_alert"),
             color = BruleeSurfaceContainerLowest,
             shape = RoundedCornerShape(28.dp),
             shadowElevation = 2.dp
@@ -251,6 +254,7 @@ fun FinanceDashboardScreen(
                     Text("⚠", color = BruleeSecondary)
                     Text(
                         if (primaryAlert == null) "Preços dos insumos estáveis" else "Alerta: reajuste sugerido",
+                        modifier = Modifier.testTag("finance_price_trend_status"),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = BruleeOnSecondaryContainer
