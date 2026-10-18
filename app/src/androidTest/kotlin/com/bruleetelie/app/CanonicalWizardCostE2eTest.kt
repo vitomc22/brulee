@@ -3,6 +3,7 @@ package com.bruleetelie.app
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
@@ -68,6 +69,30 @@ class CanonicalWizardCostE2eTest {
 
         // Step 4: Cost summary & pricing should show
         composeRule.onNodeWithTag("cost_summary_screen")
+            .performScrollTo()
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun wizardCanNavigateBackAndRemoveIngredient() {
+        composeRule.onNodeWithTag("nav_wizard").performClick()
+        composeRule.onNodeWithTag("recipe_continue").performClick()
+
+        composeRule.onNodeWithTag("ingredient_name").performTextInput("Ingrediente removível")
+        composeRule.onNodeWithTag("ingredient_package_quantity").performTextInput("100")
+        composeRule.onNodeWithTag("ingredient_package_price").performTextInput("10,00")
+        composeRule.onNodeWithTag("ingredient_used_quantity").performTextInput("10")
+        composeRule.onNodeWithTag("ingredient_add").performClick()
+
+        composeRule.onAllNodesWithTag("ingredient_remove")[3].performClick()
+        composeRule.onNodeWithTag("ingredients_continue")
+            .performScrollTo()
+            .performClick()
+        composeRule.onNodeWithTag("operational_prep_minutes")
+            .performScrollTo()
+            .assertIsDisplayed()
+        composeRule.onNodeWithTag("wizard_back").performClick()
+        composeRule.onNodeWithTag("ingredient_name")
             .performScrollTo()
             .assertIsDisplayed()
     }

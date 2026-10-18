@@ -135,6 +135,20 @@ fun NewQuoteWizardScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        if (step != WizardStep.RecipeName && step != WizardStep.SentSuccess) {
+            TextButton(
+                onClick = {
+                    step = when (step) {
+                        WizardStep.Ingredients -> WizardStep.RecipeName
+                        WizardStep.OperationalCosts -> WizardStep.Ingredients
+                        WizardStep.CostSummaryAndPricing -> WizardStep.OperationalCosts
+                        WizardStep.CustomerAndQuote -> WizardStep.CostSummaryAndPricing
+                        else -> step
+                    }
+                },
+                modifier = Modifier.testTag("wizard_back")
+            ) { Text("← Voltar") }
+        }
         // Progress bar (Duolingo style)
         if (step != WizardStep.SentSuccess) {
             Surface(
@@ -271,6 +285,10 @@ fun NewQuoteWizardScreen(
                                 fontWeight = FontWeight.Bold,
                                 color = BruleePrimary
                             )
+                            TextButton(
+                                onClick = { ingredients.remove(item) },
+                                modifier = Modifier.testTag("ingredient_remove")
+                            ) { Text("Excluir") }
                         }
                     }
                 }
