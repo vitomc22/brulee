@@ -50,6 +50,7 @@ class QuoteFlowE2eTest {
         composeRule.onNodeWithTag("quote_advance")
             .performScrollTo()
             .performClick()
+        composeRule.onNodeWithText("Passo 5 de 5").performScrollTo().assertIsDisplayed()
 
         composeRule.onNodeWithTag("customer_name")
             .performTextClearance()

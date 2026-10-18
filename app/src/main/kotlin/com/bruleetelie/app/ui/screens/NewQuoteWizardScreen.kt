@@ -121,11 +121,11 @@ fun NewQuoteWizardScreen(
 
     val currentStepNumber = when (step) {
         WizardStep.RecipeName -> 1
-        WizardStep.Ingredients -> 4
-        WizardStep.OperationalCosts -> 7
-        WizardStep.CostSummaryAndPricing -> 9
-        WizardStep.CustomerAndQuote -> 10
-        WizardStep.SentSuccess -> 10
+        WizardStep.Ingredients -> 2
+        WizardStep.OperationalCosts -> 3
+        WizardStep.CostSummaryAndPricing -> 4
+        WizardStep.CustomerAndQuote -> 5
+        WizardStep.SentSuccess -> 5
     }
 
     Column(
@@ -159,7 +159,7 @@ fun NewQuoteWizardScreen(
             ) {
                 StepProgressBar(
                     currentStep = currentStepNumber,
-                    totalSteps = 10,
+                    totalSteps = 5,
                     modifier = Modifier.padding(14.dp)
                 )
             }

@@ -21,6 +21,7 @@ class CanonicalWizardCostE2eTest {
     fun testCanonicalCostWizardFlow() {
         // Open new quote wizard
         composeRule.onNodeWithTag("nav_wizard").performClick()
+        composeRule.onNodeWithText("Passo 1 de 5").performScrollTo().assertIsDisplayed()
 
         // Step 1: Recipe name
         composeRule.onNodeWithTag("recipe_name")
@@ -28,6 +29,7 @@ class CanonicalWizardCostE2eTest {
         composeRule.onNodeWithTag("recipe_name")
             .performTextInput("Bolo Canônico E2E")
         composeRule.onNodeWithTag("recipe_continue").performClick()
+        composeRule.onNodeWithText("Passo 2 de 5").performScrollTo().assertIsDisplayed()
 
         // Step 2: Add ingredients (Chocolate, Creme, Açúcar)
         // Chocolate: 2000g, R$ 80.00, used 350g
@@ -52,6 +54,7 @@ class CanonicalWizardCostE2eTest {
         composeRule.onNodeWithTag("ingredients_continue")
             .performScrollTo()
             .performClick()
+        composeRule.onNodeWithText("Passo 3 de 5").performScrollTo().assertIsDisplayed()
 
         // Step 3: Operational costs / times
         composeRule.onNodeWithTag("operational_prep_minutes").performTextClearance()
@@ -71,6 +74,7 @@ class CanonicalWizardCostE2eTest {
         composeRule.onNodeWithTag("cost_summary_screen")
             .performScrollTo()
             .assertIsDisplayed()
+        composeRule.onNodeWithText("Passo 4 de 5").performScrollTo().assertIsDisplayed()
     }
 
     @Test
