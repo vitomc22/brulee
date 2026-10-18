@@ -159,4 +159,17 @@ class CanonicalWizardCostE2eTest {
         composeRule.onNodeWithTag("ingredient_name").performTextInput("Ingrediente sem preço")
         composeRule.onNodeWithTag("ingredient_validation").assertIsDisplayed()
     }
+
+    @Test
+    fun cost030_offlineCalculationReachesStableSummary() {
+        composeRule.onNodeWithTag("nav_wizard").performClick()
+        composeRule.onNodeWithTag("recipe_continue").performClick()
+        composeRule.onNodeWithTag("ingredients_continue").performScrollTo().performClick()
+        composeRule.onNodeWithTag("costs_calculate").performScrollTo().performClick()
+        composeRule.onNodeWithTag("cost_summary_screen")
+            .performScrollTo()
+            .assertIsDisplayed()
+        composeRule.onNodeWithText("NaN").assertDoesNotExist()
+        composeRule.onNodeWithText("Infinity").assertDoesNotExist()
+    }
 }
