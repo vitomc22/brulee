@@ -10,10 +10,15 @@ import java.io.FileOutputStream
 /** Renders one PDF page at a time so large receipts do not exhaust memory. */
 class PdfPageRenderer {
     /** Renders pages to private temporary JPEG files for downstream OCR. */
-    fun renderToFiles(context: Context, uri: Uri, directory: File): List<Uri> {
+    fun renderToFiles(
+        context: Context,
+        uri: Uri,
+        directory: File,
+        shouldContinue: () -> Boolean = { true }
+    ): List<Uri> {
         require(directory.mkdirs() || directory.isDirectory) { "Não foi possível criar o cache do PDF" }
         val files = mutableListOf<Uri>()
-        renderAll(context, uri) { page, bitmap ->
+        renderAll(context, uri, shouldContinue) { page, bitmap ->
             val file = File(directory, "page-${page + 1}.jpg")
             FileOutputStream(file).use { output ->
                 check(bitmap.compress(Bitmap.CompressFormat.JPEG, 92, output)) {
@@ -25,11 +30,17 @@ class PdfPageRenderer {
         return files
     }
 
-    fun renderAll(context: Context, uri: Uri, onPage: (page: Int, bitmap: Bitmap) -> Unit) {
+    fun renderAll(
+        context: Context,
+        uri: Uri,
+        shouldContinue: () -> Boolean = { true },
+        onPage: (page: Int, bitmap: Bitmap) -> Unit
+    ) {
         context.contentResolver.openFileDescriptor(uri, "r").use { descriptor ->
             requireNotNull(descriptor) { "Não foi possível abrir o PDF" }
             PdfRenderer(descriptor).use { renderer ->
                 for (index in 0 until renderer.pageCount) {
+                    check(shouldContinue()) { "Renderização do PDF cancelada" }
                     renderer.openPage(index).use { page ->
                         val width = (page.width * 2).coerceAtMost(2400)
                         val height = (page.height * width / page.width).coerceAtMost(3200)

@@ -48,7 +48,7 @@ jobs:
           arch: x86_64
           profile: Nexus 6
           system-image: google_apis_playstore_ps16k
-          script: ./gradlew :app:connectedDebugAndroidTest :data:connectedDebugAndroidTest --console=plain
+          script: ./gradlew :app:connectedDebugAndroidTest :data:connectedDebugAndroidTest :documents:connectedDebugAndroidTest --console=plain
       - name: Run macrobenchmark and baseline profile checks
         uses: reactivecircus/android-emulator-runner@v2
         with:

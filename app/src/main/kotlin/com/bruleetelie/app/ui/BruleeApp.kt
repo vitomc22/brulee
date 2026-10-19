@@ -9,6 +9,7 @@ import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
 import androidx.compose.runtime.*
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -171,11 +172,11 @@ fun BruleeApp() {
         ProductionWidgetProvider.updateSnapshot(context, orders, sales)
     }
 
-    val navBackStack = remember { mutableStateListOf<Any>(uiState.destination) }
+    val navBackStack = rememberSaveable { mutableStateListOf(uiState.destination.name) }
     LaunchedEffect(uiState.destination, uiState.activeFlow) {
-        if (uiState.activeFlow == ActiveFlow.None && navBackStack.lastOrNull() != uiState.destination) {
+        if (uiState.activeFlow == ActiveFlow.None && navBackStack.lastOrNull() != uiState.destination.name) {
             navBackStack.clear()
-            navBackStack.add(uiState.destination)
+            navBackStack.add(uiState.destination.name)
         }
     }
 
@@ -184,7 +185,9 @@ fun BruleeApp() {
         onBack = {
             if (navBackStack.size > 1) {
                 navBackStack.removeLastOrNull()
-                (navBackStack.lastOrNull() as? Destination)?.let(appViewModel::navigate)
+                navBackStack.lastOrNull()
+                    ?.let { name -> Destination.entries.firstOrNull { it.name == name } }
+                    ?.let(appViewModel::navigate)
             }
         },
         entryProvider = { key ->
@@ -192,7 +195,11 @@ fun BruleeApp() {
         Scaffold(
             containerColor = MaterialTheme.colorScheme.surface,
             snackbarHost = { SnackbarHost(snackbarHostState) },
-            topBar = { BruleeTopBar((key as? Destination) ?: uiState.destination) },
+            topBar = {
+                BruleeTopBar(
+                    Destination.entries.firstOrNull { it.name == key } ?: uiState.destination
+                )
+            },
             bottomBar = {
                 if (uiState.activeFlow == ActiveFlow.None) {
                     if (isMediumLayout || isExpandedLayout) {
