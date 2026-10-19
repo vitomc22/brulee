@@ -1,0 +1,80 @@
+benchmark/build/intermediates/merged_res_blame_folder/debug/mergeDebugResources/out/multi-v2/values-ta.json
+benchmark/build/intermediates/merged_res_blame_folder/debug/mergeDebugResources/out/multi-v2/values-te.json
+benchmark/build/intermediates/merged_res_blame_folder/debug/mergeDebugResources/out/multi-v2/values-th.json
+benchmark/build/intermediates/merged_res_blame_folder/debug/mergeDebugResources/out/multi-v2/values-tl.json
+benchmark/build/intermediates/merged_res_blame_folder/debug/mergeDebugResources/out/multi-v2/values-tr.json
+benchmark/build/intermediates/merged_res_blame_folder/debug/mergeDebugResources/out/multi-v2/values-uk.json
+benchmark/build/intermediates/merged_res_blame_folder/debug/mergeDebugResources/out/multi-v2/values-ur.json
+benchmark/build/intermediates/merged_res_blame_folder/debug/mergeDebugResources/out/multi-v2/values-uz.json
+benchmark/build/intermediates/merged_res_blame_folder/debug/mergeDebugResources/out/multi-v2/values-v16.json
+benchmark/build/intermediates/merged_res_blame_folder/debug/mergeDebugResources/out/multi-v2/values-v18.json
+benchmark/build/intermediates/merged_res_blame_folder/debug/mergeDebugResources/out/multi-v2/values-v21.json
+benchmark/build/intermediates/merged_res_blame_folder/debug/mergeDebugResources/out/multi-v2/values-v28.json
+benchmark/build/intermediates/merged_res_blame_folder/debug/mergeDebugResources/out/multi-v2/values-vi.json
+benchmark/build/intermediates/merged_res_blame_folder/debug/mergeDebugResources/out/multi-v2/values-zh-rCN.json
+benchmark/build/intermediates/merged_res_blame_folder/debug/mergeDebugResources/out/multi-v2/values-zh-rHK.json
+benchmark/build/intermediates/merged_res_blame_folder/debug/mergeDebugResources/out/multi-v2/values-zh-rTW.json
+benchmark/build/intermediates/merged_res_blame_folder/debug/mergeDebugResources/out/multi-v2/values-zu.json
+benchmark/build/intermediates/merged_res_blame_folder/debug/mergeDebugResources/out/multi-v2/values.json
+benchmark/build/intermediates/nested_resources_validation_report/benchmark/generateBenchmarkResources/nestedResourcesValidationReport.txt
+benchmark/build/intermediates/nested_resources_validation_report/debug/generateDebugResources/nestedResourcesValidationReport.txt
+benchmark/build/intermediates/packaged_manifests/benchmark/processBenchmarkManifest/output-metadata.json
+benchmark/build/intermediates/packaged_manifests/debug/processDebugManifest/output-metadata.json
+benchmark/build/intermediates/runtime_symbol_list/benchmark/processBenchmarkResources/R.txt
+benchmark/build/intermediates/runtime_symbol_list/debug/processDebugResources/R.txt
+benchmark/build/intermediates/signing_config_versions/benchmark/writeBenchmarkSigningConfigVersions/signing-config-versions.json
+benchmark/build/intermediates/signing_config_versions/debug/writeDebugSigningConfigVersions/signing-config-versions.json
+benchmark/build/intermediates/source_set_path_map/benchmark/mapBenchmarkSourceSetPaths/file-map.txt
+benchmark/build/intermediates/source_set_path_map/debug/mapDebugSourceSetPaths/file-map.txt
+benchmark/build/intermediates/stable_resource_ids_file/benchmark/processBenchmarkResources/stableIds.txt
+benchmark/build/intermediates/stable_resource_ids_file/debug/processDebugResources/stableIds.txt
+benchmark/build/intermediates/symbol_list_with_package_name/benchmark/generateBenchmarkRFile/package-aware-r.txt
+benchmark/build/intermediates/symbol_list_with_package_name/benchmark/processBenchmarkResources/package-aware-r.txt
+benchmark/build/intermediates/symbol_list_with_package_name/debug/processDebugResources/package-aware-r.txt
+benchmark/build/outputs/androidTest-results/connected/benchmark/Medium_Phone(AVD) - 17/aapt.1.ok.txt
+benchmark/build/outputs/androidTest-results/connected/benchmark/Medium_Phone(AVD) - 17/aapt.2.ok.txt
+benchmark/build/outputs/androidTest-results/connected/benchmark/Medium_Phone(AVD) - 17/logcat-com.bruleetelie.benchmark.StartupBenchmark-coldStartupAndFinanceScroll.txt
+benchmark/build/outputs/androidTest-results/connected/benchmark/Medium_Phone(AVD) - 17/logcat-com.bruleetelie.benchmark.StartupBenchmark-coldStartupAndProductionQueue.txt
+benchmark/build/outputs/androidTest-results/connected/benchmark/Medium_Phone(AVD) - 17/logcat-com.bruleetelie.benchmark.StartupBenchmark-coldStartupAndQuoteWizard.txt
+benchmark/build/outputs/androidTest-results/connected/benchmark/Medium_Phone(AVD) - 17/logcat-com.bruleetelie.benchmark.StartupBenchmark-coldStartupAndShopping.txt
+benchmark/build/outputs/androidTest-results/connected/benchmark/Medium_Phone(AVD) - 17/logcat-com.bruleetelie.benchmark.StartupBenchmark-coldStartupAndStock.txt
+benchmark/build/outputs/androidTest-results/connected/benchmark/test-result-exit-code.txt
+benchmark/build/outputs/androidTest-results/connected/debug/Small_Phone(AVD) - 17/aapt.1.ok.txt
+benchmark/build/outputs/androidTest-results/connected/debug/Small_Phone(AVD) - 17/aapt.2.ok.txt
+benchmark/build/outputs/androidTest-results/connected/debug/Small_Phone(AVD) - 17/logcat-com.bruleetelie.app.BackupBlockE2eTest-initializationError.txt
+benchmark/build/outputs/androidTest-results/connected/debug/Small_Phone(AVD) - 17/logcat-com.bruleetelie.app.CanonicalWizardCostE2eTest-initializationError.txt
+benchmark/build/outputs/androidTest-results/connected/debug/Small_Phone(AVD) - 17/logcat-com.bruleetelie.app.CostScenarioIndividualE2eTest-initializationError.txt
+benchmark/build/outputs/androidTest-results/connected/debug/Small_Phone(AVD) - 17/logcat-com.bruleetelie.app.PriceScenarioIndividualE2eTest-initializationError.txt
+benchmark/build/outputs/apk/benchmark/output-metadata.json
+benchmark/build/outputs/apk/debug/output-metadata.json
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/StartupBenchmark_coldStartupAndFinanceScroll_iter000_2026-10-19-10-30-11.perfetto-trace
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/StartupBenchmark_coldStartupAndFinanceScroll_iter001_2026-10-19-10-30-19.perfetto-trace
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/StartupBenchmark_coldStartupAndFinanceScroll_iter002_2026-10-19-10-30-26.perfetto-trace
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/StartupBenchmark_coldStartupAndFinanceScroll_iter003_2026-10-19-10-30-34.perfetto-trace
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/StartupBenchmark_coldStartupAndFinanceScroll_iter004_2026-10-19-10-30-41.perfetto-trace
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/StartupBenchmark_coldStartupAndProductionQueue_iter000_2026-10-19-10-29-33.perfetto-trace
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/StartupBenchmark_coldStartupAndProductionQueue_iter001_2026-10-19-10-29-39.perfetto-trace
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/StartupBenchmark_coldStartupAndProductionQueue_iter002_2026-10-19-10-29-45.perfetto-trace
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/StartupBenchmark_coldStartupAndProductionQueue_iter003_2026-10-19-10-29-52.perfetto-trace
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/StartupBenchmark_coldStartupAndProductionQueue_iter004_2026-10-19-10-29-58.perfetto-trace
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/StartupBenchmark_coldStartupAndQuoteWizard_iter000_2026-10-19-10-31-40.perfetto-trace
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/StartupBenchmark_coldStartupAndQuoteWizard_iter001_2026-10-19-10-31-48.perfetto-trace
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/StartupBenchmark_coldStartupAndQuoteWizard_iter002_2026-10-19-10-31-54.perfetto-trace
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/StartupBenchmark_coldStartupAndQuoteWizard_iter003_2026-10-19-10-32-01.perfetto-trace
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/StartupBenchmark_coldStartupAndQuoteWizard_iter004_2026-10-19-10-32-07.perfetto-trace
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/StartupBenchmark_coldStartupAndShopping_iter000_2026-10-19-10-28-55.perfetto-trace
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/StartupBenchmark_coldStartupAndShopping_iter001_2026-10-19-10-29-01.perfetto-trace
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/StartupBenchmark_coldStartupAndShopping_iter002_2026-10-19-10-29-08.perfetto-trace
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/StartupBenchmark_coldStartupAndShopping_iter003_2026-10-19-10-29-14.perfetto-trace
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/StartupBenchmark_coldStartupAndShopping_iter004_2026-10-19-10-29-21.perfetto-trace
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/StartupBenchmark_coldStartupAndStock_iter000_2026-10-19-10-30-58.perfetto-trace
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/StartupBenchmark_coldStartupAndStock_iter001_2026-10-19-10-31-07.perfetto-trace
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/StartupBenchmark_coldStartupAndStock_iter002_2026-10-19-10-31-14.perfetto-trace
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/StartupBenchmark_coldStartupAndStock_iter003_2026-10-19-10-31-21.perfetto-trace
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/StartupBenchmark_coldStartupAndStock_iter004_2026-10-19-10-31-27.perfetto-trace
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/additionaltestoutput.benchmark.message_com.bruleetelie.benchmark.StartupBenchmark.coldStartupAndFinanceScroll.txt
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/additionaltestoutput.benchmark.message_com.bruleetelie.benchmark.StartupBenchmark.coldStartupAndProductionQueue.txt
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/additionaltestoutput.benchmark.message_com.bruleetelie.benchmark.StartupBenchmark.coldStartupAndQuoteWizard.txt
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/additionaltestoutput.benchmark.message_com.bruleetelie.benchmark.StartupBenchmark.coldStartupAndShopping.txt
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/additionaltestoutput.benchmark.message_com.bruleetelie.benchmark.StartupBenchmark.coldStartupAndStock.txt
+benchmark/build/outputs/connected_android_test_additional_output/benchmark/connected/Medium_Phone(AVD) - 17/com.bruleetelie.benchmark-benchmarkData.json

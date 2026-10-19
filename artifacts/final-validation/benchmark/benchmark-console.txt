@@ -1,0 +1,206 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.3.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preBenchmarkBuild UP-TO-DATE
+> Task :data:preBuild UP-TO-DATE
+> Task :data:preReleaseBuild UP-TO-DATE
+> Task :data:prepareReleaseArtProfile UP-TO-DATE
+> Task :documents:preBuild UP-TO-DATE
+> Task :documents:preReleaseBuild UP-TO-DATE
+> Task :documents:prepareReleaseArtProfile UP-TO-DATE
+> Task :app:mergeBenchmarkArtProfile UP-TO-DATE
+> Task :domain:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :domain:compileKotlin UP-TO-DATE
+> Task :domain:compileJava NO-SOURCE
+> Task :domain:processResources NO-SOURCE
+> Task :domain:classes UP-TO-DATE
+> Task :domain:jar UP-TO-DATE
+> Task :data:generateReleaseResources UP-TO-DATE
+> Task :data:packageReleaseResources UP-TO-DATE
+> Task :data:processReleaseNavigationResources UP-TO-DATE
+> Task :data:parseReleaseLocalResources UP-TO-DATE
+> Task :data:generateReleaseRFile UP-TO-DATE
+> Task :data:kaptGenerateStubsReleaseKotlin UP-TO-DATE
+> Task :data:kaptReleaseKotlin UP-TO-DATE
+> Task :data:compileReleaseKotlin UP-TO-DATE
+> Task :data:javaPreCompileRelease UP-TO-DATE
+> Task :data:compileReleaseJavaWithJavac UP-TO-DATE
+> Task :data:bundleLibRuntimeToJarRelease UP-TO-DATE
+> Task :documents:generateReleaseResources UP-TO-DATE
+> Task :documents:packageReleaseResources UP-TO-DATE
+> Task :documents:processReleaseNavigationResources UP-TO-DATE
+> Task :documents:parseReleaseLocalResources UP-TO-DATE
+> Task :documents:generateReleaseRFile UP-TO-DATE
+> Task :documents:compileReleaseKotlin UP-TO-DATE
+> Task :documents:javaPreCompileRelease UP-TO-DATE
+> Task :documents:compileReleaseJavaWithJavac NO-SOURCE
+> Task :documents:bundleLibRuntimeToJarRelease UP-TO-DATE
+> Task :app:desugarBenchmarkFileDependencies UP-TO-DATE
+> Task :app:generateBenchmarkResources UP-TO-DATE
+> Task :app:packageBenchmarkResources UP-TO-DATE
+> Task :app:processBenchmarkNavigationResources UP-TO-DATE
+> Task :app:parseBenchmarkLocalResources UP-TO-DATE
+> Task :app:generateBenchmarkRFile UP-TO-DATE
+> Task :data:bundleLibCompileToJarRelease UP-TO-DATE
+> Task :documents:bundleLibCompileToJarRelease UP-TO-DATE
+> Task :app:kaptGenerateStubsBenchmarkKotlin
+> Task :app:kaptBenchmarkKotlin
+> Task :app:compileBenchmarkKotlin
+> Task :app:javaPreCompileBenchmark UP-TO-DATE
+> Task :app:compileBenchmarkJavaWithJavac
+> Task :app:hiltSyncBenchmark
+> Task :app:hiltAggregateDepsBenchmark
+> Task :app:hiltJavaCompileBenchmark
+> Task :data:writeReleaseAarMetadata UP-TO-DATE
+> Task :documents:writeReleaseAarMetadata UP-TO-DATE
+> Task :app:checkBenchmarkAarMetadata UP-TO-DATE
+> Task :app:mapBenchmarkSourceSetPaths UP-TO-DATE
+> Task :app:compileBenchmarkNavigationResources UP-TO-DATE
+> Task :app:mergeBenchmarkResources UP-TO-DATE
+> Task :app:createBenchmarkCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksBenchmark UP-TO-DATE
+> Task :data:extractDeepLinksRelease UP-TO-DATE
+> Task :data:processReleaseManifest UP-TO-DATE
+> Task :documents:extractDeepLinksRelease UP-TO-DATE
+> Task :documents:processReleaseManifest UP-TO-DATE
+> Task :app:processBenchmarkMainManifest UP-TO-DATE
+> Task :app:processBenchmarkManifest UP-TO-DATE
+> Task :app:processBenchmarkManifestForPackage UP-TO-DATE
+> Task :data:mapReleaseSourceSetPaths UP-TO-DATE
+> Task :data:compileReleaseLibraryResources UP-TO-DATE
+> Task :documents:mapReleaseSourceSetPaths UP-TO-DATE
+> Task :documents:compileReleaseLibraryResources UP-TO-DATE
+> Task :app:processBenchmarkResources UP-TO-DATE
+> Task :app:transformBenchmarkClassesWithAsm
+> Task :app:dexBuilderBenchmark
+> Task :app:mergeBenchmarkGlobalSynthetics
+> Task :data:bundleLibRuntimeToDirRelease UP-TO-DATE
+> Task :documents:bundleLibRuntimeToDirRelease UP-TO-DATE
+> Task :app:checkBenchmarkDuplicateClasses UP-TO-DATE
+> Task :app:mergeBenchmarkStartupProfile UP-TO-DATE
+> Task :app:mergeExtDexBenchmark UP-TO-DATE
+> Task :app:mergeDexBenchmark
+> Task :app:compileBenchmarkArtProfile
+> Task :app:generateBenchmarkAssets UP-TO-DATE
+> Task :data:generateReleaseAssets UP-TO-DATE
+> Task :data:mergeReleaseAssets UP-TO-DATE
+> Task :documents:generateReleaseAssets UP-TO-DATE
+> Task :documents:mergeReleaseAssets UP-TO-DATE
+> Task :app:mergeBenchmarkAssets UP-TO-DATE
+> Task :app:compressBenchmarkAssets UP-TO-DATE
+> Task :app:extractBenchmarkVersionControlInfo
+> Task :app:extractProguardFiles UP-TO-DATE
+> Task :data:processReleaseJavaRes UP-TO-DATE
+> Task :data:createFullJarRelease UP-TO-DATE
+> Task :data:extractProguardFiles UP-TO-DATE
+> Task :data:generateReleaseLintModel UP-TO-DATE
+> Task :data:prepareLintJarForPublish UP-TO-DATE
+> Task :documents:processReleaseJavaRes UP-TO-DATE
+> Task :documents:createFullJarRelease UP-TO-DATE
+> Task :documents:extractProguardFiles UP-TO-DATE
+> Task :documents:generateReleaseLintModel UP-TO-DATE
+> Task :documents:prepareLintJarForPublish UP-TO-DATE
+> Task :app:generateBenchmarkLintVitalReportModel
+> Task :data:checkReleaseAarMetadata UP-TO-DATE
+> Task :data:mergeReleaseJniLibFolders UP-TO-DATE
+> Task :data:mergeReleaseNativeLibs NO-SOURCE
+> Task :data:stripReleaseDebugSymbols NO-SOURCE
+> Task :data:copyReleaseJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :data:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :data:extractReleaseAnnotations UP-TO-DATE
+> Task :data:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :data:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :data:mergeReleaseJavaResource UP-TO-DATE
+> Task :data:syncReleaseLibJars UP-TO-DATE
+> Task :data:bundleReleaseLocalLintAar UP-TO-DATE
+> Task :documents:checkReleaseAarMetadata UP-TO-DATE
+> Task :documents:mergeReleaseJniLibFolders UP-TO-DATE
+> Task :documents:mergeReleaseNativeLibs NO-SOURCE
+> Task :documents:stripReleaseDebugSymbols NO-SOURCE
+> Task :documents:copyReleaseJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :documents:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :documents:extractReleaseAnnotations UP-TO-DATE
+> Task :documents:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :documents:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :documents:mergeReleaseJavaResource UP-TO-DATE
+> Task :documents:syncReleaseLibJars UP-TO-DATE
+> Task :documents:bundleReleaseLocalLintAar UP-TO-DATE
+> Task :data:lintVitalAnalyzeRelease UP-TO-DATE
+> Task :data:writeReleaseLintModelMetadata UP-TO-DATE
+> Task :documents:lintVitalAnalyzeRelease UP-TO-DATE
+> Task :documents:writeReleaseLintModelMetadata UP-TO-DATE
+> Task :app:lintVitalAnalyzeBenchmark
+> Task :data:generateReleaseLintVitalModel UP-TO-DATE
+> Task :documents:generateReleaseLintVitalModel UP-TO-DATE
+> Task :app:lintVitalReportBenchmark
+> Task :app:lintVitalBenchmark
+> Task :app:processBenchmarkJavaRes
+> Task :app:mergeBenchmarkJavaResource
+> Task :app:optimizeBenchmarkResources
+> Task :app:collectBenchmarkDependencies
+> Task :app:sdkBenchmarkDependencyData
+> Task :app:mergeBenchmarkJniLibFolders
+> Task :data:copyReleaseJniLibsProjectOnly UP-TO-DATE
+> Task :documents:copyReleaseJniLibsProjectOnly UP-TO-DATE
+> Task :app:mergeBenchmarkNativeLibs
+
+> Task :app:stripBenchmarkDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libdatastore_shared_counter.so. Run with --info option to learn more.
+
+> Task :app:validateSigningBenchmark
+> Task :app:writeBenchmarkAppMetadata
+> Task :app:writeBenchmarkSigningConfigVersions
+> Task :app:packageBenchmark
+> Task :app:createBenchmarkApkListingFileRedirect
+> Task :benchmark:preBuild UP-TO-DATE
+> Task :benchmark:preBenchmarkBuild UP-TO-DATE
+> Task :benchmark:checkTestedAppObfuscationBenchmark UP-TO-DATE
+> Task :benchmark:generateBenchmarkResources UP-TO-DATE
+> Task :benchmark:packageBenchmarkResources UP-TO-DATE
+> Task :benchmark:processBenchmarkNavigationResources UP-TO-DATE
+> Task :benchmark:parseBenchmarkLocalResources UP-TO-DATE
+> Task :benchmark:generateBenchmarkRFile UP-TO-DATE
+> Task :benchmark:compileBenchmarkKotlin UP-TO-DATE
+> Task :benchmark:javaPreCompileBenchmark UP-TO-DATE
+> Task :benchmark:compileBenchmarkJavaWithJavac NO-SOURCE
+> Task :benchmark:generateBenchmarkAssets UP-TO-DATE
+> Task :benchmark:mergeBenchmarkAssets UP-TO-DATE
+> Task :benchmark:compressBenchmarkAssets UP-TO-DATE
+> Task :benchmark:desugarBenchmarkFileDependencies UP-TO-DATE
+> Task :benchmark:checkBenchmarkAarMetadata UP-TO-DATE
+> Task :benchmark:mapBenchmarkSourceSetPaths UP-TO-DATE
+> Task :benchmark:compileBenchmarkNavigationResources UP-TO-DATE
+> Task :benchmark:mergeBenchmarkResources UP-TO-DATE
+> Task :benchmark:processBenchmarkManifest UP-TO-DATE
+> Task :benchmark:processBenchmarkResources UP-TO-DATE
+> Task :benchmark:dexBuilderBenchmark UP-TO-DATE
+> Task :benchmark:mergeBenchmarkGlobalSynthetics UP-TO-DATE
+> Task :benchmark:processBenchmarkJavaRes UP-TO-DATE
+> Task :benchmark:mergeBenchmarkJavaResource UP-TO-DATE
+> Task :benchmark:checkBenchmarkDuplicateClasses UP-TO-DATE
+> Task :benchmark:mergeExtDexBenchmark UP-TO-DATE
+> Task :benchmark:mergeDexBenchmark UP-TO-DATE
+> Task :benchmark:mergeBenchmarkJniLibFolders UP-TO-DATE
+> Task :benchmark:mergeBenchmarkNativeLibs UP-TO-DATE
+> Task :benchmark:stripBenchmarkDebugSymbols UP-TO-DATE
+> Task :benchmark:validateSigningBenchmark UP-TO-DATE
+> Task :benchmark:writeBenchmarkSigningConfigVersions UP-TO-DATE
+> Task :benchmark:packageBenchmark UP-TO-DATE
+> Task :benchmark:createBenchmarkApkListingFileRedirect UP-TO-DATE
+Starting 5 tests on Medium_Phone(AVD) - 17
+> Task :benchmark:connectedBenchmarkAndroidTest
+
+Medium_Phone(AVD) - 17 Tests 0/5 completed. (0 skipped) (0 failed)
+Medium_Phone(AVD) - 17 Tests 1/5 completed. (0 skipped) (0 failed)
+Medium_Phone(AVD) - 17 Tests 2/5 completed. (0 skipped) (0 failed)
+
+com.bruleetelie.benchmark.StartupBenchmark > coldStartupAndOrders[Medium_Phone(AVD) - 17] [31mFAILED [0m
+	java.lang.IllegalStateException: Navegação Pedidos não ficou disponível
+	at com.bruleetelie.benchmark.StartupBenchmark.coldStartupAndOrders$lambda$11(StartupBenchmark.kt:81)
+Medium_Phone(AVD) - 17 Tests 3/5 completed. (0 skipped) (1 failed)
+Medium_Phone(AVD) - 17 Tests 4/5 completed. (0 skipped) (1 failed)
+Tests on Medium_Phone(AVD) - 17 failed: There was 1 failure(s).
+Finished 5 tests on Medium_Phone(AVD) - 17
+
+> Task :benchmark:connectedBenchmarkAndroidTest FAILED
+162 actionable tasks: 30 executed, 132 up-to-date

@@ -46,6 +46,22 @@ class PdfPageRendererStressTest {
     }
 
     @Test
+    fun encryptedPdfIsRejectedWithoutCreatingPages() {
+        val file = File(context.cacheDir, "encrypted-receipt.pdf")
+        context.assets.open("pdf/encrypted_receipt.pdf").use { input ->
+            file.outputStream().use(input::copyTo)
+        }
+        try {
+            renderer.renderAll(context, android.net.Uri.fromFile(file)) { _, _ -> }
+            throw AssertionError("encrypted PDF unexpectedly rendered")
+        } catch (expected: Exception) {
+            assertTrue(expected.message.orEmpty().isNotBlank())
+        } finally {
+            file.delete()
+        }
+    }
+
+    @Test
     fun cancellationStopsBeforeNextPageAndRepeatedCyclesRemainStable() {
         val pdf = createPdf(20)
         try {

@@ -1,0 +1,73 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.3.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :domain:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :domain:compileKotlin UP-TO-DATE
+> Task :domain:compileJava NO-SOURCE
+> Task :domain:processResources NO-SOURCE
+> Task :domain:classes UP-TO-DATE
+> Task :domain:jar UP-TO-DATE
+> Task :documents:preBuild UP-TO-DATE
+> Task :documents:preDebugBuild UP-TO-DATE
+> Task :documents:generateDebugResources UP-TO-DATE
+> Task :documents:packageDebugResources UP-TO-DATE
+> Task :documents:processDebugNavigationResources UP-TO-DATE
+> Task :documents:parseDebugLocalResources UP-TO-DATE
+> Task :documents:generateDebugRFile UP-TO-DATE
+> Task :documents:compileDebugKotlin UP-TO-DATE
+> Task :documents:javaPreCompileDebug UP-TO-DATE
+> Task :documents:compileDebugJavaWithJavac NO-SOURCE
+> Task :documents:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :documents:preDebugAndroidTestBuild UP-TO-DATE
+> Task :documents:generateDebugAndroidTestResources UP-TO-DATE
+> Task :documents:packageDebugAndroidTestResources UP-TO-DATE
+> Task :documents:processDebugAndroidTestNavigationResources UP-TO-DATE
+> Task :documents:parseDebugAndroidTestLocalResources UP-TO-DATE
+> Task :documents:generateDebugAndroidTestRFile UP-TO-DATE
+> Task :documents:compileDebugAndroidTestKotlin UP-TO-DATE
+> Task :documents:javaPreCompileDebugAndroidTest UP-TO-DATE
+> Task :documents:compileDebugAndroidTestJavaWithJavac NO-SOURCE
+> Task :documents:generateDebugAndroidTestAssets UP-TO-DATE
+> Task :documents:generateDebugAssets UP-TO-DATE
+> Task :documents:mergeDebugAssets UP-TO-DATE
+> Task :documents:mergeDebugAndroidTestAssets UP-TO-DATE
+> Task :documents:compressDebugAndroidTestAssets UP-TO-DATE
+> Task :documents:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :documents:desugarDebugAndroidTestFileDependencies UP-TO-DATE
+> Task :documents:writeDebugAarMetadata UP-TO-DATE
+> Task :documents:checkDebugAndroidTestAarMetadata UP-TO-DATE
+> Task :documents:mapDebugAndroidTestSourceSetPaths UP-TO-DATE
+> Task :documents:compileDebugAndroidTestNavigationResources UP-TO-DATE
+> Task :documents:mapDebugSourceSetPaths UP-TO-DATE
+> Task :documents:compileDebugLibraryResources UP-TO-DATE
+> Task :documents:mergeDebugAndroidTestResources UP-TO-DATE
+> Task :documents:extractDeepLinksDebug UP-TO-DATE
+> Task :documents:processDebugManifest UP-TO-DATE
+> Task :documents:processDebugAndroidTestManifest UP-TO-DATE
+> Task :documents:processDebugAndroidTestResources UP-TO-DATE
+> Task :documents:dexBuilderDebugAndroidTest UP-TO-DATE
+> Task :documents:mergeDebugAndroidTestGlobalSynthetics UP-TO-DATE
+> Task :documents:processDebugAndroidTestJavaRes UP-TO-DATE
+> Task :documents:processDebugJavaRes UP-TO-DATE
+> Task :documents:mergeDebugAndroidTestJavaResource UP-TO-DATE
+> Task :documents:checkDebugAndroidTestDuplicateClasses UP-TO-DATE
+> Task :documents:mergeExtDexDebugAndroidTest UP-TO-DATE
+> Task :documents:bundleLibRuntimeToDirDebug UP-TO-DATE
+> Task :documents:mergeLibDexDebugAndroidTest UP-TO-DATE
+> Task :documents:mergeProjectDexDebugAndroidTest UP-TO-DATE
+> Task :documents:mergeDebugJniLibFolders UP-TO-DATE
+> Task :documents:mergeDebugNativeLibs NO-SOURCE
+> Task :documents:copyDebugJniLibsProjectOnly UP-TO-DATE
+> Task :documents:mergeDebugAndroidTestJniLibFolders UP-TO-DATE
+> Task :documents:mergeDebugAndroidTestNativeLibs NO-SOURCE
+> Task :documents:stripDebugAndroidTestDebugSymbols NO-SOURCE
+> Task :documents:validateSigningDebugAndroidTest UP-TO-DATE
+> Task :documents:writeDebugAndroidTestSigningConfigVersions UP-TO-DATE
+> Task :documents:packageDebugAndroidTest UP-TO-DATE
+> Task :documents:createDebugAndroidTestApkListingFileRedirect UP-TO-DATE
+Starting 4 tests on Medium_Phone(AVD) - 17
+Finished 4 tests on Medium_Phone(AVD) - 17
+> Task :documents:connectedDebugAndroidTest
+
+BUILD SUCCESSFUL in 42s
+51 actionable tasks: 1 executed, 50 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.3.1/userguide/configuration_cache_enabling.html

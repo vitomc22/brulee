@@ -69,7 +69,7 @@ class StartupBenchmark {
     }
 
     @Test
-    fun coldStartupAndOrders() = benchmarkRule.measureRepeated(
+    fun coldStartupAndShopping() = benchmarkRule.measureRepeated(
         packageName = "com.bruleetelie.app",
         metrics = listOf(StartupTimingMetric(), FrameTimingMetric()),
         compilationMode = CompilationMode.Partial(),
@@ -78,15 +78,15 @@ class StartupBenchmark {
         setupBlock = { pressHome() }
     ) {
         startActivityAndWait()
-        check(device.wait(Until.hasObject(By.desc("Navegação Pedidos")), 5_000)) {
-            "Navegação Pedidos não ficou disponível"
+        check(device.wait(Until.hasObject(By.desc("Navegação Compras")), 5_000)) {
+            "Navegação Compras não ficou disponível"
         }
-        device.findObject(By.desc("Navegação Pedidos")).click()
+        device.findObject(By.desc("Navegação Compras")).click()
         device.waitForIdle()
     }
 
     @Test
-    fun coldStartupAndShopping() = benchmarkRule.measureRepeated(
+    fun coldStartupAndStock() = benchmarkRule.measureRepeated(
         packageName = "com.bruleetelie.app",
         metrics = listOf(StartupTimingMetric(), FrameTimingMetric()),
         compilationMode = CompilationMode.Partial(),

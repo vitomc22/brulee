@@ -1,0 +1,4 @@
+    12471  1981-01-01 01:01   assets/dexopt/baseline.prof
+      643  1981-01-01 01:01   assets/dexopt/baseline.profm
+ 13349356  1981-01-01 01:01   classes.dex
+        6  1981-01-01 01:01   META-INF/androidx.profileinstaller_profileinstaller.version

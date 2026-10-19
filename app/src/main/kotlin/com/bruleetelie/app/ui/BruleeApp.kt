@@ -201,27 +201,7 @@ fun BruleeApp() {
                 )
             },
             bottomBar = {
-                if (uiState.activeFlow == ActiveFlow.None) {
-                    if (isMediumLayout || isExpandedLayout) {
-                        NavigationRail(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .testTag(if (isExpandedLayout) "navigation_rail_expanded" else "navigation_rail_medium")
-                        ) {
-                            Destination.entries.forEach { item ->
-                                val isSelected = uiState.destination == item
-                                NavigationRailItem(
-                                    modifier = Modifier
-                                        .testTag("nav_${item.name.lowercase()}")
-                                        .semantics { contentDescription = "Navegação ${item.label}" },
-                                    selected = isSelected,
-                                    onClick = { appViewModel.navigate(item) },
-                                    icon = { Text(item.icon, style = MaterialTheme.typography.titleLarge) },
-                                    label = { Text(item.label, style = MaterialTheme.typography.labelSmall) }
-                                )
-                            }
-                        }
-                    } else {
+                if (uiState.activeFlow == ActiveFlow.None && !isMediumLayout && !isExpandedLayout) {
                         NavigationBar {
                             Destination.entries.forEach { item ->
                                 val isSelected = uiState.destination == item
@@ -236,15 +216,35 @@ fun BruleeApp() {
                                 )
                             }
                         }
-                    }
                 }
             }
         ) { padding ->
-            Box(
+            Row(
                 Modifier
                     .padding(padding)
                     .fillMaxSize()
             ) {
+                if (uiState.activeFlow == ActiveFlow.None && (isMediumLayout || isExpandedLayout)) {
+                    NavigationRail(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .testTag(if (isExpandedLayout) "navigation_rail_expanded" else "navigation_rail_medium")
+                    ) {
+                        Destination.entries.forEach { item ->
+                            val isSelected = uiState.destination == item
+                            NavigationRailItem(
+                                modifier = Modifier
+                                    .testTag("nav_${item.name.lowercase()}")
+                                    .semantics { contentDescription = "Navegação ${item.label}" },
+                                selected = isSelected,
+                                onClick = { appViewModel.navigate(item) },
+                                icon = { Text(item.icon, style = MaterialTheme.typography.titleLarge) },
+                                label = { Text(item.label, style = MaterialTheme.typography.labelSmall) }
+                            )
+                        }
+                    }
+                }
+                Box(Modifier.weight(1f).fillMaxHeight()) {
             when (val flow = uiState.activeFlow) {
                 is ActiveFlow.OrderCompleted -> {
                     ProductionCompletionScreen(
@@ -402,6 +402,7 @@ fun BruleeApp() {
             }
             }
         }
+    }
     }
     }
     )
