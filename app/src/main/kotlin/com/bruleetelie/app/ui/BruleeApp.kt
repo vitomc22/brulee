@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
+import androidx.compose.material3.NavigationBarItem
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
 import androidx.compose.runtime.*
@@ -15,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -55,6 +57,8 @@ import kotlinx.coroutines.launch
 fun BruleeApp() {
     val activityContext = LocalContext.current
     val context = activityContext.applicationContext
+    val isExpandedLayout = LocalConfiguration.current.screenWidthDp >= 840
+    val isMediumLayout = LocalConfiguration.current.screenWidthDp >= 600
     val appViewModel: BruleeAppViewModel = hiltViewModel()
     val repository = appViewModel.repository
     val uiState by appViewModel.uiState.collectAsState()
@@ -191,30 +195,39 @@ fun BruleeApp() {
             topBar = { BruleeTopBar((key as? Destination) ?: uiState.destination) },
             bottomBar = {
                 if (uiState.activeFlow == ActiveFlow.None) {
-                    NavigationBar {
-                        Destination.entries.forEach { item ->
-                            val isSelected = uiState.destination == item
-                            NavigationBarItem(
-                                modifier = Modifier
-                                    .testTag("nav_${item.name.lowercase()}")
-                                    .semantics { contentDescription = "Navegação ${item.label}" },
-                                selected = isSelected,
-                                onClick = { appViewModel.navigate(item) },
-                                icon = {
-                                    Text(
-                                        item.icon,
-                                        style = MaterialTheme.typography.titleLarge,
-                                        color = if (isSelected) BruleePrimary else MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                },
-                                label = {
-                                    Text(
-                                        item.label,
-                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                        style = MaterialTheme.typography.labelSmall
-                                    )
-                                }
-                            )
+                    if (isMediumLayout || isExpandedLayout) {
+                        NavigationRail(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag(if (isExpandedLayout) "navigation_rail_expanded" else "navigation_rail_medium")
+                        ) {
+                            Destination.entries.forEach { item ->
+                                val isSelected = uiState.destination == item
+                                NavigationRailItem(
+                                    modifier = Modifier
+                                        .testTag("nav_${item.name.lowercase()}")
+                                        .semantics { contentDescription = "Navegação ${item.label}" },
+                                    selected = isSelected,
+                                    onClick = { appViewModel.navigate(item) },
+                                    icon = { Text(item.icon, style = MaterialTheme.typography.titleLarge) },
+                                    label = { Text(item.label, style = MaterialTheme.typography.labelSmall) }
+                                )
+                            }
+                        }
+                    } else {
+                        NavigationBar {
+                            Destination.entries.forEach { item ->
+                                val isSelected = uiState.destination == item
+                                NavigationBarItem(
+                                    modifier = Modifier
+                                        .testTag("nav_${item.name.lowercase()}")
+                                        .semantics { contentDescription = "Navegação ${item.label}" },
+                                    selected = isSelected,
+                                    onClick = { appViewModel.navigate(item) },
+                                    icon = { Text(item.icon, style = MaterialTheme.typography.titleLarge) },
+                                    label = { Text(item.label, style = MaterialTheme.typography.labelSmall) }
+                                )
+                            }
                         }
                     }
                 }

@@ -1,0 +1,8 @@
+{
+  "items": [
+    {"name": "Leite Condensado 395g", "priceCents": 650, "quantity": "395g"},
+    {"name": "Manteiga Extra Sem Sal", "priceCents": 1190, "quantity": "200g"},
+    {"name": "Chocolate em Pó 50%", "priceCents": 3490, "quantity": "1kg"}
+  ],
+  "totalCents": 5330
+}

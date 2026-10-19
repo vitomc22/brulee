@@ -7,6 +7,7 @@ import com.bruleetelie.documents.ocr.IngredientMatcher
 import com.bruleetelie.documents.ocr.ReceiptParser
 import com.bruleetelie.documents.ocr.DuplicateReceiptResult
 import com.bruleetelie.documents.ocr.ReceiptDuplicateDetector
+import com.bruleetelie.documents.ocr.OcrQualityMetrics
 import com.bruleetelie.documents.pdf.DefaultPdfGenerator
 import com.bruleetelie.documents.pdf.PdfTemplateType
 import com.bruleetelie.domain.*
@@ -150,6 +151,55 @@ class DocumentsModuleTests {
     }
 
     @Test
+    fun `versioned OCR fixture reports exact quality`() {
+        val expected = javaClass.getResource("/ocr/receipt-real.txt")!!.readText()
+        val parsed = receiptParser.parse(expected)
+        val names = parsed.items.mapNotNull { it.matchedIngredientName }.toSet()
+        val report = OcrQualityMetrics.report(
+            expectedText = expected,
+            actualText = expected,
+            expectedItems = names,
+            actualItems = names,
+            expectedPrices = names.zip(listOf(650L, 1190L, 3490L)).toMap(),
+            actualPrices = names.zip(listOf(650L, 1190L, 3490L)).toMap(),
+            expectedQuantities = names.zip(listOf("395g", "200g", "1kg")).toMap(),
+            actualQuantities = names.zip(listOf("395g", "200g", "1kg")).toMap(),
+            expectedTotalCents = 5330L,
+            actualTotalCents = 5330L
+        )
+
+        assertEquals(0.0, report.characterErrorRate, 0.0)
+        assertEquals(0.0, report.wordErrorRate, 0.0)
+        assertEquals(1.0, report.itemPrecision, 0.0)
+        assertEquals(1.0, report.itemRecall, 0.0)
+        assertEquals(1.0, report.priceAccuracy, 0.0)
+        assertEquals(1.0, report.quantityAccuracy, 0.0)
+        assertEquals(1.0, report.totalAccuracy, 0.0)
+    }
+
+    @Test
+    fun `OCR quality metrics expose degradation instead of hiding it`() {
+        val report = OcrQualityMetrics.report(
+            expectedText = "LEITE 395G R$ 6,50",
+            actualText = "LEITE 395G R$ 8,50",
+            expectedItems = setOf("Leite"),
+            actualItems = setOf("Leite", "Manteiga"),
+            expectedPrices = mapOf("Leite" to 650L),
+            actualPrices = mapOf("Leite" to 850L),
+            expectedQuantities = mapOf("Leite" to "395g"),
+            actualQuantities = mapOf("Leite" to "395g"),
+            expectedTotalCents = 650L,
+            actualTotalCents = 850L
+        )
+
+        assertTrue(report.characterErrorRate > 0.0)
+        assertEquals(0.5, report.itemPrecision, 0.0)
+        assertEquals(1.0, report.itemRecall, 0.0)
+        assertEquals(0.0, report.priceAccuracy, 0.0)
+        assertEquals(0.0, report.totalAccuracy, 0.0)
+    }
+
+    @Test
     fun `customer PDF text stays private with a large notes payload`() {
         val largeNotesQuote = sampleQuote.copy(notes = "nota ".repeat(20_000))
 
@@ -158,6 +208,12 @@ class DocumentsModuleTests {
         assertTrue(customerDocument.length > 100_000)
         assertFalse(customerDocument.contains("INGREDIENTS_COST"))
         assertFalse(customerDocument.contains("MARGIN_PERCENT"))
+    }
+
+    @Test
+    fun `PDF generator handles a fifty-page-sized document without truncation`() {
+        val longQuote = sampleQuote.copy(notes = (1..2_500).joinToString("\n") { "Linha de produção $it" })
+        assertTrue(pdfGenerator.buildInternalPdfDocument(longQuote).length > 50_000)
     }
 
     private fun sampleReceiptText(): String = """

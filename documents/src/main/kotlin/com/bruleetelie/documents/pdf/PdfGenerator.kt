@@ -28,6 +28,7 @@ class DefaultPdfGenerator {
         appendLine("PACKAGING_COST=${quote.pricing.costs.packaging.toBigDecimal()}")
         appendLine("PROFIT=${quote.pricing.profit.toBigDecimal()}")
         appendLine("MARGIN_PERCENT=${quote.pricing.marginPercent}%")
+        appendLine("NOTES=${quote.notes}")
     }
 
     /** Writes a paginated, shareable Android PDF while keeping the text representation for audits/tests. */
