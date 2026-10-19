@@ -50,4 +50,55 @@ class StartupBenchmark {
         device.findObject(By.desc("Navegação Novo Orçamento")).click()
         device.waitForIdle()
     }
+
+    @Test
+    fun coldStartupAndProductionQueue() = benchmarkRule.measureRepeated(
+        packageName = "com.bruleetelie.app",
+        metrics = listOf(StartupTimingMetric(), FrameTimingMetric()),
+        compilationMode = CompilationMode.Partial(),
+        startupMode = StartupMode.COLD,
+        iterations = 5,
+        setupBlock = { pressHome() }
+    ) {
+        startActivityAndWait()
+        check(device.wait(Until.hasObject(By.desc("Navegação Produção")), 5_000)) {
+            "Navegação Produção não ficou disponível"
+        }
+        device.findObject(By.desc("Navegação Produção")).click()
+        device.waitForIdle()
+    }
+
+    @Test
+    fun coldStartupAndOrders() = benchmarkRule.measureRepeated(
+        packageName = "com.bruleetelie.app",
+        metrics = listOf(StartupTimingMetric(), FrameTimingMetric()),
+        compilationMode = CompilationMode.Partial(),
+        startupMode = StartupMode.COLD,
+        iterations = 5,
+        setupBlock = { pressHome() }
+    ) {
+        startActivityAndWait()
+        check(device.wait(Until.hasObject(By.desc("Navegação Pedidos")), 5_000)) {
+            "Navegação Pedidos não ficou disponível"
+        }
+        device.findObject(By.desc("Navegação Pedidos")).click()
+        device.waitForIdle()
+    }
+
+    @Test
+    fun coldStartupAndShopping() = benchmarkRule.measureRepeated(
+        packageName = "com.bruleetelie.app",
+        metrics = listOf(StartupTimingMetric(), FrameTimingMetric()),
+        compilationMode = CompilationMode.Partial(),
+        startupMode = StartupMode.COLD,
+        iterations = 5,
+        setupBlock = { pressHome() }
+    ) {
+        startActivityAndWait()
+        check(device.wait(Until.hasObject(By.desc("Navegação Estoque")), 5_000)) {
+            "Navegação Estoque não ficou disponível"
+        }
+        device.findObject(By.desc("Navegação Estoque")).click()
+        device.waitForIdle()
+    }
 }

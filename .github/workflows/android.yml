@@ -16,8 +16,8 @@ jobs:
           java-version: '17'
       - uses: android-actions/setup-android@v3
       - uses: gradle/actions/setup-gradle@v4
-      - name: Unit tests, lint and build variants
-        run: ./gradlew test lint assembleDebug assembleRelease
+      - name: Unit tests, Room migration tests, document tests, lint and build variants
+        run: ./gradlew test :data:test :documents:test lint assembleDebug assembleRelease
       - name: Upload test and lint reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -42,14 +42,14 @@ jobs:
       - name: Run Compose UI tests on Android emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 35
+            api-level: 37
           arch: x86_64
           profile: Nexus 6
-          script: ./gradlew connectedDebugAndroidTest --console=plain
+          script: ./gradlew :app:connectedDebugAndroidTest :data:connectedDebugAndroidTest --console=plain
       - name: Run macrobenchmark and baseline profile checks
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 35
+            api-level: 37
           arch: x86_64
           profile: Nexus 6
           script: ./gradlew :benchmark:connectedBenchmarkAndroidTest --console=plain
