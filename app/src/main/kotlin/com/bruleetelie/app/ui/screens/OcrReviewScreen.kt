@@ -41,7 +41,8 @@ data class OcrItem(
 @Composable
 fun OcrReviewScreen(
     initialItems: List<OcrItem>,
-    onSaveConfirmedItems: (List<OcrItem>) -> Unit
+    onSaveConfirmedItems: (List<OcrItem>) -> Unit,
+    onItemsChanged: (List<OcrItem>) -> Unit = {}
 ) {
     val items = remember(initialItems) {
         mutableStateListOf<OcrItem>().apply { addAll(initialItems) }
@@ -132,7 +133,10 @@ fun OcrReviewScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Button(
-                            onClick = { items[index] = item.copy(isConfirmed = true) },
+                            onClick = {
+                                items[index] = item.copy(isConfirmed = true)
+                                onItemsChanged(items.toList())
+                            },
                             modifier = Modifier
                                 .weight(1f)
                                 .testTag("ocr_confirm_${item.id}"),
@@ -162,6 +166,7 @@ fun OcrReviewScreen(
                         onClick = {
                             if (editingItemId == item.id) editingItemId = null
                             items.removeAt(index)
+                            onItemsChanged(items.toList())
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -212,6 +217,7 @@ fun OcrReviewScreen(
                                     isConfirmed = false
                                 )
                                 editingItemId = null
+                                onItemsChanged(items.toList())
                             }
                         )
                     }

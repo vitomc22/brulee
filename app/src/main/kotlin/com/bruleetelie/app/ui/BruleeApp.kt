@@ -353,6 +353,7 @@ fun BruleeApp() {
                             } else {
                                 OcrReviewScreen(
                                     initialItems = itemsToReview,
+                                    onItemsChanged = appViewModel::setOcrItems,
                                     onSaveConfirmedItems = { confirmedItems ->
                                     confirmedItems.forEach { item ->
                                         val ingredient = ingredients.firstOrNull { it.name == item.matchedIngredient }

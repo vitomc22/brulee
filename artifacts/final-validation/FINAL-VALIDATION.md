@@ -10,8 +10,8 @@ Date: 2026-10-19
 - PDF stress on `Medium_Phone`: 4/4 passed, including 20/50 pages, corruption, cancellation, repeated cycles and encrypted PDF rejection.
 - Release APK contains `assets/dexopt/baseline.prof` and `assets/dexopt/baseline.profm`.
 - Macrobenchmark on `Medium_Phone`: 5/5 passed with Perfetto traces for finance, quote, production, shopping and stock journeys.
-- Full compact UI suite on `Small_Phone(AVD) - 17`: 250/250 passed, 0 skipped, 0 failed.
-- JVM/build regression passed: `test :app:assembleDebug :documents:assembleDebug`.
+- Full compact UI suite on `Small_Phone(AVD) - 17`: 252/252 passed, 0 skipped, 0 failed, including OCR lifecycle persistence tests.
+- JVM/build regression passed: `test :app:assembleDebug :documents:assembleDebug :app:assembleRelease`.
 - `git diff --check` passed.
 
 ## Classification
@@ -21,5 +21,5 @@ Macrobenchmark values are harness validation from an emulator, not an authoritat
 ## External limitations
 
 - Historical Room `identityHash` values for schema versions 1 and 2 cannot be proven without original schema/database/APK/AAB artifacts.
-- The automated OCR stress suite covers pipeline cancellation/retry; physical camera lifecycle rotation and background/foreground behavior still require a dedicated UI lifecycle test if those product states must be certified separately.
+- OCR draft state now survives activity recreation and background/foreground transitions without duplicate persistence; physical camera hardware behavior remains outside emulator certification.
 - The Medium runtime proves adaptive navigation rail rendering, but not every tablet list-detail interaction because the current app does not expose a separate list-detail route for every domain screen.
