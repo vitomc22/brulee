@@ -1,12 +1,11 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.legacy.kapt)
 }
 
 android {
     namespace = "com.bruleetelie.data"
-    compileSdk = 35
+    compileSdk = 37
     defaultConfig {
         minSdk = 26
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -29,7 +28,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
-    ksp(libs.androidx.room.compiler)
+    kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.datastore.preferences)
 
     testImplementation(libs.junit)
@@ -40,7 +39,8 @@ dependencies {
     androidTestImplementation(libs.androidx.room.testing)
 }
 
-ksp {
-    arg("room.schemaLocation", "$projectDir/schemas")
-    arg("room.generateKotlin", "true")
+kapt {
+        arguments {
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
 }

@@ -1,19 +1,18 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt.android)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.legacy.kapt)
 }
 
 android {
     namespace = "com.bruleetelie.app"
-    compileSdk = 35
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.bruleetelie.app"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 37
         versionCode = 1
         versionName = "0.1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -56,12 +55,14 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
     implementation(libs.vico.compose)
     implementation(libs.vico.compose.m3)
-    ksp(libs.hilt.compiler)
+    kapt(libs.hilt.compiler)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
+    implementation("androidx.navigation3:navigation3-runtime:1.0.1")
+    implementation("androidx.navigation3:navigation3-ui:1.0.1")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.runner)

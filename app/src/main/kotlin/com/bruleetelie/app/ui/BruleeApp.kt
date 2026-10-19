@@ -4,8 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.ui.NavDisplay
 import androidx.compose.runtime.*
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -165,40 +167,58 @@ fun BruleeApp() {
         ProductionWidgetProvider.updateSnapshot(context, orders, sales)
     }
 
-    NavigationSuiteScaffold(
-        navigationSuiteItems = {
-            if (uiState.activeFlow == ActiveFlow.None) {
-                Destination.entries.forEach { item ->
-                    val isSelected = uiState.destination == item
-                    item(
-                        modifier = Modifier
-                            .testTag("nav_${item.name.lowercase()}")
-                            .semantics { contentDescription = "Navegação ${item.label}" },
-                        selected = isSelected,
-                        onClick = { appViewModel.navigate(item) },
-                        icon = {
-                            Text(
-                                item.icon,
-                                style = MaterialTheme.typography.titleLarge,
-                                color = if (isSelected) BruleePrimary else MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        },
-                        label = {
-                            Text(
-                                item.label,
-                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                style = MaterialTheme.typography.labelSmall
-                            )
-                        }
-                    )
-                }
-            }
+    val navBackStack = remember { mutableStateListOf<Any>(uiState.destination) }
+    LaunchedEffect(uiState.destination, uiState.activeFlow) {
+        if (uiState.activeFlow == ActiveFlow.None && navBackStack.lastOrNull() != uiState.destination) {
+            navBackStack.clear()
+            navBackStack.add(uiState.destination)
         }
-    ) {
+    }
+
+    NavDisplay(
+        backStack = navBackStack,
+        onBack = {
+            if (navBackStack.size > 1) {
+                navBackStack.removeLastOrNull()
+                (navBackStack.lastOrNull() as? Destination)?.let(appViewModel::navigate)
+            }
+        },
+        entryProvider = { key ->
+            NavEntry(key) {
         Scaffold(
             containerColor = MaterialTheme.colorScheme.surface,
             snackbarHost = { SnackbarHost(snackbarHostState) },
-            topBar = { BruleeTopBar(uiState.destination) }
+            topBar = { BruleeTopBar((key as? Destination) ?: uiState.destination) },
+            bottomBar = {
+                if (uiState.activeFlow == ActiveFlow.None) {
+                    NavigationBar {
+                        Destination.entries.forEach { item ->
+                            val isSelected = uiState.destination == item
+                            NavigationBarItem(
+                                modifier = Modifier
+                                    .testTag("nav_${item.name.lowercase()}")
+                                    .semantics { contentDescription = "Navegação ${item.label}" },
+                                selected = isSelected,
+                                onClick = { appViewModel.navigate(item) },
+                                icon = {
+                                    Text(
+                                        item.icon,
+                                        style = MaterialTheme.typography.titleLarge,
+                                        color = if (isSelected) BruleePrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                },
+                                label = {
+                                    Text(
+                                        item.label,
+                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                        style = MaterialTheme.typography.labelSmall
+                                    )
+                                }
+                            )
+                        }
+                    }
+                }
+            }
         ) { padding ->
             Box(
                 Modifier
@@ -363,6 +383,8 @@ fun BruleeApp() {
             }
         }
     }
+    }
+    )
 }
 
 private fun ParsedReceiptItem.toOcrItem(index: Int): OcrItem {

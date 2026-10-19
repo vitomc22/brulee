@@ -1,17 +1,16 @@
 plugins {
     id("com.android.test")
-    alias(libs.plugins.kotlin.android)
 }
 
 android {
     namespace = "com.bruleetelie.benchmark"
-    compileSdk = 35
+    compileSdk = 37
     targetProjectPath = ":app"
     experimentalProperties["android.experimental.self-instrumenting"] = true
 
     defaultConfig {
         minSdk = 28
-        targetSdk = 35
+        targetSdk = 37
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["androidx.benchmark.suppressErrors"] = "EMULATOR,DEBUGGABLE"
     }
