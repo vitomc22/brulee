@@ -42,7 +42,7 @@ class EarningsScenarioIndividualE2eTest {
     @Test fun earnE2e020_timezoneBoundaryDoesNotCrash() { finance(); metric("FATURAMENTO TOTAL") }
     @Test fun earnE2e021_reopenKeepsMetrics() { finance(); composeRule.onNodeWithTag("nav_production").performClick(); finance(); composeRule.onNodeWithTag("finance_revenue").assertIsDisplayed() }
     @Test fun earnE2e022_backupFlowIsAvailable() { composeRule.onNodeWithTag("nav_backup").performClick(); composeRule.onNodeWithTag("backup_export").performScrollTo().assertIsDisplayed() }
-    @Test fun earnE2e023_csvExportActionIsAvailable() { finance(); composeRule.onNodeWithText("Exportar CSV para Web").performScrollTo().assertIsDisplayed() }
+    @Test fun earnE2e023_csvExportActionIsAvailable() { finance(); composeRule.onNodeWithText("EXPORTAR VENDAS EM CSV").performScrollTo().assertIsDisplayed() }
     @Test fun earnE2e024_revenueProfitChartIsAvailable() {
         finance()
         composeRule.onNodeWithTag("finance_revenue_profit_chart").performScrollTo().assertIsDisplayed()

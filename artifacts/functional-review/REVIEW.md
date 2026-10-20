@@ -1,5 +1,7 @@
 # Revisão funcional Android — 20/10/2026
 
+> Revisão atual: [UX, PDF, custos e gráfico — versão 0.2.0](../ui-redesign/REVIEW.md). O texto abaixo registra a entrega anterior; métricas de jogo, lista de compras, layout do PDF e gráfico foram revistos após o retorno do usuário.
+
 A revisão confrontou o código com as decisões e o roadmap recuperados do ai-memory. Os registros históricos de conclusão não correspondiam aos fluxos reais: havia ações sem efeito, dados fictícios em produção e testes que verificavam apenas a abertura de telas.
 
 ## Correções e regressões

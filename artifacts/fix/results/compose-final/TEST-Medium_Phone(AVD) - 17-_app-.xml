@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuites tests="34" failures="0" errors="0" skipped="0" time="217.043" timestamp="2026-10-20T21:50:39" hostname="localhost">
+  <testsuite name="com.bruleetelie.app.DraftQuoteE2eTest" tests="3" failures="0" errors="0" skipped="0" time="50.676" timestamp="2026-10-20T21:50:39" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="systemBackMovesToPreviousStepAndRetainsInputs" classname="com.bruleetelie.app.DraftQuoteE2eTest" time="13.065" />
+    <testcase name="draftResumesEveryInputUpdatesSameRecordAndApprovesIntoProduction" classname="com.bruleetelie.app.DraftQuoteE2eTest" time="29.933" />
+    <testcase name="incompleteDraftCanBeSavedAndReturnsToItsSavedStep" classname="com.bruleetelie.app.DraftQuoteE2eTest" time="7.678" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.QuoteUiRegressionTest" tests="4" failures="0" errors="0" skipped="0" time="15.668" timestamp="2026-10-20T21:50:39" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="emptyListAndOfficialBrandAreAccessibleWithReducedMotion" classname="com.bruleetelie.app.QuoteUiRegressionTest" time="1.414" />
+    <testcase name="lazyOrdersListSupportsManyRecordsAndShowsLifecycleStatus" classname="com.bruleetelie.app.QuoteUiRegressionTest" time="8.206" />
+    <testcase name="calendarSelectsBrazilianDateRejectsPastDatesAndSurvivesRestoration" classname="com.bruleetelie.app.QuoteUiRegressionTest" time="4.231" />
+    <testcase name="ordersDistinguishApprovalFromActiveProductionAndCompletion" classname="com.bruleetelie.app.QuoteUiRegressionTest" time="1.817" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.WizardRegressionTest" tests="14" failures="0" errors="0" skipped="0" time="94.632" timestamp="2026-10-20T21:50:39" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="invalidOperatingCostsExplainErrorsAndCorrectionEnablesCalculation" classname="com.bruleetelie.app.WizardRegressionTest" time="8.376" />
+    <testcase name="formSurvivesActivityStateRestorationIncludingIngredients" classname="com.bruleetelie.app.WizardRegressionTest" time="6.44" />
+    <testcase name="savedRecipeCanBeLoadedWithReducedMotionAndItsRealYield" classname="com.bruleetelie.app.WizardRegressionTest" time="1.915" />
+    <testcase name="pdfDraftAndApprovalShareTheSameQuoteIdentity" classname="com.bruleetelie.app.WizardRegressionTest" time="7.981" />
+    <testcase name="removingLastIngredientBlocksAdvanceAndEditingRecalculates" classname="com.bruleetelie.app.WizardRegressionTest" time="6.219" />
+    <testcase name="manualCurrencyKeepsSequentialKeystrokesAndInvalidPriceBlocksAdvance" classname="com.bruleetelie.app.WizardRegressionTest" time="9.287" />
+    <testcase name="WhatsAppDoesNotClaimSuccessWhenCallbackFailsToOpen" classname="com.bruleetelie.app.WizardRegressionTest" time="8.006" />
+    <testcase name="unfinishedIngredientMustBeSavedOrCancelledBeforeLeavingTheStep" classname="com.bruleetelie.app.WizardRegressionTest" time="7.478" />
+    <testcase name="legacyDraftEditsAvailableFieldsWithoutLosingSavedTotalsOrIdentity" classname="com.bruleetelie.app.WizardRegressionTest" time="2.269" />
+    <testcase name="reducedMotionStillAllowsEveryWizardStepAndDraftSave" classname="com.bruleetelie.app.WizardRegressionTest" time="7.048" />
+    <testcase name="pdfCarriesCustomerDeliveryValidityAndNotesFromTheForm" classname="com.bruleetelie.app.WizardRegressionTest" time="8.865" />
+    <testcase name="startsEmptyAndRequiresRecipeAndPositiveYield" classname="com.bruleetelie.app.WizardRegressionTest" time="3.076" />
+    <testcase name="operationalInputsCanBeClearedAndPackagingAndOverheadPersist" classname="com.bruleetelie.app.WizardRegressionTest" time="7.505" />
+    <testcase name="optionalOperatingFieldsEmptyCalculateZeroWithoutReusingOldValues" classname="com.bruleetelie.app.WizardRegressionTest" time="10.167" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.QuoteFlowE2eTest" tests="2" failures="0" errors="0" skipped="0" time="32.624" timestamp="2026-10-20T21:50:39" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="createRecipeWithCostsApproveProduceAndRecordActualCostsAndRevenue" classname="com.bruleetelie.app.QuoteFlowE2eTest" time="19.294" />
+    <testcase name="WhatsAppActuallyLaunchesCustomerIntentAndSavedQuoteCanBeApprovedLater" classname="com.bruleetelie.app.QuoteFlowE2eTest" time="13.33" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.OperationalScreensRegressionTest" tests="6" failures="0" errors="0" skipped="0" time="15.458" timestamp="2026-10-20T21:50:39" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="fixedCostsAndDefaultMarginAreEditableAndAnalyticsExportIsReachable" classname="com.bruleetelie.app.OperationalScreensRegressionTest" time="2.817" />
+    <testcase name="pendingQuotesCanBeSharedApprovedOrRejectedAndAllFilterWorks" classname="com.bruleetelie.app.OperationalScreensRegressionTest" time="3.217" />
+    <testcase name="OCRStartsEmptySupportsPdfAndDisablesActionsWhileProcessing" classname="com.bruleetelie.app.OperationalScreensRegressionTest" time="2.523" />
+    <testcase name="WhatsAppUsesViewIntentWithEncodedCustomerMessage" classname="com.bruleetelie.app.OperationalScreensRegressionTest" time="2.425" />
+    <testcase name="realCustomerPdfIsSharedFromApplicationContextWithReadableUri" classname="com.bruleetelie.app.OperationalScreensRegressionTest" time="1.263" />
+    <testcase name="inventoryAcceptsOnlyValidPricesWithoutShoppingActions" classname="com.bruleetelie.app.OperationalScreensRegressionTest" time="3.213" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.NavigationLayoutRegressionTest" tests="2" failures="0" errors="0" skipped="0" time="6.061" timestamp="2026-10-20T21:50:39" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="debugDistributionCannotAutomaticallyRestoreOldTestRegistrations" classname="com.bruleetelie.app.NavigationLayoutRegressionTest" time="2.276" />
+    <testcase name="fiveTabsHaveConsistentTouchTargetsAndOpenTheirRealScreens" classname="com.bruleetelie.app.NavigationLayoutRegressionTest" time="3.785" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.BackupRestoreRegressionTest" tests="3" failures="0" errors="0" skipped="0" time="0.615" timestamp="2026-10-20T21:50:39" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="invalidDatabaseWithValidArchiveChecksumDoesNotEraseCurrentData" classname="com.bruleetelie.app.BackupRestoreRegressionTest" time="0.256" />
+    <testcase name="invalidSettingsAreValidatedBeforeAnyDatabaseReplacement" classname="com.bruleetelie.app.BackupRestoreRegressionTest" time="0.205" />
+    <testcase name="restoredBackupRefreshesLiveDataAndAllowsMoreWrites" classname="com.bruleetelie.app.BackupRestoreRegressionTest" time="0.154" />
+  </testsuite>
+</testsuites>

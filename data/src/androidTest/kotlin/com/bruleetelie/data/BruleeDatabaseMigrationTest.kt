@@ -47,4 +47,18 @@ class BruleeDatabaseMigrationTest {
             }
     }
 
+    @Test fun migrate4To5PreservesOldDraftAndAddsNullableInputSnapshot() {
+        helper.createDatabase("migration-test", 4).apply {
+            execSQL("INSERT INTO quotes (id, code, customerId, customerName, customerPhone, productName, productSubtitle, unitsCount, ingredientsCostCents, laborCostCents, energyCostCents, packagingCostCents, overheadCostCents, salePriceCents, profitCents, marginPercent, deliveryDate, validDays, notes, status, createdAtMillis) VALUES ('q', '#ORC-Q', 'c', 'Cliente', '', 'Bolo', '', 10, 1000, 200, 100, 200, 0, 3000, 1500, '50', '21/10/2026', 7, 'Retirada', 'Draft', 1000)")
+            close()
+        }
+        helper.runMigrationsAndValidate("migration-test", 5, true, *BruleeDatabase.ALL_MIGRATIONS).use { db ->
+            db.query("SELECT customerName, salePriceCents, notes, draftData FROM quotes WHERE id = 'q'").use { cursor ->
+                assertEquals(true, cursor.moveToFirst())
+                assertEquals("Cliente", cursor.getString(0)); assertEquals(3000L, cursor.getLong(1))
+                assertEquals("Retirada", cursor.getString(2)); assertEquals(true, cursor.isNull(3))
+            }
+        }
+    }
+
 }

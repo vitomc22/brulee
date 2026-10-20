@@ -38,8 +38,8 @@ class AccessibilityE2eTest {
             .assertHasClickAction()
     }
     @Test fun secondaryNavigationHasAccessibleDescriptions() {
-        composeRule.onNodeWithContentDescription("Navegação Compras").assertIsDisplayed().assertHasClickAction()
-        composeRule.onNodeWithContentDescription("Navegação Backup").assertIsDisplayed().assertHasClickAction()
+        composeRule.onNodeWithContentDescription("Navegação Compras").assertDoesNotExist()
+        composeRule.onNodeWithContentDescription("Configurações e backup").assertIsDisplayed().assertHasClickAction()
     }
 
 }

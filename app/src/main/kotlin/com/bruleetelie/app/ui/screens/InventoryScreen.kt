@@ -17,8 +17,7 @@ import com.bruleetelie.domain.*
 @Composable
 fun InventoryScreen(
     ingredients: List<IngredientEntity>, observations: List<PriceObservationEntity>,
-    onImport: () -> Unit, onSave: (String, String, String, Money) -> Unit,
-    onBuy: (String) -> Unit
+    onImport: () -> Unit, onSave: (String, String, String, Money) -> Unit
 ) {
     var name by rememberSaveable { mutableStateOf("") }
     var quantity by rememberSaveable { mutableStateOf("") }
@@ -46,7 +45,6 @@ fun InventoryScreen(
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(ingredient.name, style = MaterialTheme.typography.titleMedium)
                     Text(latest?.let { "${it.packageQuantityValue} ${it.packageQuantityUnit} • ${Money(it.packagePriceCents).format()}" } ?: "Sem preço cadastrado")
-                    TextButton({ onBuy(ingredient.name) }, Modifier.testTag("stock_buy_${ingredient.id}")) { Text("Adicionar à lista de compras") }
                 }
             }
         }

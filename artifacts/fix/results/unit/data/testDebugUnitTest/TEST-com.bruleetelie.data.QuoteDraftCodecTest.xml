@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bruleetelie.data.QuoteDraftCodecTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-20T21:51:15.335Z" hostname="victor-Lenovo-IdeaPad-S145-15API" time="0.01">
+  <properties/>
+  <testcase name="quoteMappingRetainsSnapshotAndAcceptsLegacyNull" classname="com.bruleetelie.data.QuoteDraftCodecTest" time="0.006"/>
+  <testcase name="corruptOrUnknownSnapshotFallsBackToLegacyQuote" classname="com.bruleetelie.data.QuoteDraftCodecTest" time="0.001"/>
+  <testcase name="snapshotRoundTripRetainsEveryInputWithoutDependingOnSavedRecipeRevisions" classname="com.bruleetelie.data.QuoteDraftCodecTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

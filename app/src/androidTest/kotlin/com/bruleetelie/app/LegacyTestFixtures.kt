@@ -169,7 +169,20 @@ fun clearTestData(rule: AndroidComposeTestRule<ActivityScenarioRule<MainActivity
     rule.waitUntil(10000) {
         repository.quotes.value.isEmpty() && repository.productionOrders.value.isEmpty() &&
         repository.completedSales.value.isEmpty() && repository.recipes.value.isEmpty() &&
-        repository.ingredients.value.isEmpty() && repository.priceObservations.value.isEmpty() && repository.shoppingItems.value.isEmpty()
+        repository.ingredients.value.isEmpty() && repository.priceObservations.value.isEmpty() && repository.shoppingItems.value.isEmpty() &&
+        repository.settings.value == OperatingSettings()
+    }
+    runBlocking(Dispatchers.IO) {
+        val database = BruleeDatabase.getInstance(rule.activity).openHelper.readableDatabase
+        val tables = database.query("SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE 'room_%' AND name != 'android_metadata'").use { cursor ->
+            buildList { while (cursor.moveToNext()) add(cursor.getString(0)) }
+        }
+        tables.forEach { table ->
+            database.query("SELECT COUNT(*) FROM \"${table.replace("\"", "\"\"")}\"").use { cursor ->
+                check(cursor.moveToFirst())
+                org.junit.Assert.assertEquals("Test cleanup left rows in $table", 0L, cursor.getLong(0))
+            }
+        }
     }
 }
 

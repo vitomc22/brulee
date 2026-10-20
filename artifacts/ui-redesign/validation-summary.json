@@ -1,0 +1,93 @@
+{
+  "created_at": "2026-10-20T18:18:26.828905+00:00",
+  "version": "0.2.0",
+  "device": {
+    "avd": "Medium_Phone",
+    "system_image": "Android API 37.2"
+  },
+  "compose": {
+    "runs": [
+      {
+        "stage": "compose-full",
+        "source": "results/compose-full/TEST-Medium_Phone(AVD) - 17-_app-.xml",
+        "tests": 264,
+        "failed": 2
+      },
+      {
+        "stage": "compose-final",
+        "source": "results/compose-final/TEST-Medium_Phone(AVD) - 17-_app-.xml",
+        "tests": 16,
+        "failed": 0
+      }
+    ],
+    "current_unique_cases": 264,
+    "unresolved_failures": [],
+    "note": "Full run found two obsolete assertions; corrected cases and all affected wizard/e2e cases were rerun. Only the renamed ranking case is explicitly mapped to its replacement; other methods retain their full names."
+  },
+  "unit": {
+    "unique_cases": 75,
+    "failures": []
+  },
+  "instrumented": {
+    "data": {
+      "tests": 2,
+      "failures": 0
+    },
+    "documents": {
+      "tests": 10,
+      "failures": 0,
+      "final_pdf_rerun": {
+        "tests": 3,
+        "failures": 0,
+        "source": "results/documents-final/TEST-Medium_Phone(AVD) - 17-_documents-.xml"
+      }
+    }
+  },
+  "distribution_guard_tests": {
+    "tests": 3,
+    "failures": 0,
+    "log": "results/apk-guard-tests.log"
+  },
+  "checks": {
+    "debug_build": "passed",
+    "release_build": "passed",
+    "lint": "passed",
+    "apk_contains_no_database_or_legacy_fixtures": "passed"
+  },
+  "apk": {
+    "path": "artifacts/ui-redesign/brulee-0.2.0-debug.apk",
+    "sha256": "a5da0630a061a7cd901c54fc002ce08dafe437f9daf13c31a2fdfebe390eab80",
+    "size_bytes": 15577700
+  },
+  "clean_install": {
+    "business_tables": {
+      "ingredients": 0,
+      "customers": 0,
+      "recipes": 0,
+      "recipe_versions": 0,
+      "recipe_ingredients": 0,
+      "quotes": 0,
+      "production_orders": 0,
+      "production_steps": 0,
+      "sale_snapshots": 0,
+      "price_observations": 0,
+      "shopping_items": 0,
+      "suppliers": 0,
+      "purchases": 0,
+      "purchase_items": 0,
+      "payments": 0,
+      "expenses": 0,
+      "cost_resources": 0,
+      "document_imports": 0,
+      "quote_status_history": 0,
+      "production_status_history": 0,
+      "payment_status_history": 0
+    },
+    "total_records": 0,
+    "app_data_cleared": true,
+    "apk_version": "0.2.0",
+    "installed_version_code": 2,
+    "android_allow_backup": false,
+    "test_packages_remaining": []
+  }
+}

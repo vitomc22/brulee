@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bruleetelie.data.BruleeRepositoryTest" tests="15" skipped="0" failures="0" errors="0" timestamp="2026-10-20T21:51:15.112Z" hostname="victor-Lenovo-IdeaPad-S145-15API" time="0.159">
+  <properties/>
+  <testcase name="rejecting a quote prevents approval" classname="com.bruleetelie.data.BruleeRepositoryTest" time="0.093"/>
+  <testcase name="repeated approval returns same production order" classname="com.bruleetelie.data.BruleeRepositoryTest" time="0.02"/>
+  <testcase name="checklist changes are isolated and current step follows progress" classname="com.bruleetelie.data.BruleeRepositoryTest" time="0.001"/>
+  <testcase name="checking all steps does not finalize or book revenue" classname="com.bruleetelie.data.BruleeRepositoryTest" time="0.001"/>
+  <testcase name="recipe revisions preserve older snapshots" classname="com.bruleetelie.data.BruleeRepositoryTest" time="0.01"/>
+  <testcase name="saving and sharing same quote upserts rather than duplicates" classname="com.bruleetelie.data.BruleeRepositoryTest" time="0.0"/>
+  <testcase name="shopping list supports add check and delete" classname="com.bruleetelie.data.BruleeRepositoryTest" time="0.003"/>
+  <testcase name="new OCR ingredient is created and duplicate spelling reuses identity" classname="com.bruleetelie.data.BruleeRepositoryTest" time="0.002"/>
+  <testcase name="fresh repository has no demonstration data" classname="com.bruleetelie.data.BruleeRepositoryTest" time="0.0"/>
+  <testcase name="completed order checklist is immutable" classname="com.bruleetelie.data.BruleeRepositoryTest" time="0.014"/>
+  <testcase name="sharing approved or completed quote cannot downgrade status" classname="com.bruleetelie.data.BruleeRepositoryTest" time="0.001"/>
+  <testcase name="cannot finalize incomplete order" classname="com.bruleetelie.data.BruleeRepositoryTest" time="0.001"/>
+  <testcase name="shopping list rejects incomplete items" classname="com.bruleetelie.data.BruleeRepositoryTest" time="0.0"/>
+  <testcase name="finalization is idempotent preserves estimate and computes actual profit" classname="com.bruleetelie.data.BruleeRepositoryTest" time="0.001"/>
+  <testcase name="settings are applied" classname="com.bruleetelie.data.BruleeRepositoryTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

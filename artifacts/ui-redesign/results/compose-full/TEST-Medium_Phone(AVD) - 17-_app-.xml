@@ -1,0 +1,486 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuites tests="264" failures="2" errors="0" skipped="0" time="1449.481" timestamp="2026-10-20T17:35:01" hostname="localhost">
+  <testsuite name="com.bruleetelie.app.AccessibilityE2eTest" tests="3" failures="0" errors="0" skipped="0" time="12.853" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="primaryNavigationKeepsStableSemanticTagsForLargeTextLayouts" classname="com.bruleetelie.app.AccessibilityE2eTest" time="6.325" />
+    <testcase name="secondaryNavigationHasAccessibleDescriptions" classname="com.bruleetelie.app.AccessibilityE2eTest" time="3.567" />
+    <testcase name="primaryNavigationExposesTalkBackDescriptionAndClickAction" classname="com.bruleetelie.app.AccessibilityE2eTest" time="2.961" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.BackupBlockE2eTest" tests="4" failures="0" errors="0" skipped="0" time="27.462" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="backup021To030_preferencesRemainAvailableForRestore" classname="com.bruleetelie.app.BackupBlockE2eTest" time="6.497" />
+    <testcase name="backup001To010_screenExposesPortableBackupActions" classname="com.bruleetelie.app.BackupBlockE2eTest" time="5.224" />
+    <testcase name="backup011To020_financialSettingsCanBeEditedBeforeBackup" classname="com.bruleetelie.app.BackupBlockE2eTest" time="9.499" />
+    <testcase name="backup031To040_navigationKeepsBackupScreenStable" classname="com.bruleetelie.app.BackupBlockE2eTest" time="6.242" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.BackupRestoreRegressionTest" tests="3" failures="0" errors="0" skipped="0" time="0.717" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="invalidDatabaseWithValidArchiveChecksumDoesNotEraseCurrentData" classname="com.bruleetelie.app.BackupRestoreRegressionTest" time="0.186" />
+    <testcase name="invalidSettingsAreValidatedBeforeAnyDatabaseReplacement" classname="com.bruleetelie.app.BackupRestoreRegressionTest" time="0.25" />
+    <testcase name="restoredBackupRefreshesLiveDataAndAllowsMoreWrites" classname="com.bruleetelie.app.BackupRestoreRegressionTest" time="0.281" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.BackupScreenE2eTest" tests="1" failures="0" errors="0" skipped="0" time="4.692" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="backupActionsAreAvailableFromNavigation" classname="com.bruleetelie.app.BackupScreenE2eTest" time="4.692" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.CanonicalWizardCostE2eTest" tests="8" failures="0" errors="0" skipped="0" time="83.547" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="cost030_offlineCalculationReachesStableSummary" classname="com.bruleetelie.app.CanonicalWizardCostE2eTest" time="9.521" />
+    <testcase name="cost025_backAndEditIngredientQuantityRecalculates" classname="com.bruleetelie.app.CanonicalWizardCostE2eTest" time="12.896" />
+    <testcase name="testCanonicalCostWizardFlow" classname="com.bruleetelie.app.CanonicalWizardCostE2eTest" time="18.619" />
+    <testcase name="cost028_duplicateIngredientShowsDecisionMessage" classname="com.bruleetelie.app.CanonicalWizardCostE2eTest" time="8.365" />
+    <testcase name="cost027_removingIngredientKeepsCostSummaryStable" classname="com.bruleetelie.app.CanonicalWizardCostE2eTest" time="6.486" />
+    <testcase name="cost029_missingPriceExplainsWhyCostCannotBeCalculated" classname="com.bruleetelie.app.CanonicalWizardCostE2eTest" time="5.91" />
+    <testcase name="cost026_cancelEditKeepsOriginalIngredient" classname="com.bruleetelie.app.CanonicalWizardCostE2eTest" time="8.995" />
+    <testcase name="wizardCanNavigateBackAndRemoveIngredient" classname="com.bruleetelie.app.CanonicalWizardCostE2eTest" time="12.755" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.CompletionRegressionTest" tests="2" failures="0" errors="0" skipped="0" time="5.227" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="completionShowsBusinessResultsAndContainsNoGameMechanics" classname="com.bruleetelie.app.CompletionRegressionTest" time="2.898" />
+    <testcase name="completionRetainsNegativeProfitAndHigherActualCosts" classname="com.bruleetelie.app.CompletionRegressionTest" time="2.329" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.CostScenarioIndividualE2eTest" tests="30" failures="0" errors="0" skipped="0" time="256.714" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="costE2e014_incompatibleUnitIsBlocked" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="11.118" />
+    <testcase name="costE2e017_expensiveIngredient" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="9.509" />
+    <testcase name="costE2e026_cancelEditRestoresValue" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="6.161" />
+    <testcase name="costE2e001_proportionalIngredientCost" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="12.665" />
+    <testcase name="costE2e013_literToMilliliterConversion" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="15.091" />
+    <testcase name="costE2e011_kilogramToGramConversion" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="12.978" />
+    <testcase name="costE2e003_activeLaborUsesTime" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="8.222" />
+    <testcase name="costE2e008_snapshotScreenIsStable" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="6.978" />
+    <testcase name="costE2e018_sameIngredientVersionsCanBeAdded" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="13.994" />
+    <testcase name="costE2e022_recipeWithoutGasReachesSummary" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="6.56" />
+    <testcase name="costE2e027_removeIngredientRecalculates" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="8.775" />
+    <testcase name="costE2e010_zeroUsedQuantityIsRejected" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="9.294" />
+    <testcase name="costE2e006_completeProjectedCost" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="5.841" />
+    <testcase name="costE2e028_duplicateIngredientRequiresDecision" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="7.572" />
+    <testcase name="costE2e025_backAndEditQuantityRecalculates" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="9.903" />
+    <testcase name="costE2e007_costFlowIsPersistable" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="5.799" />
+    <testcase name="costE2e020_otherCostsReachSummary" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="5.884" />
+    <testcase name="costE2e005_energyUsesPowerAndDuration" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="6.594" />
+    <testcase name="costE2e019_packagingCostReachesSummary" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="6.77" />
+    <testcase name="costE2e016_veryCheapIngredient" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="9.484" />
+    <testcase name="costE2e021_passiveTimeDoesNotBlockCalculation" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="5.5" />
+    <testcase name="costE2e024_recipeWithGasAndEnergyReachesSummary" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="6.117" />
+    <testcase name="costE2e012_gramToKilogramConversion" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="11.187" />
+    <testcase name="costE2e004_gasUsesDuration" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="6.296" />
+    <testcase name="costE2e030_offlineCalculationReachesStableSummary" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="5.581" />
+    <testcase name="costE2e015_centPrecisionIsAccepted" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="9.617" />
+    <testcase name="costE2e002_sumsIngredients" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="13.181" />
+    <testcase name="costE2e009_updatedPriceCanBeEntered" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="9.265" />
+    <testcase name="costE2e023_recipeWithoutEnergyReachesSummary" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="6.119" />
+    <testcase name="costE2e029_insufficientDataDoesNotCalculate" classname="com.bruleetelie.app.CostScenarioIndividualE2eTest" time="4.659" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.CrossScenarioIndividualE2eTest" tests="30" failures="0" errors="0" skipped="0" time="100.197" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="crossE2e022_invalidDataDoesNotPropagate" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="3.647" />
+    <testcase name="crossE2e002_quoteToFinance" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="2.494" />
+    <testcase name="crossE2e019_rankingToQuote" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="3.593" />
+    <testcase name="crossE2e010_financeSnapshotIsStable" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="3.185" />
+    <testcase name="crossE2e020_workflowPersistsAfterRestart" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="4.27" />
+    <testcase name="crossE2e007_priceToQuote" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="2.842" />
+    <testcase name="crossE2e005_saleToFinance" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="3.734" />
+    <testcase name="crossE2e030_fullEndToEndFlowIsAvailable" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="2.565" />
+    <testcase name="crossE2e013_schemaMigrationPreservesMetrics" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="3.876" />
+    <testcase name="crossE2e006_costToPrice" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="3.185" />
+    <testcase name="crossE2e028_reopenPreservesState" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="4.711" />
+    <testcase name="crossE2e004_productionToSale" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="3.69" />
+    <testcase name="crossE2e026_backupIntegrityIsStable" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="2.007" />
+    <testcase name="crossE2e001_quoteToProduction" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="2.868" />
+    <testcase name="crossE2e003_quoteToSale" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="3.555" />
+    <testcase name="crossE2e011_backupRoundTrip" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="3.277" />
+    <testcase name="crossE2e009_productionApprovalIsStable" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="3.249" />
+    <testcase name="crossE2e023_offlineFlowIsStable" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="3.76" />
+    <testcase name="crossE2e012_corruptBackupIsRejected" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="3.31" />
+    <testcase name="crossE2e027_navigationDoesNotDuplicateState" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="3.114" />
+    <testcase name="crossE2e029_androidStateIsConsistent" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="3.666" />
+    <testcase name="crossE2e015_correctedOcrToCalculation" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="3.207" />
+    <testcase name="crossE2e024_pdfExportFlowIsAvailable" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="3.381" />
+    <testcase name="crossE2e017_actualCostToEarnings" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="3.423" />
+    <testcase name="crossE2e014_ocrToCostToQuote" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="3.2" />
+    <testcase name="crossE2e018_trendToPricing" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="3.105" />
+    <testcase name="crossE2e025_webExportFlowIsAvailable" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="3.243" />
+    <testcase name="crossE2e008_quoteApprovalIsStable" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="3.151" />
+    <testcase name="crossE2e021_emptyStateTransitions" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="3.478" />
+    <testcase name="crossE2e016_manualPriceToProduction" classname="com.bruleetelie.app.CrossScenarioIndividualE2eTest" time="3.411" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.DevScenarioIndividualE2eTest" tests="28" failures="0" errors="0" skipped="0" time="100.855" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="devE2e008_orderProgressIsPersistent" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="3.319" />
+    <testcase name="devE2e012_checklistSupportsCompleteProgress" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="3.12" />
+    <testcase name="devE2e013_completedStepRemainsChecked" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="3.961" />
+    <testcase name="devE2e024_completionStateIsExplicit" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="3.186" />
+    <testcase name="devE2e017_realCostCanBeShown" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="3.343" />
+    <testcase name="devE2e016_orderStatusIsVisible" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="3.632" />
+    <testcase name="devE2e026_actualCostCanDiffer" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="3.279" />
+    <testcase name="devE2e009_finalizeActionIsAvailable" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="3.317" />
+    <testcase name="devE2e004_stepCanBeChecked" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="3.798" />
+    <testcase name="devE2e020_reopenDoesNotDuplicateOrder" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="3.471" />
+    <testcase name="devE2e014_uncompletedStepRemainsPending" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="3.414" />
+    <testcase name="devE2e006_reopenProductionBoard" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="3.726" />
+    <testcase name="devE2e019_varianceIsFinite" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="3.11" />
+    <testcase name="devE2e018_estimatedCostCanBeShown" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="4.067" />
+    <testcase name="devE2e001_orderAppearsInProduction" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="3.28" />
+    <testcase name="devE2e003_currentStepIsVisible" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="3.194" />
+    <testcase name="devE2e022_productionStateIsStable" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="4.55" />
+    <testcase name="devE2e015_stepOrderIsStable" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="5.398" />
+    <testcase name="devE2e021_navigationPreservesOrder" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="6.851" />
+    <testcase name="devE2e005_stepProgressIsAtomic" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="2.841" />
+    <testcase name="devE2e025_backupPreservesCosts" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="2.962" />
+    <testcase name="devE2e011_checklistSupportsPartialProgress" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="2.82" />
+    <testcase name="devE2e028_productionRemainsAvailableOffline" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="2.499" />
+    <testcase name="devE2e027_saleCompletionIsAvailable" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="3.414" />
+    <testcase name="devE2e002_orderHasRecipeSteps" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="3.308" />
+    <testcase name="devE2e007_multipleOrdersRemainSeparate" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="3.492" />
+    <testcase name="devE2e010_finalizeRequiresChecklist" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="3.877" />
+    <testcase name="devE2e023_invalidValuesAreAbsent" classname="com.bruleetelie.app.DevScenarioIndividualE2eTest" time="3.626" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.EarningsBlockE2eTest" tests="4" failures="0" errors="0" skipped="0" time="16.982" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="earn022To024_emptyAndProductionStatesRemainExplicit" classname="com.bruleetelie.app.EarningsBlockE2eTest" time="4.832" />
+    <testcase name="earn018To021_financeFilterRemainsStableAfterPeriodChange" classname="com.bruleetelie.app.EarningsBlockE2eTest" time="4.786" />
+    <testcase name="earn001To006_dashboardShowsRevenueProfitAndHistoricalMetrics" classname="com.bruleetelie.app.EarningsBlockE2eTest" time="2.941" />
+    <testcase name="earn007To017_financeSeparatesOperationalMetrics" classname="com.bruleetelie.app.EarningsBlockE2eTest" time="4.423" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" tests="26" failures="0" errors="0" skipped="0" time="94.931" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="earnE2e001_realProfitAfterSale" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="3.015" />
+    <testcase name="earnE2e024_insufficientValuesAreNotNaN" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="3.261" />
+    <testcase name="earnE2e025_chartHasAccessibleDescription" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="4.053" />
+    <testcase name="earnE2e020_timezoneBoundaryDoesNotCrash" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="3.313" />
+    <testcase name="earnE2e003_realMarginAfterCostIncrease" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="4.191" />
+    <testcase name="earnE2e019_yearBoundaryDoesNotCrash" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="3.373" />
+    <testcase name="earnE2e017_zeroRevenueWithPositiveCostIsExplicit" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="3.2" />
+    <testcase name="earnE2e014_averageTicketIsDisplayed" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="3.765" />
+    <testcase name="earnE2e006_historicalSaleRemainsStable" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="3.626" />
+    <testcase name="earnE2e024_revenueProfitChartIsAvailable" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="4.491" />
+    <testcase name="earnE2e021_reopenKeepsMetrics" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="4.048" />
+    <testcase name="earnE2e002_realProfitAfterCostIncrease" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="2.718" />
+    <testcase name="earnE2e012_multipleSalesSumRevenue" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="4.445" />
+    <testcase name="earnE2e010_refundDoesNotCrashFinance" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="2.697" />
+    <testcase name="earnE2e011_cancelledSaleIsNotCompletedRevenue" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="3.26" />
+    <testcase name="earnE2e018_monthFilterIsAvailable" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="3.829" />
+    <testcase name="earnE2e004_realProfitAfterSavings" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="3.757" />
+    <testcase name="earnE2e022_backupFlowIsAvailable" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="3.612" />
+    <testcase name="earnE2e015_negativeProfitIsFinite" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="3.624" />
+    <testcase name="earnE2e007_pendingPaymentIsSeparate" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="3.597" />
+    <testcase name="earnE2e023_csvExportActionIsAvailable" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="3.683" />
+    <testcase name="earnE2e016_zeroActualCostIsFinite" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="4.374" />
+    <testcase name="earnE2e005_financeUsesActualCost" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="3.673" />
+    <testcase name="earnE2e008_partialPaymentIsRepresented" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="4.171" />
+    <testcase name="earnE2e009_totalPaymentIsRepresented" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="3.267" />
+    <testcase name="earnE2e013_multipleSalesSumProfit" classname="com.bruleetelie.app.EarningsScenarioIndividualE2eTest" time="3.888" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.FinanceDashboardE2eTest" tests="1" failures="0" errors="0" skipped="0" time="4.053" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="dashboardUsesPersistedFinancialData" classname="com.bruleetelie.app.FinanceDashboardE2eTest" time="4.053" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.FinanceRegressionTest" tests="5" failures="0" errors="0" skipped="0" time="12.521" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="aSingleSaleOf9111DrawsBothRevenueAndProfitBars" classname="com.bruleetelie.app.FinanceRegressionTest" time="2.524" />
+    <testcase name="clearingSalesWhileDashboardIsVisibleRestoresEmptyState" classname="com.bruleetelie.app.FinanceRegressionTest" time="2.21" />
+    <testcase name="chartDisplaysLossesAndReturnsToEmptyWhenSaleLeavesTheSelectedPeriod" classname="com.bruleetelie.app.FinanceRegressionTest" time="2.444" />
+    <testcase name="freshAppFinanceAndPeriodFiltersWorkWithNoSales" classname="com.bruleetelie.app.FinanceRegressionTest" time="3.093" />
+    <testcase name="recipeRankingAggregatesRepeatedOrdersRatherThanRepeatingRecipeRows" classname="com.bruleetelie.app.FinanceRegressionTest" time="2.25" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.NavigationLayoutRegressionTest" tests="2" failures="0" errors="0" skipped="0" time="11.576" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="debugDistributionCannotAutomaticallyRestoreOldTestRegistrations" classname="com.bruleetelie.app.NavigationLayoutRegressionTest" time="4.401" />
+    <testcase name="fiveTabsHaveConsistentTouchTargetsAndOpenTheirRealScreens" classname="com.bruleetelie.app.NavigationLayoutRegressionTest" time="7.175" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.OcrCaptureE2eTest" tests="2" failures="0" errors="0" skipped="0" time="10.907" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="processRecognizedReceiptText_opensReviewWithParsedItems" classname="com.bruleetelie.app.OcrCaptureE2eTest" time="5.759" />
+    <testcase name="realDocumentScannerAction_isAvailableBeforeManualFallback" classname="com.bruleetelie.app.OcrCaptureE2eTest" time="5.148" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.OcrIgnoreItemE2eTest" tests="1" failures="0" errors="0" skipped="0" time="7.942" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="ignoreDetectedItem_excludesItFromSavedPriceObservations" classname="com.bruleetelie.app.OcrIgnoreItemE2eTest" time="7.942" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.OcrItemEditingE2eTest" tests="1" failures="0" errors="0" skipped="0" time="9.786" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="editDetectedQuantityAndPrice_updatesItemBeforeConfirmation" classname="com.bruleetelie.app.OcrItemEditingE2eTest" time="9.786" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.OcrLifecycleStressTest" tests="2" failures="0" errors="0" skipped="0" time="20.069" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="reviewStateSurvivesBackgroundForegroundWithoutDuplicateCommit" classname="com.bruleetelie.app.OcrLifecycleStressTest" time="11.09" />
+    <testcase name="reviewStateSurvivesActivityRecreationWithoutAutoPersisting" classname="com.bruleetelie.app.OcrLifecycleStressTest" time="8.979" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.OcrReviewE2eTest" tests="1" failures="0" errors="0" skipped="0" time="7.886" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="reviewRequiresEveryOcrItemConfirmation_beforeReturningToProduction" classname="com.bruleetelie.app.OcrReviewE2eTest" time="7.886" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.OperationalScreensRegressionTest" tests="6" failures="0" errors="0" skipped="0" time="22.309" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="fixedCostsAndDefaultMarginAreEditableAndAnalyticsExportIsReachable" classname="com.bruleetelie.app.OperationalScreensRegressionTest" time="4.272" />
+    <testcase name="pendingQuotesCanBeSharedApprovedOrRejectedAndAllFilterWorks" classname="com.bruleetelie.app.OperationalScreensRegressionTest" time="4.182" />
+    <testcase name="OCRStartsEmptySupportsPdfAndDisablesActionsWhileProcessing" classname="com.bruleetelie.app.OperationalScreensRegressionTest" time="3.847" />
+    <testcase name="WhatsAppUsesViewIntentWithEncodedCustomerMessage" classname="com.bruleetelie.app.OperationalScreensRegressionTest" time="2.409" />
+    <testcase name="realCustomerPdfIsSharedFromApplicationContextWithReadableUri" classname="com.bruleetelie.app.OperationalScreensRegressionTest" time="2.069" />
+    <testcase name="inventoryAcceptsOnlyValidPricesWithoutShoppingActions" classname="com.bruleetelie.app.OperationalScreensRegressionTest" time="5.53" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.PriceScenarioIndividualE2eTest" tests="23" failures="1" errors="0" skipped="0" time="158.314" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="priceE2e011_zeroCostDoesNotProduceInvalidNumber" classname="com.bruleetelie.app.PriceScenarioIndividualE2eTest" time="7.622" />
+    <testcase name="priceE2e009_veryHighTargetMarginRemainsFinite" classname="com.bruleetelie.app.PriceScenarioIndividualE2eTest" time="7.453" />
+    <testcase name="priceE2e008_fiftyPercentTargetMargin" classname="com.bruleetelie.app.PriceScenarioIndividualE2eTest" time="7.054" />
+    <testcase name="priceE2e019_commaCurrencyInputIsAccepted" classname="com.bruleetelie.app.PriceScenarioIndividualE2eTest" time="6.219" />
+    <testcase name="priceE2e017_manualPriceSurvivesPricingSummary" classname="com.bruleetelie.app.PriceScenarioIndividualE2eTest" time="7.975" />
+    <testcase name="priceE2e002_profitFollowsSuggestedPrice" classname="com.bruleetelie.app.PriceScenarioIndividualE2eTest" time="6.304" />
+    <testcase name="priceE2e014_approvedQuoteUsesDisplayedPrice" classname="com.bruleetelie.app.PriceScenarioIndividualE2eTest" time="6.874" />
+    <testcase name="priceE2e001_suggestedPriceForTargetMargin" classname="com.bruleetelie.app.PriceScenarioIndividualE2eTest" time="5.696" />
+    <testcase name="priceE2e020_invalidCurrencyInputDoesNotCrash" classname="com.bruleetelie.app.PriceScenarioIndividualE2eTest" time="7.634" />
+    <testcase name="priceE2e004_manualPriceRecalculatesProfit" classname="com.bruleetelie.app.PriceScenarioIndividualE2eTest" time="7.415" />
+    <testcase name="priceE2e022_quotePriceIsAvailableForDocuments" classname="com.bruleetelie.app.PriceScenarioIndividualE2eTest" time="6.509" />
+    <testcase name="priceE2e015_newMarginAffectsCurrentCalculation" classname="com.bruleetelie.app.PriceScenarioIndividualE2eTest" time="7.716" />
+    <testcase name="priceE2e012_suggestedPriceRoundingIsFinite" classname="com.bruleetelie.app.PriceScenarioIndividualE2eTest" time="5.881" />
+    <testcase name="priceE2e018_largeSalePriceIsDisplayed" classname="com.bruleetelie.app.PriceScenarioIndividualE2eTest" time="7.544" />
+    <testcase name="priceE2e006_zeroTargetMarginIsAccepted" classname="com.bruleetelie.app.PriceScenarioIndividualE2eTest" time="7.95" />
+    <testcase name="priceE2e021_suggestedPriceIsAvailableOffline" classname="com.bruleetelie.app.PriceScenarioIndividualE2eTest" time="5.874" />
+    <testcase name="priceE2e013_finalPriceCanAdvanceToQuote" classname="com.bruleetelie.app.PriceScenarioIndividualE2eTest" time="6.232" />
+    <testcase name="priceE2e005_priceBelowCostIsRepresented" classname="com.bruleetelie.app.PriceScenarioIndividualE2eTest" time="6.832" />
+    <testcase name="priceE2e023_customerQuoteCanGeneratePdf" classname="com.bruleetelie.app.PriceScenarioIndividualE2eTest" time="6.082" />
+    <testcase name="priceE2e016_costEditCanRecalculatePrice" classname="com.bruleetelie.app.PriceScenarioIndividualE2eTest" time="7.718" />
+    <testcase name="priceE2e007_tenPercentTargetMargin" classname="com.bruleetelie.app.PriceScenarioIndividualE2eTest" time="6.718" />
+    <testcase name="priceE2e010_negativeMarginIsBlocked" classname="com.bruleetelie.app.PriceScenarioIndividualE2eTest" time="7.281">
+      <failure>java.lang.AssertionError: Assert failed: The component with Text + InputText + EditableText contains 'Margem: 35.00%' (ignoreCase: false) is not displayed!
+at androidx.compose.ui.test.AssertionsKt.assertIsDisplayed(Assertions.kt:34)
+at com.bruleetelie.app.PriceScenarioIndividualE2eTest.priceE2e010_negativeMarginIsBlocked(PriceScenarioIndividualE2eTest.kt:44)
+</failure>
+    </testcase>
+    <testcase name="priceE2e003_marginIsDisplayedAsMargin" classname="com.bruleetelie.app.PriceScenarioIndividualE2eTest" time="5.731" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.PricingBlockE2eTest" tests="4" failures="0" errors="0" skipped="0" time="26.598" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="price001To003_suggestedPriceProfitAndMarginAreDisplayed" classname="com.bruleetelie.app.PricingBlockE2eTest" time="6.161" />
+    <testcase name="price013To022_priceSummaryCanAdvanceToQuoteOffline" classname="com.bruleetelie.app.PricingBlockE2eTest" time="6.846" />
+    <testcase name="price004_manualAdjustmentRecalculatesProfit" classname="com.bruleetelie.app.PricingBlockE2eTest" time="6.122" />
+    <testcase name="price005To012_priceAdjustmentRemainsFiniteAndFormatted" classname="com.bruleetelie.app.PricingBlockE2eTest" time="7.469" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.ProductionBlockE2eTest" tests="4" failures="0" errors="0" skipped="0" time="16.143" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="dev001To010_productionBoardShowsOrderAndChecklist" classname="com.bruleetelie.app.ProductionBlockE2eTest" time="3.718" />
+    <testcase name="dev025To028_productionStateDoesNotExposeInvalidValues" classname="com.bruleetelie.app.ProductionBlockE2eTest" time="2.869" />
+    <testcase name="dev020To024_productionCanBeReopenedFromNavigation" classname="com.bruleetelie.app.ProductionBlockE2eTest" time="5.091" />
+    <testcase name="dev011To019_checklistSupportsAtomicStepProgress" classname="com.bruleetelie.app.ProductionBlockE2eTest" time="4.465" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.ProductionRegressionTest" tests="5" failures="0" errors="0" skipped="0" time="22.247" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="invalidActualCostBlocksCompletionAndCancelDoesNotSell" classname="com.bruleetelie.app.ProductionRegressionTest" time="4.839" />
+    <testcase name="dateFiltersReallyChangeOrdersAndExcludeCompleted" classname="com.bruleetelie.app.ProductionRegressionTest" time="6.536" />
+    <testcase name="completedOrderCannotBeFinalizedAgain" classname="com.bruleetelie.app.ProductionRegressionTest" time="2.124" />
+    <testcase name="emptyBoardHasNoFakeOrdersAndNewQuoteWorks" classname="com.bruleetelie.app.ProductionRegressionTest" time="2.861" />
+    <testcase name="checklistEnablesFinalizationAndActualCostCanBeChanged" classname="com.bruleetelie.app.ProductionRegressionTest" time="5.887" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.QuoteFlowE2eTest" tests="2" failures="0" errors="0" skipped="0" time="51.064" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="createRecipeWithCostsApproveProduceAndRecordActualCostsAndRevenue" classname="com.bruleetelie.app.QuoteFlowE2eTest" time="28.77" />
+    <testcase name="WhatsAppActuallyLaunchesCustomerIntentAndSavedQuoteCanBeApprovedLater" classname="com.bruleetelie.app.QuoteFlowE2eTest" time="22.294" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.RankScenarioIndividualE2eTest" tests="22" failures="1" errors="0" skipped="0" time="83.024" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="rankE2e020_rankingDoesNotExposeInvalidNumbers" classname="com.bruleetelie.app.RankScenarioIndividualE2eTest" time="3.574" />
+    <testcase name="rankE2e011_rankingUsesActualCost" classname="com.bruleetelie.app.RankScenarioIndividualE2eTest" time="3.658" />
+    <testcase name="rankE2e013_historicalRankingRemainsStable" classname="com.bruleetelie.app.RankScenarioIndividualE2eTest" time="3.303" />
+    <testcase name="rankE2e019_rankingSurvivesNavigation" classname="com.bruleetelie.app.RankScenarioIndividualE2eTest" time="4.996" />
+    <testcase name="rankE2e004_tiesUseStableOrder" classname="com.bruleetelie.app.RankScenarioIndividualE2eTest" time="3.134" />
+    <testcase name="rankE2e010_rankingHasFiniteMargin" classname="com.bruleetelie.app.RankScenarioIndividualE2eTest" time="3.361" />
+    <testcase name="rankE2e015_productNameIsDisplayed" classname="com.bruleetelie.app.RankScenarioIndividualE2eTest" time="4.237" />
+    <testcase name="rankE2e022_rankingRemainsAvailableOffline" classname="com.bruleetelie.app.RankScenarioIndividualE2eTest" time="3.58" />
+    <testcase name="rankE2e005_negativeProfitRemainsVisible" classname="com.bruleetelie.app.RankScenarioIndividualE2eTest" time="4.357" />
+    <testcase name="rankE2e017_marginPillIsDisplayed" classname="com.bruleetelie.app.RankScenarioIndividualE2eTest" time="3.394" />
+    <testcase name="rankE2e008_monthFilterRestoresRanking" classname="com.bruleetelie.app.RankScenarioIndividualE2eTest" time="3.634" />
+    <testcase name="rankE2e014_multipleRecipesAreListed" classname="com.bruleetelie.app.RankScenarioIndividualE2eTest" time="4.398" />
+    <testcase name="rankE2e016_profitPerUnitIsDisplayed" classname="com.bruleetelie.app.RankScenarioIndividualE2eTest" time="4.144">
+      <failure>java.lang.AssertionError: Action performScrollTo() failed.
+Can't retrieve node at index '0' of 'Text + InputText + EditableText contains 'Lucro/unid.' (ignoreCase: false) as substring'
+There are no existing nodes for that selector.
+
+at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:175)
+at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:81)
+at com.bruleetelie.app.RankScenarioIndividualE2eTest.rankE2e016_profitPerUnitIsDisplayed(RankScenarioIndividualE2eTest.kt:36)
+</failure>
+    </testcase>
+    <testcase name="rankE2e001_topRecipeIsShown" classname="com.bruleetelie.app.RankScenarioIndividualE2eTest" time="4.06" />
+    <testcase name="rankE2e018_emptyRankingIsExplicit" classname="com.bruleetelie.app.RankScenarioIndividualE2eTest" time="3.027" />
+    <testcase name="rankE2e021_rankingIsScrollable" classname="com.bruleetelie.app.RankScenarioIndividualE2eTest" time="3.719" />
+    <testcase name="rankE2e002_profitOrdersRanking" classname="com.bruleetelie.app.RankScenarioIndividualE2eTest" time="3.836" />
+    <testcase name="rankE2e009_rankingHasFiniteProfit" classname="com.bruleetelie.app.RankScenarioIndividualE2eTest" time="3.501" />
+    <testcase name="rankE2e007_periodFilterChangesRanking" classname="com.bruleetelie.app.RankScenarioIndividualE2eTest" time="3.131" />
+    <testcase name="rankE2e006_zeroSalesShowsEmptyState" classname="com.bruleetelie.app.RankScenarioIndividualE2eTest" time="4.514" />
+    <testcase name="rankE2e003_marginOrdersRanking" classname="com.bruleetelie.app.RankScenarioIndividualE2eTest" time="3.496" />
+    <testcase name="rankE2e012_rankingUsesSaleSnapshot" classname="com.bruleetelie.app.RankScenarioIndividualE2eTest" time="3.97" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.TrendBlockE2eTest" tests="4" failures="0" errors="0" skipped="0" time="17.181" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="trend011To024_financialValuesNeverExposeInvalidArtifacts" classname="com.bruleetelie.app.TrendBlockE2eTest" time="3.838" />
+    <testcase name="trend001To003_baselineAndBelowThresholdAreStable" classname="com.bruleetelie.app.TrendBlockE2eTest" time="3.578" />
+    <testcase name="trend004To010_dashboardExposesPeriodAndTrendArea" classname="com.bruleetelie.app.TrendBlockE2eTest" time="5.026" />
+    <testcase name="trend025To028_trendStateSurvivesNavigation" classname="com.bruleetelie.app.TrendBlockE2eTest" time="4.739" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.TrendScenarioIndividualE2eTest" tests="28" failures="0" errors="0" skipped="0" time="103.022" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="trendE2e006_kgAndGramAreNormalized" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="3.662" />
+    <testcase name="trendE2e024_historyPersistsAfterRestart" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="3.925" />
+    <testcase name="trendE2e001_firstPurchaseCreatesBaseline" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="3.358" />
+    <testcase name="trendE2e012_unconfirmedOcrDoesNotChangeTrend" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="3.897" />
+    <testcase name="trendE2e014_manualCorrectionAfterOcr" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="3.63" />
+    <testcase name="trendE2e004_accumulatedIncreaseIsSeparate" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="3.33" />
+    <testcase name="trendE2e011_confirmedOcrCreatesObservation" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="3.626" />
+    <testcase name="trendE2e008_suppliersRemainDistinct" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="3.449" />
+    <testcase name="trendE2e025_backupPreservesHistory" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="4.125" />
+    <testcase name="trendE2e028_movingAverageDoesNotUseFutureData" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="3.921" />
+    <testcase name="trendE2e007_oldHistoryIsImmutable" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="3.228" />
+    <testcase name="trendE2e020_zeroQuantityIsInvalid" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="4.005" />
+    <testcase name="trendE2e010_incompatibleUnitIsExcluded" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="3.802" />
+    <testcase name="trendE2e009_fractionalQuantityIsHandled" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="4.256" />
+    <testcase name="trendE2e026_importedSeriesIsAvailable" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="3.357" />
+    <testcase name="trendE2e022_historyIsChronological" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="3.223" />
+    <testcase name="trendE2e015_discountUsesFinalPrice" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="3.96" />
+    <testcase name="trendE2e017_veryHighIncreaseIsFinite" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="3.771" />
+    <testcase name="trendE2e013_duplicateNoteDoesNotDuplicateHistory" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="3.19" />
+    <testcase name="trendE2e003_belowThresholdDoesNotTrigger" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="3.891" />
+    <testcase name="trendE2e018_halfPriceDropIsFinite" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="3.62" />
+    <testcase name="trendE2e027_insufficientHistoryIsExplicit" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="3.342" />
+    <testcase name="trendE2e021_periodFilterIsAvailable" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="4.218" />
+    <testcase name="trendE2e016_equalPriceHasNoVariation" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="3.726" />
+    <testcase name="trendE2e019_zeroPriceIsInvalid" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="3.843" />
+    <testcase name="trendE2e023_sameDayPurchasesAreStable" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="3.521" />
+    <testcase name="trendE2e002_exactTenPercentTriggersAlert" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="3.241" />
+    <testcase name="trendE2e005_exactTenPercentDrop" classname="com.bruleetelie.app.TrendScenarioIndividualE2eTest" time="3.905" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.WizardRegressionTest" tests="12" failures="0" errors="0" skipped="0" time="139.729" timestamp="2026-10-20T17:35:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="invalidOperatingCostsExplainErrorsAndCorrectionEnablesCalculation" classname="com.bruleetelie.app.WizardRegressionTest" time="12.967" />
+    <testcase name="formSurvivesActivityStateRestorationIncludingIngredients" classname="com.bruleetelie.app.WizardRegressionTest" time="9.892" />
+    <testcase name="savedRecipeCanBeLoadedWithReducedMotionAndItsRealYield" classname="com.bruleetelie.app.WizardRegressionTest" time="3.324" />
+    <testcase name="pdfDraftAndApprovalShareTheSameQuoteIdentity" classname="com.bruleetelie.app.WizardRegressionTest" time="14.441" />
+    <testcase name="removingLastIngredientBlocksAdvanceAndEditingRecalculates" classname="com.bruleetelie.app.WizardRegressionTest" time="11.046" />
+    <testcase name="manualCurrencyKeepsSequentialKeystrokesAndInvalidPriceBlocksAdvance" classname="com.bruleetelie.app.WizardRegressionTest" time="13.39" />
+    <testcase name="WhatsAppDoesNotClaimSuccessWhenCallbackFailsToOpen" classname="com.bruleetelie.app.WizardRegressionTest" time="13.869" />
+    <testcase name="reducedMotionStillAllowsEveryWizardStepAndDraftSave" classname="com.bruleetelie.app.WizardRegressionTest" time="12.175" />
+    <testcase name="pdfCarriesCustomerDeliveryValidityAndNotesFromTheForm" classname="com.bruleetelie.app.WizardRegressionTest" time="15.951" />
+    <testcase name="startsEmptyAndRequiresRecipeAndPositiveYield" classname="com.bruleetelie.app.WizardRegressionTest" time="4.744" />
+    <testcase name="operationalInputsCanBeClearedAndPackagingAndOverheadPersist" classname="com.bruleetelie.app.WizardRegressionTest" time="12.756" />
+    <testcase name="optionalOperatingFieldsEmptyCalculateZeroWithoutReusingOldValues" classname="com.bruleetelie.app.WizardRegressionTest" time="15.174" />
+  </testsuite>
+</testsuites>

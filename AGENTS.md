@@ -130,3 +130,9 @@ start/end HTML-comment markers, without disturbing the rest of the file.
 - Keep fictitious customers, recipes, quotes, orders, sales and receipt text in test sources only; the installed app must start without demonstration data.
 - Instrumented tests must await pending writes before cleanup, reset settings they change, and verify the database is empty afterward.
 - After emulator validation, leave the installed app with its data cleared.
+
+## Product design
+
+- Use `layout.png` as the mobile production-board layout reference: cream, olive, caramel and sage, balanced cards, consistent outline icons and five equal navigation tabs.
+- The Duolingo inspiration applies to visual style, transitions and touch feedback only. Do not add XP, levels, streaks, offensives or game rewards; all displayed metrics must serve quotes, production or finances.
+- Keep shopping lists out of the application navigation. Preserve legacy backup compatibility in the data layer.

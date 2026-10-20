@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bruleetelie.domain.FinancialAnalysisEngineTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-20T21:51:13.819Z" hostname="victor-Lenovo-IdeaPad-S145-15API" time="0.092">
+  <properties/>
+  <testcase name="testCalculateSummary" classname="com.bruleetelie.domain.FinancialAnalysisEngineTest" time="0.003"/>
+  <testcase name="testBreakEven" classname="com.bruleetelie.domain.FinancialAnalysisEngineTest" time="0.001"/>
+  <testcase name="large sales history remains exact" classname="com.bruleetelie.domain.FinancialAnalysisEngineTest" time="0.086"/>
+  <testcase name="testPriceVariation" classname="com.bruleetelie.domain.FinancialAnalysisEngineTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

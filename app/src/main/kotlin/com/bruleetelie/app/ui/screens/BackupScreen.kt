@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.Switch
 import androidx.compose.material3.OutlinedTextField
@@ -22,6 +20,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import com.bruleetelie.app.ui.components.*
 import com.bruleetelie.domain.Money
 import com.bruleetelie.domain.OperatingSettings
 
@@ -102,17 +101,6 @@ fun BackupScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("Sons de conquista")
-            Switch(
-                checked = settings.soundsEnabled,
-                onCheckedChange = { onSettingsChanged(settings.copy(soundsEnabled = it)) },
-                modifier = Modifier.testTag("settings_sounds")
-            )
-        }
-        androidx.compose.foundation.layout.Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
             Text("Reduzir animações")
             Switch(
                 checked = settings.reducedMotion,
@@ -130,19 +118,13 @@ fun BackupScreen(
             margin = value
             value.replace(',', '.').toBigDecimalOrNull()?.takeIf { it >= java.math.BigDecimal.ZERO && it < java.math.BigDecimal(100) }?.let { onSettingsChanged(settings.copy(defaultMarginPercent = it)) }
         }, label = { Text("Margem padrão (%)") }, modifier = Modifier.fillMaxWidth().testTag("settings_default_margin"))
-        OutlinedButton(onExportAnalytics, Modifier.fillMaxWidth().testTag("analytics_export")) { Text("EXPORTAR DADOS PARA WEB") }
+        TactileSecondaryButton("EXPORTAR DADOS PARA WEB", onExportAnalytics, Modifier.testTag("analytics_export"), BruleeSymbol.Download)
         Text(
             "Exporte um arquivo portátil com banco, histórico e configurações. " +
                 "A restauração valida versão e integridade antes de substituir os dados.",
             style = MaterialTheme.typography.bodyMedium
         )
-        Button(
-            onClick = onExport,
-            modifier = Modifier.fillMaxWidth().testTag("backup_export")
-        ) { Text("EXPORTAR BACKUP") }
-        OutlinedButton(
-            onClick = onRestore,
-            modifier = Modifier.fillMaxWidth().testTag("backup_restore")
-        ) { Text("RESTAURAR BACKUP") }
+        TactilePrimaryButton("EXPORTAR BACKUP", onExport, Modifier.testTag("backup_export"), BruleeSymbol.Download)
+        TactileSecondaryButton("RESTAURAR BACKUP", onRestore, Modifier.testTag("backup_restore"), BruleeSymbol.Orders)
     }
 }

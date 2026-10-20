@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuites tests="3" failures="0" errors="0" skipped="0" time="3.744" timestamp="2026-10-20T21:51:04" hostname="localhost">
+  <testsuite name="com.bruleetelie.data.BruleeDatabaseMigrationTest" tests="2" failures="0" errors="0" skipped="0" time="0.391" timestamp="2026-10-20T21:51:04" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":data" />
+    </properties>
+    <testcase name="migrate3To4_preservesSaleSnapshotAndCreatesFinancialTables" classname="com.bruleetelie.data.BruleeDatabaseMigrationTest" time="0.26" />
+    <testcase name="migrate4To5PreservesOldDraftAndAddsNullableInputSnapshot" classname="com.bruleetelie.data.BruleeDatabaseMigrationTest" time="0.131" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.data.RepositoryPersistenceRegressionTest" tests="1" failures="0" errors="0" skipped="0" time="2.77" timestamp="2026-10-20T21:51:04" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":data" />
+    </properties>
+    <testcase name="recipeRevisionsQuoteChecklistAndSaleSurviveReopeningRepository" classname="com.bruleetelie.data.RepositoryPersistenceRegressionTest" time="2.77" />
+  </testsuite>
+</testsuites>

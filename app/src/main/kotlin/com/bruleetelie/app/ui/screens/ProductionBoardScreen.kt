@@ -15,7 +15,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.font.FontWeight
+import com.bruleetelie.app.ui.theme.*
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.bruleetelie.app.ui.components.*
@@ -58,27 +60,27 @@ fun ProductionBoardScreen(
         Modifier.fillMaxSize().testTag("production_board").verticalScroll(rememberScrollState()).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text("Sua bancada", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
+        Text("SUA BANCADA", style = MaterialTheme.typography.labelSmall, color = BruleeSecondary)
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-            Text("Fila de Produção", style = MaterialTheme.typography.headlineMedium)
+            Text("Fila de Produção", Modifier.weight(1f), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
             StatusPill("${active.size} ativas")
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            MetricStatCard("◷", "Próxima entrega", next?.deliveryTimeFormatted ?: "Sem entregas", Modifier.weight(1f))
-            MetricStatCard("♨", "Em produção", "${active.count { it.status == ProductionStatus.InProgress }} pedidos", Modifier.weight(1f))
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            MetricStatCard(BruleeSymbol.Clock, "Próxima entrega", next?.deliveryTimeFormatted ?: "Sem entregas", Modifier.weight(1f))
+            MetricStatCard(BruleeSymbol.Flame, "Em produção", "${active.count { it.status == ProductionStatus.InProgress }} pedidos", Modifier.weight(1f))
         }
-        TactilePrimaryButton("NOVO ORÇAMENTO", onNewQuoteClicked, Modifier.testTag("production_new_quote"), icon = "+")
+        TactilePrimaryButton("NOVO ORÇAMENTO", onNewQuoteClicked, Modifier.testTag("production_new_quote"), icon = BruleeSymbol.Plus)
         Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             listOf("Em aberto", "Hoje", "Amanhã", "Esta semana", "Concluídos").forEachIndexed { index, filter ->
-                FilterChip(selectedFilter == filter, { selectedFilter = filter }, label = { Text(filter) }, modifier = Modifier.testTag("production_filter_$index"))
+                FilterChip(selectedFilter == filter, { selectedFilter = filter }, label = { Text(filter) }, modifier = Modifier.testTag("production_filter_$index"), shape = RoundedCornerShape(22.dp), colors = FilterChipDefaults.filterChipColors(selectedContainerColor = BruleeSecondary, selectedLabelColor = androidx.compose.ui.graphics.Color.White))
             }
         }
         if (filtered.isEmpty()) {
-            Surface(Modifier.fillMaxWidth().testTag("production_empty"), shape = RoundedCornerShape(24.dp), color = MaterialTheme.colorScheme.primaryContainer) {
-                Column(Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    BruleeMascot()
-                    Text(if (active.isEmpty() && selectedFilter == "Em aberto") "Sua próxima receita começa aqui" else "Nenhum pedido neste filtro", style = MaterialTheme.typography.titleLarge)
-                    Text("Crie um orçamento e aprove com o cliente para acompanhar cada etapa da produção.")
+            Surface(Modifier.fillMaxWidth().testTag("production_empty"), shape = RoundedCornerShape(24.dp), color = androidx.compose.ui.graphics.Color(0xFFE3EDDF)) {
+                Column(Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 28.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    BruleeMascot(size = 112.dp)
+                    Text(if (active.isEmpty() && selectedFilter == "Em aberto") "Sua próxima receita começa aqui" else "Nenhum pedido neste filtro", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+                    Text("Crie um orçamento e aprove com o cliente para acompanhar cada etapa da produção.", textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         }
@@ -108,7 +110,7 @@ fun ProductionBoardScreen(
                         }
                     }
                     if (order.status != ProductionStatus.Completed) {
-                        TactilePrimaryButton("✓  Finalizar Pedido", { finishingId = order.id }, Modifier.testTag("production_finalize_${order.id}"), enabled = order.isAllStepsDone)
+                        TactilePrimaryButton("Finalizar Pedido", { finishingId = order.id }, Modifier.testTag("production_finalize_${order.id}"), enabled = order.isAllStepsDone)
                         if (!order.isAllStepsDone) Text("Conclua as etapas para registrar os custos reais e finalizar.", style = MaterialTheme.typography.bodySmall)
                     } else Text("Custo real: ${(order.actualCosts ?: order.estimatedCosts).total.format()}")
                 }

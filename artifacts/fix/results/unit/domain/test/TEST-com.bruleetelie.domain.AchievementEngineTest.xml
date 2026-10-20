@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bruleetelie.domain.AchievementEngineTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-20T21:51:13.648Z" hostname="victor-Lenovo-IdeaPad-S145-15API" time="0.074">
+  <properties/>
+  <testcase name="stops profitable streak on first loss" classname="com.bruleetelie.domain.AchievementEngineTest" time="0.061"/>
+  <testcase name="counts one sale day only once and walks consecutive days" classname="com.bruleetelie.domain.AchievementEngineTest" time="0.004"/>
+  <testcase name="allows streak whose last sale was yesterday" classname="com.bruleetelie.domain.AchievementEngineTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

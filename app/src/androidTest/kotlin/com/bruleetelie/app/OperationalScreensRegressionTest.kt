@@ -18,28 +18,31 @@ class OperationalScreensRegressionTest {
     private fun quote() = Quote("q1", "#ORC-REAL", Customer("c1", "Cliente real", "11999998888"), "Bolo", "", 1,
         PricingEngine.fromSalePrice(RecipeCosts(Money(2000), Money(1000), Money(200), Money(300)), Money(6000)), "21/10/2026 16:00")
     @Test fun pendingQuotesCanBeSharedApprovedOrRejectedAndAllFilterWorks() {
-        var quotes by mutableStateOf(listOf(quote(), quote().copy(id = "done", status = QuoteStatus.ConvertedToSale)))
+        var quotes by mutableStateOf(listOf(quote().copy(status = QuoteStatus.Sent), quote().copy(id = "done", status = QuoteStatus.ConvertedToSale)))
         var shared = ""; var pdf = ""; var approved = ""
         rule.setContent { BruleeTheme { QuotesScreen(quotes, {}, { approved = it.id }, { shared = it.id }, { pdf = it.id }, { q -> quotes = quotes.map { if (it.id == q.id) it.copy(status = QuoteStatus.Rejected) else it } }) } }
         rule.onNodeWithTag("quote_card_done").assertDoesNotExist()
-        rule.onNodeWithTag("quote_whatsapp_q1").performScrollTo().performClick()
-        rule.onNodeWithTag("quote_pdf_q1").performScrollTo().performClick()
+        rule.onNodeWithTag("quote_actions_q1").performScrollTo().performClick()
+        rule.onNodeWithTag("quote_whatsapp_q1").performClick()
+        rule.onNodeWithTag("quote_actions_q1").performScrollTo().performClick()
+        rule.onNodeWithTag("quote_pdf_q1").performClick()
         rule.onNodeWithTag("quote_approve_q1").performScrollTo().performClick()
         rule.runOnIdle { assertEquals("q1", shared); assertEquals("q1", pdf); assertEquals("q1", approved) }
-        rule.onNodeWithTag("quote_reject_q1").performScrollTo().performClick()
+        rule.onNodeWithTag("quote_actions_q1").performScrollTo().performClick()
+        rule.onNodeWithTag("quote_reject_q1").performClick()
         rule.onNodeWithTag("quote_card_q1").assertDoesNotExist()
         rule.onNodeWithTag("quotes_all").performScrollTo().performClick()
         rule.onNodeWithTag("quote_card_done").assertExists()
         rule.onNodeWithTag("quote_approve_done").assertDoesNotExist()
     }
-    @Test fun inventoryAcceptsOnlyValidPricesAndCanAddToShopping() {
+    @Test fun inventoryAcceptsOnlyValidPricesWithoutShoppingActions() {
         val repo = BruleeRepository()
         val ingredient = repo.addIngredient("Chocolate real", "kg")
         repo.addPriceObservation(ingredient.id, "", "1", "kg", 5000, 5000)
-        var saved: List<String>? = null; var buy = ""
+        var saved: List<String>? = null
         val ingredientSnapshot = repo.ingredients.value
         val observationSnapshot = repo.priceObservations.value
-        rule.setContent { BruleeTheme { InventoryScreen(ingredientSnapshot, observationSnapshot, {}, { name, qty, unit, price -> saved = listOf(name, qty, unit, price.cents.toString()) }, { buy = it }) } }
+        rule.setContent { BruleeTheme { InventoryScreen(ingredientSnapshot, observationSnapshot, {}, { name, qty, unit, price -> saved = listOf(name, qty, unit, price.cents.toString()) }) } }
         rule.onNodeWithTag("stock_save").performScrollTo().assertIsNotEnabled()
         rule.onNodeWithTag("stock_name").performScrollTo().performTextInput("Farinha")
         rule.onNodeWithTag("stock_quantity").performTextInput("1000")
@@ -48,8 +51,7 @@ class OperationalScreensRegressionTest {
         rule.onNodeWithTag("stock_price").performScrollTo().performTextReplacement("8,50")
         rule.onNodeWithTag("stock_save").performScrollTo().performClick()
         rule.runOnIdle { assertEquals(listOf("Farinha", "1000", "g", "850"), saved) }
-        rule.onNodeWithTag("stock_buy_${ingredient.id}").performScrollTo().performClick()
-        rule.runOnIdle { assertEquals("Chocolate real", buy) }
+        rule.onNodeWithTag("stock_buy_${ingredient.id}").assertDoesNotExist()
     }
     @Test fun fixedCostsAndDefaultMarginAreEditableAndAnalyticsExportIsReachable() {
         var settings by mutableStateOf(OperatingSettings())

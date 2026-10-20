@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bruleetelie.app.DeliveryDateTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-20T21:51:16.648Z" hostname="victor-Lenovo-IdeaPad-S145-15API" time="0.016">
+  <properties/>
+  <testcase name="onlyTodayAndFutureRealBrazilianDatesAreAccepted" classname="com.bruleetelie.app.DeliveryDateTest" time="0.016"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

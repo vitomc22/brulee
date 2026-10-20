@@ -1,0 +1,117 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuites tests="33" failures="3" errors="0" skipped="0" time="215.686" timestamp="2026-10-20T20:05:01" hostname="localhost">
+  <testsuite name="com.bruleetelie.app.DraftQuoteE2eTest" tests="3" failures="1" errors="0" skipped="0" time="53.58" timestamp="2026-10-20T20:05:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="systemBackMovesToPreviousStepAndRetainsInputs" classname="com.bruleetelie.app.DraftQuoteE2eTest" time="13.65" />
+    <testcase name="draftResumesEveryInputUpdatesSameRecordAndApprovesIntoProduction" classname="com.bruleetelie.app.DraftQuoteE2eTest" time="30.687">
+      <failure>java.lang.AssertionError: expected:&lt;Approved&gt; but was:&lt;Draft&gt;
+at org.junit.Assert.fail(Assert.java:89)
+at org.junit.Assert.failNotEquals(Assert.java:835)
+at org.junit.Assert.assertEquals(Assert.java:120)
+at org.junit.Assert.assertEquals(Assert.java:146)
+at com.bruleetelie.app.DraftQuoteE2eTest.draftResumesEveryInputUpdatesSameRecordAndApprovesIntoProduction(DraftQuoteE2eTest.kt:108)
+</failure>
+    </testcase>
+    <testcase name="incompleteDraftCanBeSavedAndReturnsToItsSavedStep" classname="com.bruleetelie.app.DraftQuoteE2eTest" time="9.243" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.QuoteUiRegressionTest" tests="4" failures="1" errors="0" skipped="0" time="17.644" timestamp="2026-10-20T20:05:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="emptyListAndOfficialBrandAreAccessibleWithReducedMotion" classname="com.bruleetelie.app.QuoteUiRegressionTest" time="2.524" />
+    <testcase name="lazyOrdersListSupportsManyRecordsAndShowsLifecycleStatus" classname="com.bruleetelie.app.QuoteUiRegressionTest" time="10.025" />
+    <testcase name="calendarSelectsBrazilianDateRejectsPastDatesAndSurvivesRestoration" classname="com.bruleetelie.app.QuoteUiRegressionTest" time="3.244">
+      <failure>java.lang.AssertionError: Failed to assert the following: (is not enabled)
+Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains '19' (ignoreCase: false))
+
+at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+at androidx.compose.ui.test.AssertionsKt.assert(Assertions.kt:262)
+at androidx.compose.ui.test.AssertionsKt.assert$default(Assertions.kt:254)
+at androidx.compose.ui.test.AssertionsKt.assertIsNotEnabled(Assertions.kt:67)
+at com.bruleetelie.app.QuoteUiRegressionTest.calendarSelectsBrazilianDateRejectsPastDatesAndSurvivesRestoration(QuoteUiRegressionTest.kt:28)
+</failure>
+    </testcase>
+    <testcase name="ordersDistinguishApprovalFromActiveProductionAndCompletion" classname="com.bruleetelie.app.QuoteUiRegressionTest" time="1.851" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.WizardRegressionTest" tests="13" failures="0" errors="0" skipped="0" time="95.606" timestamp="2026-10-20T20:05:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="invalidOperatingCostsExplainErrorsAndCorrectionEnablesCalculation" classname="com.bruleetelie.app.WizardRegressionTest" time="9.912" />
+    <testcase name="formSurvivesActivityStateRestorationIncludingIngredients" classname="com.bruleetelie.app.WizardRegressionTest" time="6.142" />
+    <testcase name="savedRecipeCanBeLoadedWithReducedMotionAndItsRealYield" classname="com.bruleetelie.app.WizardRegressionTest" time="2.4" />
+    <testcase name="pdfDraftAndApprovalShareTheSameQuoteIdentity" classname="com.bruleetelie.app.WizardRegressionTest" time="8.058" />
+    <testcase name="removingLastIngredientBlocksAdvanceAndEditingRecalculates" classname="com.bruleetelie.app.WizardRegressionTest" time="7.118" />
+    <testcase name="manualCurrencyKeepsSequentialKeystrokesAndInvalidPriceBlocksAdvance" classname="com.bruleetelie.app.WizardRegressionTest" time="9.174" />
+    <testcase name="WhatsAppDoesNotClaimSuccessWhenCallbackFailsToOpen" classname="com.bruleetelie.app.WizardRegressionTest" time="9.032" />
+    <testcase name="unfinishedIngredientMustBeSavedOrCancelledBeforeLeavingTheStep" classname="com.bruleetelie.app.WizardRegressionTest" time="7.354" />
+    <testcase name="reducedMotionStillAllowsEveryWizardStepAndDraftSave" classname="com.bruleetelie.app.WizardRegressionTest" time="8.104" />
+    <testcase name="pdfCarriesCustomerDeliveryValidityAndNotesFromTheForm" classname="com.bruleetelie.app.WizardRegressionTest" time="8.729" />
+    <testcase name="startsEmptyAndRequiresRecipeAndPositiveYield" classname="com.bruleetelie.app.WizardRegressionTest" time="2.973" />
+    <testcase name="operationalInputsCanBeClearedAndPackagingAndOverheadPersist" classname="com.bruleetelie.app.WizardRegressionTest" time="7.246" />
+    <testcase name="optionalOperatingFieldsEmptyCalculateZeroWithoutReusingOldValues" classname="com.bruleetelie.app.WizardRegressionTest" time="9.364" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.QuoteFlowE2eTest" tests="2" failures="1" errors="0" skipped="0" time="26.475" timestamp="2026-10-20T20:05:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="createRecipeWithCostsApproveProduceAndRecordActualCostsAndRevenue" classname="com.bruleetelie.app.QuoteFlowE2eTest" time="12.94">
+      <failure>java.lang.AssertionError: Failed to perform text input.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (TestTag = 'actual_minutes')
+
+at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+at androidx.compose.ui.test.TextActionsKt.getNodeAndFocus(TextActions.kt:124)
+at androidx.compose.ui.test.TextActionsKt.getNodeAndFocus$default(TextActions.kt:119)
+at androidx.compose.ui.test.TextActionsKt.performTextReplacement(TextActions.kt:82)
+at com.bruleetelie.app.QuoteFlowE2eTest.createRecipeWithCostsApproveProduceAndRecordActualCostsAndRevenue(QuoteFlowE2eTest.kt:59)
+</failure>
+    </testcase>
+    <testcase name="WhatsAppActuallyLaunchesCustomerIntentAndSavedQuoteCanBeApprovedLater" classname="com.bruleetelie.app.QuoteFlowE2eTest" time="13.535" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.OperationalScreensRegressionTest" tests="6" failures="0" errors="0" skipped="0" time="15.03" timestamp="2026-10-20T20:05:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="fixedCostsAndDefaultMarginAreEditableAndAnalyticsExportIsReachable" classname="com.bruleetelie.app.OperationalScreensRegressionTest" time="2.598" />
+    <testcase name="pendingQuotesCanBeSharedApprovedOrRejectedAndAllFilterWorks" classname="com.bruleetelie.app.OperationalScreensRegressionTest" time="2.728" />
+    <testcase name="OCRStartsEmptySupportsPdfAndDisablesActionsWhileProcessing" classname="com.bruleetelie.app.OperationalScreensRegressionTest" time="2.268" />
+    <testcase name="WhatsAppUsesViewIntentWithEncodedCustomerMessage" classname="com.bruleetelie.app.OperationalScreensRegressionTest" time="2.243" />
+    <testcase name="realCustomerPdfIsSharedFromApplicationContextWithReadableUri" classname="com.bruleetelie.app.OperationalScreensRegressionTest" time="2.192" />
+    <testcase name="inventoryAcceptsOnlyValidPricesWithoutShoppingActions" classname="com.bruleetelie.app.OperationalScreensRegressionTest" time="3.001" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.NavigationLayoutRegressionTest" tests="2" failures="0" errors="0" skipped="0" time="5.708" timestamp="2026-10-20T20:05:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="debugDistributionCannotAutomaticallyRestoreOldTestRegistrations" classname="com.bruleetelie.app.NavigationLayoutRegressionTest" time="2.097" />
+    <testcase name="fiveTabsHaveConsistentTouchTargetsAndOpenTheirRealScreens" classname="com.bruleetelie.app.NavigationLayoutRegressionTest" time="3.611" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.BackupRestoreRegressionTest" tests="3" failures="0" errors="0" skipped="0" time="0.437" timestamp="2026-10-20T20:05:01" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="invalidDatabaseWithValidArchiveChecksumDoesNotEraseCurrentData" classname="com.bruleetelie.app.BackupRestoreRegressionTest" time="0.103" />
+    <testcase name="invalidSettingsAreValidatedBeforeAnyDatabaseReplacement" classname="com.bruleetelie.app.BackupRestoreRegressionTest" time="0.156" />
+    <testcase name="restoredBackupRefreshesLiveDataAndAllowsMoreWrites" classname="com.bruleetelie.app.BackupRestoreRegressionTest" time="0.178" />
+  </testsuite>
+</testsuites>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bruleetelie.domain.DomainCoreTests" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-20T21:51:13.767Z" hostname="victor-Lenovo-IdeaPad-S145-15API" time="0.047">
+  <properties/>
+  <testcase name="test proportional cost calculation for ingredients" classname="com.bruleetelie.domain.DomainCoreTests" time="0.0"/>
+  <testcase name="test money operations and precision" classname="com.bruleetelie.domain.DomainCoreTests" time="0.024"/>
+  <testcase name="test recipe cost calculator with operational costs and complexity" classname="com.bruleetelie.domain.DomainCoreTests" time="0.006"/>
+  <testcase name="test quantity conversions within same dimension" classname="com.bruleetelie.domain.DomainCoreTests" time="0.0"/>
+  <testcase name="test estimated vs actual cost comparison" classname="com.bruleetelie.domain.DomainCoreTests" time="0.002"/>
+  <testcase name="test incompatible quantity conversions throw exception" classname="com.bruleetelie.domain.DomainCoreTests" time="0.01"/>
+  <testcase name="test pricing from target margin and interactive price update" classname="com.bruleetelie.domain.DomainCoreTests" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

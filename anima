@@ -1,0 +1,392 @@
+<!DOCTYPE html><html lang="pt-BR" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Produção - Brûlée Telie</title>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS CDN with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            cream: {
+              50: '#FDFCF7',
+              100: '#FAF7F0',
+              200: '#F5EFE1',
+            },
+            brulee: {
+              gold: '#B57E2F',
+              accent: '#C49753',
+              dark: '#2E473B',
+              darkHover: '#23382E',
+              mint: '#E4EFE7',
+              text: '#1C2921',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<!-- Mascote Animations Stylesheet -->
+<style data-purpose="mascot-animations">
+    @keyframes mascotBobbing {
+      0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+      }
+      25% {
+        transform: translateY(-8px) rotate(-1.5deg);
+      }
+      50% {
+        transform: translateY(-12px) rotate(0deg);
+      }
+      75% {
+        transform: translateY(-6px) rotate(1.5deg);
+      }
+    }
+
+    @keyframes chefHatSquash {
+      0%, 100% {
+        transform: translateY(0) scale(1, 1) rotate(0deg);
+      }
+      30% {
+        transform: translateY(-3px) scale(0.98, 1.04) rotate(1deg);
+      }
+      60% {
+        transform: translateY(1px) scale(1.03, 0.97) rotate(-1deg);
+      }
+    }
+
+    @keyframes eyeBlink {
+      0%, 94%, 98%, 100% {
+        transform: scaleY(1);
+      }
+      96% {
+        transform: scaleY(0.1);
+      }
+    }
+
+    @keyframes cheekGlow {
+      0%, 100% {
+        opacity: 0.65;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.95;
+        transform: scale(1.15);
+      }
+    }
+
+    @keyframes shadowPulse {
+      0%, 100% {
+        transform: scaleX(1) scaleY(1);
+        opacity: 0.35;
+      }
+      50% {
+        transform: scaleX(0.78) scaleY(0.7);
+        opacity: 0.16;
+      }
+    }
+
+    @keyframes sparkleFloat1 {
+      0%, 100% {
+        transform: translate(0, 0) scale(0.8) rotate(0deg);
+        opacity: 0.3;
+      }
+      50% {
+        transform: translate(-4px, -8px) scale(1.15) rotate(45deg);
+        opacity: 1;
+      }
+    }
+
+    @keyframes sparkleFloat2 {
+      0%, 100% {
+        transform: translate(0, 0) scale(0.7) rotate(0deg);
+        opacity: 0.25;
+      }
+      50% {
+        transform: translate(5px, -10px) scale(1.1) rotate(-35deg);
+        opacity: 0.95;
+      }
+    }
+
+    .animate-mascot {
+      animation: mascotBobbing 3.8s ease-in-out infinite;
+      transform-origin: center bottom;
+    }
+
+    .animate-chef-hat {
+      animation: chefHatSquash 3.8s ease-in-out infinite;
+      transform-origin: center bottom;
+    }
+
+    .animate-blink {
+      animation: eyeBlink 3.8s infinite;
+      transform-origin: center;
+    }
+
+    .animate-cheek {
+      animation: cheekGlow 2.5s ease-in-out infinite;
+      transform-origin: center;
+    }
+
+    .animate-shadow {
+      animation: shadowPulse 3.8s ease-in-out infinite;
+      transform-origin: center;
+    }
+
+    .animate-sparkle-1 {
+      animation: sparkleFloat1 2.8s ease-in-out infinite;
+    }
+
+    .animate-sparkle-2 {
+      animation: sparkleFloat2 3.3s ease-in-out 0.8s infinite;
+    }
+
+    /* Hide scrollbars for clean filter pills scroll */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-[#FAF7F0] font-sans text-neutral-800 antialiased min-h-screen flex justify-center selection:bg-amber-200">
+<!-- BEGIN: Mobile App Container -->
+<div class="w-full max-w-md min-h-screen bg-[#FAF7F0] flex flex-col justify-between relative shadow-xl overflow-x-hidden pb-24">
+<!-- BEGIN: Top Header Section -->
+<header class="pt-6 px-5 pb-3 flex items-center justify-between" data-purpose="app-header">
+<div class="flex items-center gap-3.5">
+<!-- Brand Monogram Avatar -->
+<img src="https://lh3.googleusercontent.com/aida/AEtjO1UtrkdN1hBG7ogqKmIBoaA4zjTqFCXgMS-M2J91Q-nlpxP2YiuPOugmlkCdS9nL5pUNiWpfcpcffKcYteny2U6SVP6nkxoyd3R5K_MuKQtecapxHtzbopA37BkF817DtiFZ3eulO7YyyeZXGhOFsCP_ej7LpXADWLL40HyexC54zItyKNN3uT1rykwDbqWt9XuLkepH701TV3CMuTy_9OXtCt2fwFdklJBnVOOQJdmF" alt="Logo Brûlée Ateliê de Doces" class="w-12 h-12 rounded-full object-cover shadow-sm ring-1 ring-[#cda066]/30">
+<!-- Title & Subtitle -->
+<div class="flex flex-col">
+<span class="text-[11px] font-bold tracking-widest text-[#B58038] uppercase">BRÛLÉE TELIE</span>
+<h1 class="text-2xl font-extrabold tracking-tight text-[#1E2922] -mt-0.5">Produção</h1>
+</div>
+</div>
+<!-- Settings Icon Button -->
+<button aria-label="Configurações" class="w-10 h-10 flex items-center justify-center text-[#55695D] hover:text-black transition-colors rounded-full active:bg-black/5" type="button">
+<svg class="w-6 h-6 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</header>
+<!-- END: Top Header Section -->
+<!-- BEGIN: Main Content Area -->
+<main class="px-5 flex-1 flex flex-col gap-4">
+<!-- KPI Summary Cards Row -->
+<section class="grid grid-cols-2 gap-3.5 pt-1" data-purpose="kpi-cards">
+<!-- Card 1: Próxima entrega -->
+<div class="bg-white rounded-3xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.03)] border border-[#EFE9DC] flex flex-col justify-between h-[116px]">
+<div class="w-10 h-10 rounded-full bg-[#F4E9D4] flex items-center justify-center text-[#9A6B29]">
+<svg class="w-5 h-5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<circle cx="12" cy="12" r="9"></circle>
+<polyline points="12 7 12 12 15 14" stroke-linecap="round" stroke-linejoin="round"></polyline>
+</svg>
+</div>
+<div>
+<span class="block text-[12.5px] font-medium text-neutral-500 leading-tight">Próxima entrega</span>
+<span class="block text-[16px] font-bold text-[#1E2922] leading-snug">Sem entregas</span>
+</div>
+</div>
+<!-- Card 2: Em produção -->
+<div class="bg-white rounded-3xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.03)] border border-[#EFE9DC] flex flex-col justify-between h-[116px]">
+<div class="w-10 h-10 rounded-full bg-[#F5EAD6] flex items-center justify-center text-[#A66E2E]">
+<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+<path d="M12.44 2.1c.14.73-.02 1.48-.44 2.1-.88 1.3-2.02 2.4-2.12 4.04-.08 1.4.73 2.65 1.95 3.23.47.22.77.7.77 1.23 0 1.21-.97 2.2-2.18 2.2-.3 0-.6-.06-.87-.19-.48-.22-1.05-.15-1.45.19-.8 1.05-.8 2.5 0 3.55C9.09 19.8 10.5 21 12.3 21c3.86 0 7-3.14 7-7 0-3.37-2.38-6.17-5.59-6.84-.46-.1-.82-.44-.92-.9-.23-1.09.28-2.5 1.15-3.3.43-.4.27-1.12-.27-1.3-.87-.29-1.35-.45-1.23.44z"></path>
+</svg>
+</div>
+<div>
+<span class="block text-[12.5px] font-medium text-neutral-500 leading-tight">Em produção</span>
+<span class="block text-[16px] font-bold text-[#1E2922] leading-snug">0 pedidos</span>
+</div>
+</div>
+</section>
+<!-- Primary Action: Novo Orçamento Button -->
+<section data-purpose="primary-action-button">
+<button class="w-full bg-[#2E473B] hover:bg-[#25392F] active:scale-[0.99] transition-all text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-2 shadow-sm" type="button">
+<svg class="w-5 h-5 stroke-[2.6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<line stroke-linecap="round" x1="12" x2="12" y1="5" y2="19"></line>
+<line stroke-linecap="round" x1="5" x2="19" y1="12" y2="12"></line>
+</svg>
+<span class="tracking-wider text-sm font-bold uppercase">NOVO ORÇAMENTO</span>
+</button>
+</section>
+<!-- Filter Pills Row -->
+<section class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5" data-purpose="status-filters">
+<!-- Active Filter: Em aberto -->
+<button class="px-5 py-2.5 rounded-full bg-[#C2934D] text-white text-[13.5px] font-semibold tracking-tight shadow-sm shrink-0 whitespace-nowrap" type="button">
+          Em aberto
+        </button>
+<!-- Filter: Hoje -->
+<button class="px-5 py-2.5 rounded-full bg-transparent border border-[#7D887F] text-[#405045] text-[13.5px] font-medium shrink-0 whitespace-nowrap hover:bg-[#EAE4D7] transition-colors" type="button">
+          Hoje
+        </button>
+<!-- Filter: Amanhã -->
+<button class="px-5 py-2.5 rounded-full bg-transparent border border-[#7D887F] text-[#405045] text-[13.5px] font-medium shrink-0 whitespace-nowrap hover:bg-[#EAE4D7] transition-colors" type="button">
+          Amanhã
+        </button>
+<!-- Filter: Esta semana -->
+<button class="px-5 py-2.5 rounded-full bg-transparent border border-[#7D887F] text-[#405045] text-[13.5px] font-medium shrink-0 whitespace-nowrap hover:bg-[#EAE4D7] transition-colors" type="button">
+          Esta semana
+        </button>
+</section>
+<!-- Empty State Card with Full Living Animated Mascot -->
+<section class="bg-[#E4EFE7] rounded-[32px] p-7 pt-9 pb-10 flex flex-col items-center text-center shadow-[inset_0_1px_2px_rgba(255,255,255,0.6)]" data-purpose="empty-state-card">
+<!-- Animated Chef Cupcake Mascot Stage -->
+<div class="relative w-44 h-40 flex items-center justify-center -mt-2 mb-2 select-none" data-purpose="animated-mascot-container">
+<!-- Ambient Sparkles -->
+<div class="absolute -top-1 left-7 w-3 h-3 text-[#B58038] animate-sparkle-1">
+<svg fill="currentColor" viewBox="0 0 24 24">
+<path d="M12 0L14.2 9.8L24 12L14.2 14.2L12 24L9.8 14.2L0 12L9.8 9.8L12 0Z"></path>
+</svg>
+</div>
+<div class="absolute top-8 right-6 w-3 h-3 text-[#C2934D] animate-sparkle-2">
+<svg fill="currentColor" viewBox="0 0 24 24">
+<path d="M12 0L14.2 9.8L24 12L14.2 14.2L12 24L9.8 14.2L0 12L9.8 9.8L12 0Z"></path>
+</svg>
+</div>
+<!-- Dynamic Shadow below Mascot -->
+<div class="absolute bottom-1 w-24 h-4 bg-[#6A8778] rounded-full filter blur-[3px] animate-shadow"></div>
+<!-- Living Animated SVG Mascot -->
+<div class="relative w-full h-full flex items-center justify-center animate-mascot">
+<svg class="w-36 h-36 overflow-visible" fill="none" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+<!-- CUPCAKE CUP / BODY -->
+<g id="cupcake-cup">
+<!-- Cup Base Shape (Tapered) -->
+<path d="M37 75 L43 114 C44 117.5 47 120 50.5 120 H89.5 C93 120 96 117.5 97 114 L103 75 Z" fill="#D3A25D" stroke="#334238" stroke-linejoin="round" stroke-width="3.5"></path>
+<!-- Cup Pleat Ribs / Grooves -->
+<line stroke="#BF8941" stroke-linecap="round" stroke-width="2.5" x1="49" x2="54" y1="75" y2="119"></line>
+<line stroke="#BF8941" stroke-linecap="round" stroke-width="2.5" x1="63" x2="66" y1="75" y2="120"></line>
+<line stroke="#BF8941" stroke-linecap="round" stroke-width="2.5" x1="77" x2="74" y1="75" y2="120"></line>
+<line stroke="#BF8941" stroke-linecap="round" stroke-width="2.5" x1="91" x2="86" y1="75" y2="119"></line>
+</g>
+<!-- CHEEKS (Glowing and Pulsing) -->
+<g id="cupcake-cheeks">
+<!-- Left Fluffy White/Pink Cream Cheek -->
+<circle class="animate-cheek" cx="33" cy="85" fill="#FFFFFF" fill-opacity="0.9" r="9.5" stroke="#E2DFC9" stroke-width="1.5"></circle>
+<circle class="animate-cheek" cx="49" cy="94" fill="#E88265" fill-opacity="0.55" r="5"></circle>
+<!-- Right Fluffy White/Pink Cream Cheek -->
+<circle class="animate-cheek" cx="107" cy="85" fill="#FFFFFF" fill-opacity="0.9" r="9.5" stroke="#E2DFC9" stroke-width="1.5"></circle>
+<circle class="animate-cheek" cx="91" cy="94" fill="#E88265" fill-opacity="0.55" r="5"></circle>
+</g>
+<!-- FACE EXPRESSION -->
+<g id="cupcake-face">
+<!-- Eyes Group with periodic blinking -->
+<g class="animate-blink" style="transform-origin: 70px 88px;">
+<!-- Left Eye -->
+<circle cx="56" cy="87.5" fill="#24332A" r="4.2"></circle>
+<circle cx="54.8" cy="86" fill="#FFFFFF" r="1.4"></circle>
+<!-- Right Eye -->
+<circle cx="84" cy="87.5" fill="#24332A" r="4.2"></circle>
+<circle cx="82.8" cy="86" fill="#FFFFFF" r="1.4"></circle>
+</g>
+<!-- Sweet Smiling Mouth -->
+<path d="M64 97.5 Q70 102.5 76 97.5" fill="none" stroke="#24332A" stroke-linecap="round" stroke-width="3.2"></path>
+</g>
+<!-- CHEF TOQUE / HAT (Slightly Squash & Stretch) -->
+<g class="animate-chef-hat" id="chef-hat">
+<!-- Chef Hat Puffs -->
+<path d="M 40 68 
+                         C 30 65, 27 50, 39 42
+                         C 34 32, 45 22, 57 24
+                         C 62 14, 78 14, 83 24
+                         C 95 22, 106 32, 101 42
+                         C 113 50, 110 65, 100 68
+                         Z" fill="#FFFFFF" stroke="#334238" stroke-linejoin="round" stroke-width="3.5"></path>
+<!-- Chef Hat Band Base -->
+<path d="M37 68 C37 68, 54 71, 70 71 C86 71, 103 68, 103 68 L101 76 C101 76, 85 79, 70 79 C55 79, 39 76, 39 76 Z" fill="#FFFFFF" stroke="#334238" stroke-linejoin="round" stroke-width="3.5"></path>
+<!-- Inner folds on the hat for pastry volume -->
+<path d="M54 28 C55 38, 57 52, 57 68" stroke="#E2DFC9" stroke-linecap="round" stroke-width="2.5"></path>
+<path d="M86 28 C85 38, 83 52, 83 68" stroke="#E2DFC9" stroke-linecap="round" stroke-width="2.5"></path>
+<path d="M70 21 C70 34, 70 54, 70 69" stroke="#E2DFC9" stroke-linecap="round" stroke-width="2.5"></path>
+</g>
+</svg>
+</div>
+</div>
+<!-- Headline -->
+<h2 class="text-[20px] font-extrabold text-[#192A20] leading-tight mb-3">
+          Sua próxima receita começa aqui
+        </h2>
+<!-- Description Subtitle -->
+<p class="text-[14px] text-[#475C50] leading-relaxed max-w-[280px]">
+          Crie um orçamento e aprove com o cliente para acompanhar cada etapa da produção.
+        </p>
+</section>
+</main>
+<!-- END: Main Content Area -->
+<!-- BEGIN: Fixed Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#FAF7F0] border-t border-[#E8DEC9] px-2 pt-2 pb-5 flex items-center justify-around z-50 shadow-md" data-purpose="bottom-navigation">
+<!-- Tab 1: Produção (Active) -->
+<a class="flex flex-col items-center gap-1 min-w-[62px] text-center group" href="#producao">
+<div class="w-14 h-8 rounded-full bg-[#E8D4B4] flex items-center justify-center text-[#2A3F34] transition-transform active:scale-95">
+<!-- Oven / Production tray icon -->
+<svg class="w-5 h-5 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<rect height="14" rx="2.5" width="18" x="3" y="5"></rect>
+<line stroke-linecap="round" x1="7" x2="17" y1="10" y2="10"></line>
+<line stroke-linecap="round" x1="7" x2="17" y1="14" y2="14"></line>
+<circle cx="12" cy="7.5" fill="currentColor" r="0.7"></circle>
+</svg>
+</div>
+<span class="text-[11.5px] font-bold text-[#203126]">Produção</span>
+</a>
+<!-- Tab 2: Pedidos -->
+<a class="flex flex-col items-center gap-1 min-w-[62px] text-center text-[#4A5D52] hover:text-[#1F2F25] active:scale-95 transition-transform" href="#pedidos">
+<div class="w-14 h-8 flex items-center justify-center">
+<svg class="w-6 h-6 stroke-[1.9]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<span class="text-[11.5px] font-medium">Pedidos</span>
+</a>
+<!-- Tab 3: Novo Orçamento (+) -->
+<a class="flex flex-col items-center gap-0.5 min-w-[66px] text-center text-[#4A5D52] hover:text-[#1F2F25] active:scale-95 transition-transform" href="#novo-orcamento">
+<div class="w-14 h-8 flex items-center justify-center">
+<svg class="w-6 h-6 stroke-[2.6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<line stroke-linecap="round" x1="12" x2="12" y1="5" y2="19"></line>
+<line stroke-linecap="round" x1="5" x2="19" y1="12" y2="12"></line>
+</svg>
+</div>
+<span class="text-[11.5px] font-medium leading-none text-center">Novo<br>Orçamento</span>
+</a>
+<!-- Tab 4: Finanças -->
+<a class="flex flex-col items-center gap-1 min-w-[62px] text-center text-[#4A5D52] hover:text-[#1F2F25] active:scale-95 transition-transform" href="#financas">
+<div class="w-14 h-8 flex items-center justify-center">
+<svg class="w-6 h-6 stroke-[1.9]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<rect height="13" rx="2" stroke-linecap="round" width="18" x="3" y="6"></rect>
+<path d="M17 10h2a1 1 0 011 1v2a1 1 0 01-1 1h-2" stroke-linecap="round"></path>
+<circle cx="18" cy="12.5" fill="currentColor" r="0.8"></circle>
+<path d="M6 6V4a1 1 0 011-1h10a1 1 0 011 1v2"></path>
+</svg>
+</div>
+<span class="text-[11.5px] font-medium">Finanças</span>
+</a>
+<!-- Tab 5: Estoque -->
+<a class="flex flex-col items-center gap-1 min-w-[62px] text-center text-[#4A5D52] hover:text-[#1F2F25] active:scale-95 transition-transform" href="#estoque">
+<div class="w-14 h-8 flex items-center justify-center">
+<!-- Clean isometric box icon -->
+<svg class="w-6 h-6 stroke-[1.9]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<span class="text-[11.5px] font-medium">Estoque</span>
+</a>
+</nav>
+<!-- END: Fixed Bottom Navigation Bar -->
+</div>
+<!-- END: Mobile App Container -->
+
+
+
+
+</body></html>

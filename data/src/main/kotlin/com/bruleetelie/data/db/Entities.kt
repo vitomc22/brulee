@@ -102,6 +102,7 @@ data class QuoteEntity(
     val validDays: Int = 3,
     val notes: String = "",
     val status: String,
+    @androidx.room.ColumnInfo(defaultValue = "NULL") val draftData: String? = null,
     val createdAtMillis: Long = System.currentTimeMillis()
 )
 

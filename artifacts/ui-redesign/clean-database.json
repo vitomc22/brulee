@@ -1,0 +1,28 @@
+{
+  "business_tables": {
+    "ingredients": 0,
+    "customers": 0,
+    "recipes": 0,
+    "recipe_versions": 0,
+    "recipe_ingredients": 0,
+    "quotes": 0,
+    "production_orders": 0,
+    "production_steps": 0,
+    "sale_snapshots": 0,
+    "price_observations": 0,
+    "shopping_items": 0,
+    "suppliers": 0,
+    "purchases": 0,
+    "purchase_items": 0,
+    "payments": 0,
+    "expenses": 0,
+    "cost_resources": 0,
+    "document_imports": 0,
+    "quote_status_history": 0,
+    "production_status_history": 0,
+    "payment_status_history": 0
+  },
+  "total_records": 0,
+  "app_data_cleared": true,
+  "apk_version": "0.2.0"
+}

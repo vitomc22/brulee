@@ -43,7 +43,8 @@ data class Quote(
     val deliveryDate: String, // ex: "Sábado, 14 de Outubro - 16:00"
     val validDays: Int = 3,
     val notes: String = "",
-    val status: QuoteStatus = QuoteStatus.Draft
+    val status: QuoteStatus = QuoteStatus.Draft,
+    val draft: QuoteDraft? = null
 )
 
 data class ProductionStep(
@@ -100,4 +101,15 @@ data class ShoppingItem(
     val quantity: String,
     val isPurchased: Boolean = false,
     val createdAtMillis: Long = System.currentTimeMillis()
+)
+
+/** Editable recipe and pricing inputs belonging to this quote, independent of recipe revisions. */
+data class QuoteDraft(
+    val recipe: SavedRecipe,
+    val hourlyLaborRate: Money,
+    val gasCostPerHour: Money,
+    val electricityCostPerHour: Money,
+    val targetMargin: BigDecimal,
+    val customPrice: Money? = null,
+    val step: Int = 4
 )

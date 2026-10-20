@@ -1,410 +1,65 @@
 package com.bruleetelie.app.ui.screens
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.scaleIn
-import android.media.AudioManager
-import android.media.ToneGenerator
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.bruleetelie.app.ui.components.StatusPill
-import com.bruleetelie.app.ui.components.BruleeMascot
-import com.bruleetelie.app.ui.components.TactilePrimaryButton
+import com.bruleetelie.app.ui.components.*
 import com.bruleetelie.app.ui.theme.*
 import com.bruleetelie.domain.CostComparisonResult
-import com.bruleetelie.domain.Money
-import com.bruleetelie.domain.RecipeCosts
 
 @Composable
 fun ProductionCompletionScreen(
-    productName: String = "Brigadeiro Gourmet Tradicional",
+    productName: String,
     comparison: CostComparisonResult,
-    salesStreak: Int = 0,
-    profitableStreak: Int = 0,
-    totalSales: Int = 0,
-    soundsEnabled: Boolean = false,
     reducedMotion: Boolean = false,
     onContinue: () -> Unit
 ) {
     var reveal by remember { mutableStateOf(reducedMotion) }
-    LaunchedEffect(reducedMotion) { reveal = true }
-    DisposableEffect(soundsEnabled) {
-        val tone = if (soundsEnabled) ToneGenerator(AudioManager.STREAM_NOTIFICATION, 45) else null
-        tone?.startTone(ToneGenerator.TONE_PROP_ACK, 180)
-        onDispose { tone?.release() }
-    }
-    AnimatedVisibility(
-        visible = reveal,
-        enter = if (reducedMotion) fadeIn(initialAlpha = 1f) else fadeIn() + scaleIn(initialScale = 0.96f)
-    ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        // Celebratory Golden Banner (Streak & Bonus)
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = BruleeSecondaryContainer,
-            shape = RoundedCornerShape(20.dp),
-            shadowElevation = 2.dp
-        ) {
-            Row(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    Text("🔥", style = MaterialTheme.typography.titleLarge)
-                    Column {
-                        Text(
-                            "OFENSIVA INCRÍVEL",
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.Bold,
-                            color = BruleeOnSecondaryContainer
-                        )
-                        Text(
-                            if (salesStreak == 1) "1 dia seguido!" else "$salesStreak dias seguidos!",
-                            modifier = Modifier.testTag("completion_sales_streak"),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = BruleeOnSecondaryContainer
-                        )
-                    }
-                }
-                Surface(
-                    color = BruleeSurfaceContainerLowest.copy(alpha = 0.85f),
-                    shape = CircleShape
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Text("⭐", style = MaterialTheme.typography.labelMedium)
-                        Text(
-                            "${totalSales * 45} XP",
-                            style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = BruleeSecondary
-                        )
-                    }
+    LaunchedEffect(Unit) { reveal = true }
+    AnimatedVisibility(reveal, enter = if (reducedMotion) fadeIn(initialAlpha = 1f) else fadeIn() + scaleIn(initialScale = .96f)) {
+        Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(20.dp)) {
+            BruleeMascot(size = 110.dp, reducedMotion = reducedMotion)
+            Text("Produção concluída", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+            Text(productName, textAlign = TextAlign.Center, style = MaterialTheme.typography.titleMedium)
+            Text("A venda foi registrada nas finanças. Confira o resultado desta produção.", textAlign = TextAlign.Center)
+            Surface(Modifier.fillMaxWidth(), color = BruleeSurfaceContainerLowest, shape = RoundedCornerShape(24.dp)) {
+                Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    Text("Custo Real vs. Orçado", fontWeight = FontWeight.Bold)
+                    CompletionAmount("Custo previsto", comparison.estimatedCosts.total.format(), "completion_estimated_cost")
+                    CompletionAmount("Custo real", comparison.actualCosts.total.format(), "completion_actual_cost")
+                    HorizontalDivider(color = BruleeSurfaceContainerHigh)
+                    CompletionAmount("Valor da venda", comparison.salePrice.format(), "completion_sale_price")
+                    CompletionAmount("Lucro real", comparison.actualProfit.format(), "completion_profit")
+                    Text("Margem real: ${comparison.actualMarginPercent.toPlainString().replace('.', ',')}%", color = BruleePrimary)
                 }
             }
+            Surface(Modifier.fillMaxWidth(), color = if (comparison.isCostHigher) BruleeErrorContainer else BruleePrimaryFixed,
+                shape = RoundedCornerShape(18.dp)) {
+                Text(if (comparison.isCostHigher) "Custo acima do previsto: ${comparison.costDifference.abs().format()}"
+                    else "Economia em relação ao previsto: ${comparison.costDifference.abs().format()}", Modifier.padding(16.dp))
+            }
+            TactilePrimaryButton("CONTINUAR PARA O PAINEL", onContinue, Modifier.testTag("completion_continue"), BruleeSymbol.Check)
         }
-
-        // Mascot Showcase with Speech Bubble
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            // Speech Bubble
-            Surface(
-                color = BruleeSurfaceContainerLowest,
-                shape = RoundedCornerShape(18.dp),
-                shadowElevation = 2.dp
-            ) {
-                Column(
-                    modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        "Ficha finalizada com sucesso! ✨",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = BruleePrimary
-                    )
-                    Text(
-                        "Seus custos estão 100% blindados!",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-
-            // Mascot Avatar
-            Box(contentAlignment = Alignment.BottomEnd) {
-                Box(
-                    modifier = Modifier
-                        .size(110.dp)
-                        .clip(CircleShape)
-                        .background(BruleeSecondaryFixed.copy(alpha = 0.7f)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    BruleeMascot(milestone = totalSales, size = 100.dp, reducedMotion = reducedMotion)
-                }
-                Surface(
-                    color = BruleePrimary,
-                    shape = CircleShape,
-                    shadowElevation = 2.dp
-                ) {
-                    Text(
-                        "Nv. ${1 + totalSales / 10}",
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
-                        color = Color.White,
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-        }
-
-        // XP Reward Card
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = BruleeSurfaceContainerLowest,
-            shape = RoundedCornerShape(24.dp),
-            shadowElevation = 2.dp
-        ) {
-            Row(
-                modifier = Modifier.padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(CircleShape)
-                            .background(BruleeSecondaryFixed),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text("💎", style = MaterialTheme.typography.titleLarge)
-                    }
-                    Column {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            Text(
-                                "+45 XP",
-                                style = MaterialTheme.typography.headlineSmall,
-                                fontWeight = FontWeight.Bold,
-                                color = BruleePrimary
-                            )
-                            Text("✓", color = BruleeSecondary, fontWeight = FontWeight.Bold)
-                        }
-                        Text(
-                            "Mestre Confeiteiro Brûlée",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-                StatusPill("BÔNUS", BruleePrimaryFixed, BruleePrimary)
-            }
-        }
-
-        // Card 2: Cost Accuracy Comparison Widget (Previsto vs Real)
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = BruleeSurfaceContainerLowest,
-            shape = RoundedCornerShape(24.dp),
-            shadowElevation = 2.dp
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Text("⚖", style = MaterialTheme.typography.titleMedium, color = BruleePrimary)
-                        Text(
-                            "Custo Real vs. Orçado",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                    Text(
-                        productName,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-
-                // Financial Pills Grid
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(BruleeSurfaceContainerLow, RoundedCornerShape(16.dp))
-                        .padding(8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Surface(
-                        modifier = Modifier.weight(1f),
-                        color = BruleeSurfaceContainerLowest,
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Column(modifier = Modifier.padding(10.dp)) {
-                            Text(
-                                "Previsto (Orçado)",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            Text(
-                                comparison.estimatedCosts.total.format(),
-                                style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-                    Surface(
-                        modifier = Modifier.weight(1f),
-                        color = BruleeSurfaceContainerLowest,
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Column(modifier = Modifier.padding(10.dp)) {
-                            Text(
-                                "Real Apurado",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = BruleePrimary,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                            Text(
-                                comparison.actualCosts.total.format(),
-                                style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.Bold,
-                                color = BruleePrimary
-                            )
-                        }
-                    }
-                }
-
-                // Economy / Difference Pill
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    color = if (comparison.isCostHigher) BruleeErrorContainer else BruleePrimaryFixed.copy(alpha = 0.7f),
-                    shape = CircleShape
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            Text(if (comparison.isCostHigher) "⚠" else "💰")
-                            Text(
-                                if (comparison.isCostHigher)
-                                    "Acréscimo de ${comparison.costDifference.format()}"
-                                else
-                                    "Economia de ${comparison.costDifference.format()}",
-                                style = MaterialTheme.typography.labelMedium,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                        StatusPill(
-                            text = "${if (comparison.marginDifferencePercent >= java.math.BigDecimal.ZERO) "+" else ""}${comparison.marginDifferencePercent}% margem",
-                            background = if (comparison.isCostHigher) BruleeError else BruleePrimary,
-                            foreground = Color.White
-                        )
-                    }
-                }
-            }
-        }
-
-        // Precision Streak Card
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = BruleeSurfaceContainerLowest,
-            shape = RoundedCornerShape(20.dp),
-            shadowElevation = 1.dp
-        ) {
-            Row(
-                modifier = Modifier.padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(44.dp)
-                        .clip(CircleShape)
-                        .background(BruleeSecondaryFixed.copy(alpha = 0.5f)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("🎯", style = MaterialTheme.typography.titleMedium)
-                }
-                Column {
-                    Text("Streak de Precisão", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                    Text(
-                        "$profitableStreak receitas sem prejuízo",
-                        modifier = Modifier.testTag("completion_profitable_streak"),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-        }
-
-        Spacer(Modifier.height(8.dp))
-
-        // CTA
-        TactilePrimaryButton(
-            text = "CONTINUAR PARA O PAINEL",
-            modifier = Modifier.testTag("completion_continue"),
-            onClick = onContinue
-        )
-    }
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-private fun ProductionCompletionScreenPreview() {
-    BruleeTheme {
-        ProductionCompletionScreen(
-            productName = "40 Brigadeiros Gourmet",
-            comparison = CostComparisonResult(
-                estimatedCosts = RecipeCosts(Money.fromReais("38.40"), Money.fromReais("50.00"), Money.fromReais("5.70"), Money.fromReais("4.50")),
-                actualCosts = RecipeCosts(Money.fromReais("35.00"), Money.fromReais("50.00"), Money.fromReais("5.00"), Money.fromReais("4.50")),
-                costDifference = Money.fromReais("3.60"),
-                isCostHigher = false,
-                salePrice = Money.fromReais("149.90"),
-                estimatedProfit = Money.fromReais("51.30"),
-                actualProfit = Money.fromReais("54.90"),
-                estimatedMarginPercent = java.math.BigDecimal("34.22"),
-                actualMarginPercent = java.math.BigDecimal("36.62"),
-                marginDifferencePercent = java.math.BigDecimal("2.40")
-            ),
-            onContinue = {}
-        )
+private fun CompletionAmount(label: String, value: String, tag: String) {
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Text(label, Modifier.weight(1f), color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(value, Modifier.testTag(tag), fontWeight = FontWeight.Bold)
     }
 }

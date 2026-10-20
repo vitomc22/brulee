@@ -1,0 +1,316 @@
+> Task :domain:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :domain:compileKotlin UP-TO-DATE
+> Task :domain:compileJava NO-SOURCE
+> Task :domain:processResources NO-SOURCE
+> Task :domain:classes UP-TO-DATE
+> Task :domain:jar UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :data:preBuild UP-TO-DATE
+> Task :data:preDebugBuild UP-TO-DATE
+> Task :data:processDebugNavigationResources UP-TO-DATE
+> Task :documents:preBuild UP-TO-DATE
+> Task :documents:preDebugBuild UP-TO-DATE
+> Task :documents:processDebugNavigationResources UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:generateDebugRFile UP-TO-DATE
+> Task :data:generateDebugResources UP-TO-DATE
+> Task :data:packageDebugResources UP-TO-DATE
+> Task :data:parseDebugLocalResources UP-TO-DATE
+> Task :data:generateDebugRFile UP-TO-DATE
+> Task :data:kaptGenerateStubsDebugKotlin UP-TO-DATE
+> Task :data:kaptDebugKotlin UP-TO-DATE
+> Task :data:compileDebugKotlin UP-TO-DATE
+> Task :data:javaPreCompileDebug UP-TO-DATE
+> Task :data:compileDebugJavaWithJavac UP-TO-DATE
+> Task :data:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :documents:generateDebugResources UP-TO-DATE
+> Task :documents:packageDebugResources UP-TO-DATE
+> Task :documents:parseDebugLocalResources UP-TO-DATE
+> Task :documents:generateDebugRFile UP-TO-DATE
+> Task :documents:compileDebugKotlin UP-TO-DATE
+> Task :documents:javaPreCompileDebug UP-TO-DATE
+> Task :documents:compileDebugJavaWithJavac NO-SOURCE
+> Task :documents:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :app:kaptGenerateStubsDebugKotlin UP-TO-DATE
+> Task :app:kaptDebugKotlin UP-TO-DATE
+> Task :app:compileDebugKotlin UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :data:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :documents:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :app:hiltSyncDebug UP-TO-DATE
+> Task :data:writeDebugAarMetadata UP-TO-DATE
+> Task :app:hiltAggregateDepsDebug UP-TO-DATE
+> Task :app:hiltJavaCompileDebug UP-TO-DATE
+> Task :documents:writeDebugAarMetadata UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:compileDebugNavigationResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :data:extractDeepLinksDebug UP-TO-DATE
+> Task :data:processDebugManifest UP-TO-DATE
+> Task :documents:extractDeepLinksDebug UP-TO-DATE
+> Task :documents:processDebugManifest UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :data:mapDebugSourceSetPaths UP-TO-DATE
+> Task :data:compileDebugLibraryResources UP-TO-DATE
+> Task :documents:mapDebugSourceSetPaths UP-TO-DATE
+> Task :documents:compileDebugLibraryResources UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:transformDebugClassesWithAsm UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :data:processDebugJavaRes UP-TO-DATE
+> Task :documents:processDebugJavaRes UP-TO-DATE
+> Task :benchmark:test UP-TO-DATE
+> Task :data:preDebugUnitTestBuild UP-TO-DATE
+> Task :data:generateDebugUnitTestStubRFile UP-TO-DATE
+> Task :data:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :documents:preDebugUnitTestBuild UP-TO-DATE
+> Task :data:kaptGenerateStubsDebugUnitTestKotlin
+> Task :app:kaptGenerateStubsDebugUnitTestKotlin
+> Task :documents:generateDebugUnitTestStubRFile UP-TO-DATE
+> Task :app:kaptDebugUnitTestKotlin SKIPPED
+> Task :data:kaptDebugUnitTestKotlin SKIPPED
+> Task :documents:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :domain:compileTestKotlin UP-TO-DATE
+> Task :domain:compileTestJava NO-SOURCE
+> Task :domain:processTestResources NO-SOURCE
+> Task :domain:testClasses UP-TO-DATE
+> Task :app:compileDebugUnitTestKotlin
+> Task :data:compileDebugUnitTestKotlin
+> Task :documents:compileDebugUnitTestKotlin
+> Task :domain:test
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:hiltSyncDebugUnitTest
+> Task :app:hiltAggregateDepsDebugUnitTest UP-TO-DATE
+> Task :app:hiltJavaCompileDebugUnitTest NO-SOURCE
+> Task :data:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :data:processDebugUnitTestJavaRes UP-TO-DATE
+> Task :app:transformDebugUnitTestClassesWithAsm
+> Task :data:testDebugUnitTest
+> Task :app:testDebugUnitTest
+> Task :app:test
+> Task :data:test
+> Task :documents:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :documents:processDebugUnitTestJavaRes UP-TO-DATE
+> Task :documents:testDebugUnitTest
+> Task :documents:test
+> Task :app:preReleaseBuild UP-TO-DATE
+> Task :app:mergeReleaseJniLibFolders UP-TO-DATE
+> Task :data:preReleaseBuild UP-TO-DATE
+> Task :data:mergeReleaseJniLibFolders UP-TO-DATE
+> Task :data:mergeReleaseNativeLibs NO-SOURCE
+> Task :data:copyReleaseJniLibsProjectOnly UP-TO-DATE
+> Task :documents:preReleaseBuild UP-TO-DATE
+> Task :documents:mergeReleaseJniLibFolders UP-TO-DATE
+> Task :documents:mergeReleaseNativeLibs NO-SOURCE
+> Task :documents:copyReleaseJniLibsProjectOnly UP-TO-DATE
+> Task :app:mergeReleaseNativeLibs UP-TO-DATE
+> Task :app:stripReleaseDebugSymbols UP-TO-DATE
+> Task :app:extractReleaseNativeSymbolTables UP-TO-DATE
+> Task :app:mergeReleaseNativeDebugMetadata NO-SOURCE
+> Task :data:generateReleaseResources UP-TO-DATE
+> Task :data:packageReleaseResources UP-TO-DATE
+> Task :data:processReleaseNavigationResources UP-TO-DATE
+> Task :data:parseReleaseLocalResources UP-TO-DATE
+> Task :data:generateReleaseRFile UP-TO-DATE
+> Task :data:javaPreCompileRelease UP-TO-DATE
+> Task :documents:generateReleaseResources UP-TO-DATE
+> Task :documents:packageReleaseResources UP-TO-DATE
+> Task :documents:processReleaseNavigationResources UP-TO-DATE
+> Task :documents:parseReleaseLocalResources UP-TO-DATE
+> Task :documents:generateReleaseRFile UP-TO-DATE
+> Task :documents:javaPreCompileRelease UP-TO-DATE
+> Task :app:checkReleaseDuplicateClasses UP-TO-DATE
+> Task :app:generateReleaseResources
+> Task :app:packageReleaseResources
+> Task :app:processReleaseNavigationResources
+> Task :app:javaPreCompileRelease UP-TO-DATE
+> Task :data:writeReleaseAarMetadata UP-TO-DATE
+> Task :documents:writeReleaseAarMetadata UP-TO-DATE
+> Task :app:checkReleaseAarMetadata UP-TO-DATE
+> Task :app:mapReleaseSourceSetPaths
+> Task :app:compileReleaseNavigationResources UP-TO-DATE
+> Task :app:parseReleaseLocalResources
+> Task :documents:compileReleaseKotlin
+> Task :documents:compileReleaseJavaWithJavac NO-SOURCE
+> Task :documents:bundleLibRuntimeToDirRelease UP-TO-DATE
+> Task :documents:bundleLibCompileToJarRelease UP-TO-DATE
+> Task :documents:bundleLibRuntimeToJarRelease UP-TO-DATE
+> Task :app:createReleaseCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksRelease UP-TO-DATE
+> Task :data:extractDeepLinksRelease UP-TO-DATE
+> Task :data:processReleaseManifest UP-TO-DATE
+> Task :documents:extractDeepLinksRelease UP-TO-DATE
+> Task :documents:processReleaseManifest UP-TO-DATE
+> Task :app:generateReleaseRFile
+> Task :app:mergeReleaseResources
+> Task :app:processReleaseMainManifest
+> Task :app:processReleaseManifest
+> Task :data:mapReleaseSourceSetPaths UP-TO-DATE
+> Task :data:compileReleaseLibraryResources UP-TO-DATE
+> Task :documents:mapReleaseSourceSetPaths UP-TO-DATE
+> Task :documents:compileReleaseLibraryResources UP-TO-DATE
+> Task :app:desugarReleaseFileDependencies UP-TO-DATE
+> Task :app:mergeReleaseStartupProfile UP-TO-DATE
+> Task :app:mergeExtDexRelease UP-TO-DATE
+> Task :data:prepareReleaseArtProfile UP-TO-DATE
+> Task :documents:prepareReleaseArtProfile UP-TO-DATE
+> Task :app:mergeReleaseArtProfile UP-TO-DATE
+> Task :app:generateReleaseAssets UP-TO-DATE
+> Task :data:generateReleaseAssets UP-TO-DATE
+> Task :data:mergeReleaseAssets UP-TO-DATE
+> Task :documents:generateReleaseAssets UP-TO-DATE
+> Task :documents:mergeReleaseAssets UP-TO-DATE
+> Task :app:mergeReleaseAssets
+> Task :app:extractReleaseVersionControlInfo UP-TO-DATE
+> Task :app:processReleaseManifestForPackage
+> Task :app:compressReleaseAssets
+> Task :app:extractProguardFiles UP-TO-DATE
+> Task :data:extractProguardFiles UP-TO-DATE
+> Task :data:prepareLintJarForPublish UP-TO-DATE
+> Task :documents:processReleaseJavaRes UP-TO-DATE
+> Task :documents:createFullJarRelease UP-TO-DATE
+> Task :documents:extractProguardFiles UP-TO-DATE
+> Task :documents:generateReleaseLintModel
+> Task :documents:prepareLintJarForPublish UP-TO-DATE
+> Task :data:checkReleaseAarMetadata UP-TO-DATE
+> Task :data:stripReleaseDebugSymbols NO-SOURCE
+> Task :data:copyReleaseJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :data:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :data:extractReleaseAnnotations
+> Task :documents:checkReleaseAarMetadata UP-TO-DATE
+> Task :documents:stripReleaseDebugSymbols NO-SOURCE
+> Task :documents:copyReleaseJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :documents:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :documents:extractReleaseAnnotations
+> Task :documents:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :documents:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :documents:mergeReleaseJavaResource UP-TO-DATE
+> Task :documents:syncReleaseLibJars UP-TO-DATE
+> Task :documents:bundleReleaseLocalLintAar UP-TO-DATE
+> Task :data:writeReleaseLintModelMetadata UP-TO-DATE
+> Task :documents:writeReleaseLintModelMetadata UP-TO-DATE
+> Task :documents:generateReleaseLintVitalModel
+> Task :app:collectReleaseDependencies UP-TO-DATE
+> Task :app:sdkReleaseDependencyData UP-TO-DATE
+> Task :app:writeReleaseAppMetadata UP-TO-DATE
+> Task :app:writeReleaseSigningConfigVersions UP-TO-DATE
+> Task :data:checkDebugAarMetadata UP-TO-DATE
+> Task :data:mergeDebugJniLibFolders UP-TO-DATE
+> Task :data:mergeDebugNativeLibs NO-SOURCE
+> Task :data:stripDebugDebugSymbols NO-SOURCE
+> Task :data:copyDebugJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :data:extractDebugAnnotations
+> Task :data:extractDeepLinksForAarDebug UP-TO-DATE
+> Task :data:generateDebugAssets UP-TO-DATE
+> Task :data:mergeDebugAssets UP-TO-DATE
+> Task :data:mergeDebugGeneratedProguardFiles UP-TO-DATE
+> Task :data:mergeDebugConsumerProguardFiles UP-TO-DATE
+> Task :data:prepareDebugArtProfile UP-TO-DATE
+> Task :data:mergeDebugJavaResource UP-TO-DATE
+> Task :data:syncDebugLibJars
+> Task :data:bundleDebugLocalLintAar
+> Task :documents:checkDebugAarMetadata UP-TO-DATE
+> Task :documents:mergeDebugJniLibFolders UP-TO-DATE
+> Task :documents:mergeDebugNativeLibs NO-SOURCE
+> Task :documents:stripDebugDebugSymbols NO-SOURCE
+> Task :documents:copyDebugJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :documents:extractDebugAnnotations
+> Task :documents:extractDeepLinksForAarDebug UP-TO-DATE
+> Task :documents:generateDebugAssets UP-TO-DATE
+> Task :documents:mergeDebugAssets UP-TO-DATE
+> Task :documents:mergeDebugGeneratedProguardFiles UP-TO-DATE
+> Task :documents:mergeDebugConsumerProguardFiles UP-TO-DATE
+> Task :documents:prepareDebugArtProfile UP-TO-DATE
+> Task :documents:mergeDebugJavaResource UP-TO-DATE
+> Task :documents:syncDebugLibJars UP-TO-DATE
+> Task :documents:bundleDebugLocalLintAar UP-TO-DATE
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :data:createFullJarDebug
+> Task :data:writeDebugLintModelMetadata UP-TO-DATE
+> Task :documents:createFullJarDebug UP-TO-DATE
+> Task :documents:writeDebugLintModelMetadata UP-TO-DATE
+> Task :app:processReleaseResources
+> Task :app:generateDebugAndroidTestLintModel
+> Task :data:generateDebugLintModel
+> Task :documents:generateDebugLintModel
+> Task :app:generateDebugLintReportModel
+> Task :app:generateDebugUnitTestLintModel
+> Task :data:preDebugAndroidTestBuild UP-TO-DATE
+> Task :app:optimizeReleaseResources
+> Task :data:generateDebugAndroidTestLintModel
+> Task :data:generateDebugUnitTestLintModel
+> Task :documents:preDebugAndroidTestBuild UP-TO-DATE
+> Task :documents:generateDebugAndroidTestLintModel
+> Task :documents:generateDebugUnitTestLintModel
+> Task :data:generateDebugLintReportModel
+> Task :documents:generateDebugLintReportModel
+> Task :data:kaptGenerateStubsReleaseKotlin
+> Task :data:kaptReleaseKotlin
+> Task :documents:lintVitalAnalyzeRelease
+> Task :data:compileReleaseKotlin
+> Task :data:lintAnalyzeDebug
+> Task :documents:lintAnalyzeDebug
+> Task :app:lintAnalyzeDebugAndroidTest
+> Task :data:compileReleaseJavaWithJavac
+> Task :data:processReleaseJavaRes UP-TO-DATE
+> Task :data:bundleLibRuntimeToJarRelease
+> Task :data:bundleLibCompileToJarRelease
+> Task :data:bundleLibRuntimeToDirRelease
+> Task :data:generateReleaseLintModel
+> Task :data:createFullJarRelease
+> Task :data:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :data:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :data:mergeReleaseJavaResource UP-TO-DATE
+> Task :data:syncReleaseLibJars
+> Task :data:bundleReleaseLocalLintAar
+> Task :data:generateReleaseLintVitalModel
+> Task :app:kaptGenerateStubsReleaseKotlin
+> Task :app:lintAnalyzeDebugUnitTest FAILED
+> Task :data:lintVitalAnalyzeRelease
+> Task :app:kaptReleaseKotlin
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:lintAnalyzeDebugUnitTest'.
+> A failure occurred while executing com.android.build.gradle.internal.lint.AndroidLintWorkAction
+   > Unexpected failure during lint analysis (this is a bug in lint or one of the libraries it depends on)
+     
+     Message: Unexpected failure during lint analysis (this is a bug in lint or one of the libraries it depends on)
+     
+     Message: Unexpected failure during lint analysis of AnalyticsJsonExporterTest.kt (this is a bug in lint or one of the libraries it depends on)
+     
+     Message: /home/victor/Documentos/git/brulee/app/build/generated/source/kapt/release/com/bruleetelie/app/BruleeApplication_GeneratedInjector.java (No such file or directory)
+     Stack: \\\`FileNotFoundException:FileInputStream.open0(FileInputStream.java:-2)←FileInputStream.open(FileInputStream.java:216)←FileInputStream.<init>(FileInputStream.java:157)←FileUtil.loadFileBytes(FileUtil.java:190)←KotlinLocalVirtualFile.contentsToByteArray(KotlinLocalVirtualFile.kt:108)←SingleJavaFileRootsIndex$JavaSourceClassIdReader.<init>(SingleJavaFileRootsIndex.kt:67)←SingleJavaFileRootsIndex.getClassIdsForRootAt(SingleJavaFileRootsIndex.kt:56)←SingleJavaFileRootsIndex.findJavaSourceClasses(SingleJavaFileRootsIndex.kt:52)←KotlinCliJavaFileManagerImpl.knownClassNamesInPackage(KotlinCliJavaFileManagerImpl.kt:306)←KotlinJavaPsiFacade$CliFinder.knownClassNamesInPackage(KotlinJavaPsiFacade.java:548)←KotlinJavaPsiFacade.knownClassNamesInPackage(KotlinJavaPsiFacade.java:251)←KaBaseKotlinJavaPsiFacade.access$knownClassNamesInPackage$s1465362269(KaBaseKotlinJavaPsiFacade.kt:22)←KaBaseKotlinJavaPsiFacade.knownClassNamesInPackage(KaBaseKotlinJavaPsiFacade.kt:35)←JavaClassFinderImpl.knownClassNamesInPackage(JavaClassFinderImpl.kt:76)←FirJavaFacade$special$$inlined$createCache$2.invoke(FirCachesFactory.kt:163)←FirJavaFacade$special$$inlined$createCache$2.invoke(FirCachesFactory.kt:147)←FirThreadSafeCache.getValue(FirThreadSafeCache.kt:29)←FirJavaFacade.knownClassNamesInPackage(FirJavaFacade.kt:764)←FirJavaFacade.hasTopLevelClassOf(FirJavaFacade.kt:82)←JavaSymbolProvider.getClassLikeSymbolByClassId(JavaSymbolProvider.kt:50)←JavaSymbolProvider.getClassLikeSymbolByClassId(JavaSymbolProvider.kt:32)←LLModuleWithDependenciesSymbolProvider.getClassLikeSymbolByClassIdWithoutDependencies(LLModuleWithDependenciesSymbolProvider.kt:82)←LLModuleWithDependenciesSymbolProvider.getClassLikeSymbolByClassId(LLModuleWithDependenciesSymbolProvider.kt:78)←ToSymbolUtilsKt.toSymbol(ToSymbolUtils.kt:94)←KaSymbolByFirBuilder$TypeBuilder.buildKtType(KaSymbolByFirBuilder.kt:454)←KaSymbolByFirBuilder$TypeBuilder.buildKtType(KaSymbolByFirBuilder.kt:503)←KaFirBuiltInTypes.cachedBuiltin_Iz0clPI$lambda$0(KaFirBuiltInTypes.kt:46)←SafePublicationLazyImpl.getValue(LazyJVM.kt:125)←ValidityAwareCachedValue.getValue-impl(ValidityAwareCachedValue.kt:21)←KaFirBuiltInTypes.getAny(KaFirBuiltInTypes.kt:37)←KaFirPsiSymbolKt.createSuperTypes(KaFirPsiSymbol.kt:206)←KaFirNamedClassSymbol.getSuperTypes(KaFirNamedClassSymbol.kt:65)←SymbolLightClassForClassOrObject._extendsList_delegate$lambda$0(SymbolLightClassForClassOrObject.kt:108)←SafePublicationLazyImpl.getValue(LazyJVM.kt:125)←SymbolLightClassForClassOrObject.get_extendsList(SymbolLightClassForClassOrObject.kt:106)←SymbolLightClassForClassOrObject.getExtendsList(SymbolLightClassForClassOrObject.kt:103)←PsiClassImplUtil.getExtendsListTypes(PsiClassImplUtil.java:1002)←SymbolLightClassBase.getExtendsListTypes(SymbolLightClassBase.kt:157)←PsiClassImplUtil.getSuperTypes(PsiClassImplUtil.java:835)←SymbolLightClassForClassLike.getSuperTypes(SymbolLightClassForClassLike.kt:174)←InheritanceUtil.getSuperClasses(InheritanceUtil.java:93)←InheritanceUtil.getSuperClasses(InheritanceUtil.java:98)←UElementVisitor$SuperclassUastVisitor.getRelevantDetectors(UElementVisitor.kt:345)←UElementVisitor$SuperclassUastVisitor.visitClass(UElementVisitor.kt:337)←AbstractKotlinUClass.accept(AbstractKotlinUClass.kt:220)←ImplementationUtilsKt.acceptList(implementationUtils.kt:15)←UFile.accept(UFile.kt:89)←UastLintUtilsKt.acceptSourceFile(UastLintUtils.kt:956)←UElementVisitor$visitFile$2.run(UElementVisitor.kt:191)←LintClient.runReadAction(LintClient.kt:1645)←LintCliClient.runReadAction(LintCliClient.kt:230)←LintDriver$LintClientWrapper.runReadAction(LintDriver.kt:2690)←UElementVisitor.visitFile(UElementVisitor.kt:189)←LintDriver$visitUastDetectors$1.run(LintDriver.kt:2028)←LintClient.runReadAction(LintClient.kt:1645)←LintCliClient.runReadAction(LintCliClient.kt:230)←LintDriver$LintClientWrapper.runReadAction(LintDriver.kt:2690)←LintDriver.visitUastDetectors(LintDriver.kt:2026)←LintDriver.visitUast(LintDriver.kt:2000)←LintDriver.runFileDetectors(LintDriver.kt:1234)←LintDriver.checkProject(LintDriver.kt:1041)←LintDriver.checkProjectRoot(LintDriver.kt:607)←LintDriver.access$checkProjectRoot(LintDriver.kt:179)←LintDriver$analyzeOnly$1.invoke(LintDriver.kt:434)←LintDriver$analyzeOnly$1.invoke(LintDriver.kt:431)←LintDriver.doAnalyze(LintDriver.kt:490)←LintDriver.analyzeOnly(LintDriver.kt:431)←LintCliClient$analyzeOnly$1.invoke(LintCliClient.kt:263)←LintCliClient$analyzeOnly$1.invoke(LintCliClient.kt:260)←LintCliClient.run(LintCliClient.kt:309)←LintCliClient.analyzeOnly(LintCliClient.kt:260)←Main.run(Main.java:1777)←Main.run(Main.java:283)←NativeMethodAccessorImpl.invoke0(NativeMethodAccessorImpl.java:-2)←NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)←DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)←Method.invoke(Method.java:569)←AndroidLintWorkAction.invokeLintMainRunMethod(AndroidLintWorkAction.kt:103)←AndroidLintWorkAction.runLint(AndroidLintWorkAction.kt:90)←AndroidLintWorkAction.execute(AndroidLintWorkAction.kt:64)←DefaultWorkerServer.execute(DefaultWorkerServer.java:68)←NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:64)←NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:61)←ClassLoaderUtils.executeInClassloader(ClassLoaderUtils.java:102)←NoIsolationWorkerFactory$1.lambda$execute$0(NoIsolationWorkerFactory.java:61)←AbstractWorker$1.call(AbstractWorker.java:44)←AbstractWorker$1.call(AbstractWorker.java:41)←DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:209)←DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:204)←DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)←DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)←DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)←DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)←DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:53)←AbstractWorker.executeWrappedInBuildOperation(AbstractWorker.java:41)←NoIsolationWorkerFactory$1.execute(NoIsolationWorkerFactory.java:58)←DefaultWorkerExecutor.lambda$submitWork$0(DefaultWorkerExecutor.java:176)←FutureTask.run(FutureTask.java:264)←DefaultConditionalExecutionQueue$ExecutionRunner.runExecution(DefaultConditionalExecutionQueue.java:194)←DefaultConditionalExecutionQueue$ExecutionRunner.access$700(DefaultConditionalExecutionQueue.java:127)\\\`
+     
+     You can run with --stacktrace or set environment variable \\\`LINT_PRINT_STACKTRACE=true\\\` to dump a full stacktrace to stdout.
+     Stack: \`RuntimeException:LintDriver$Companion.handleDetectorError(LintDriver.kt:3597)←LintDriver$Companion.handleDetectorError$default(LintDriver.kt:3462)←LintDriver$Companion.handleDetectorError(LintDriver.kt:3458)←UElementVisitor.visitFile(UElementVisitor.kt:233)←LintDriver$visitUastDetectors$1.run(LintDriver.kt:2028)←LintClient.runReadAction(LintClient.kt:1645)←LintCliClient.runReadAction(LintCliClient.kt:230)←LintDriver$LintClientWrapper.runReadAction(LintDriver.kt:2690)←LintDriver.visitUastDetectors(LintDriver.kt:2026)←LintDriver.visitUast(LintDriver.kt:2000)←LintDriver.runFileDetectors(LintDriver.kt:1234)←LintDriver.checkProject(LintDriver.kt:1041)←LintDriver.checkProjectRoot(LintDriver.kt:607)←LintDriver.access$checkProjectRoot(LintDriver.kt:179)←LintDriver$analyzeOnly$1.invoke(LintDriver.kt:434)←LintDriver$analyzeOnly$1.invoke(LintDriver.kt:431)←LintDriver.doAnalyze(LintDriver.kt:490)←LintDriver.analyzeOnly(LintDriver.kt:431)←LintCliClient$analyzeOnly$1.invoke(LintCliClient.kt:263)←LintCliClient$analyzeOnly$1.invoke(LintCliClient.kt:260)←LintCliClient.run(LintCliClient.kt:309)←LintCliClient.analyzeOnly(LintCliClient.kt:260)←Main.run(Main.java:1777)←Main.run(Main.java:283)←NativeMethodAccessorImpl.invoke0(NativeMethodAccessorImpl.java:-2)←NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)←DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)←Method.invoke(Method.java:569)←AndroidLintWorkAction.invokeLintMainRunMethod(AndroidLintWorkAction.kt:103)←AndroidLintWorkAction.runLint(AndroidLintWorkAction.kt:90)←AndroidLintWorkAction.execute(AndroidLintWorkAction.kt:64)←DefaultWorkerServer.execute(DefaultWorkerServer.java:68)←NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:64)←NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:61)←ClassLoaderUtils.executeInClassloader(ClassLoaderUtils.java:102)←NoIsolationWorkerFactory$1.lambda$execute$0(NoIsolationWorkerFactory.java:61)←AbstractWorker$1.call(AbstractWorker.java:44)←AbstractWorker$1.call(AbstractWorker.java:41)←DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:209)←DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:204)←DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)←DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)←DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)←DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)←DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:53)←AbstractWorker.executeWrappedInBuildOperation(AbstractWorker.java:41)←NoIsolationWorkerFactory$1.execute(NoIsolationWorkerFactory.java:58)←DefaultWorkerExecutor.lambda$submitWork$0(DefaultWorkerExecutor.java:176)←FutureTask.run(FutureTask.java:264)←DefaultConditionalExecutionQueue$ExecutionRunner.runExecution(DefaultConditionalExecutionQueue.java:194)←DefaultConditionalExecutionQueue$ExecutionRunner.access$700(DefaultConditionalExecutionQueue.java:127)←DefaultConditionalExecutionQueue$ExecutionRunner$1.run(DefaultConditionalExecutionQueue.java:169)←Factories$1.create(Factories.java:30)←DefaultWorkerLeaseService.lambda$withLocksAcquired$0(DefaultWorkerLeaseService.java:269)←ResourceLockStatistics$1.measure(ResourceLockStatistics.java:42)←DefaultWorkerLeaseService.withLocksAcquired(DefaultWorkerLeaseService.java:267)←DefaultWorkerLeaseService.withLocks(DefaultWorkerLeaseService.java:259)←DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:127)←DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:132)←DefaultConditionalExecutionQueue$ExecutionRunner.runBatch(DefaultConditionalExecutionQueue.java:164)←DefaultConditionalExecutionQueue$ExecutionRunner.run(DefaultConditionalExecutionQueue.java:133)←Executors$RunnableAdapter.call(Executors.java:539)←FutureTask.run(FutureTask.java:264)←ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)←AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:47)←ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)←ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)←Thread.run(Thread.java:840)\`
+     
+     You can run with --stacktrace or set environment variable \`LINT_PRINT_STACKTRACE=true\` to dump a full stacktrace to stdout.
+     Stack: `RuntimeException:LintDriver$Companion.handleDetectorError(LintDriver.kt:3597)←LintDriver$Companion.handleDetectorError$default(LintDriver.kt:3462)←LintDriver$Companion.handleDetectorError(LintDriver.kt:3458)←LintDriver$analyzeOnly$1.invoke(LintDriver.kt:436)←LintDriver$analyzeOnly$1.invoke(LintDriver.kt:431)←LintDriver.doAnalyze(LintDriver.kt:490)←LintDriver.analyzeOnly(LintDriver.kt:431)←LintCliClient$analyzeOnly$1.invoke(LintCliClient.kt:263)←LintCliClient$analyzeOnly$1.invoke(LintCliClient.kt:260)←LintCliClient.run(LintCliClient.kt:309)←LintCliClient.analyzeOnly(LintCliClient.kt:260)←Main.run(Main.java:1777)←Main.run(Main.java:283)←NativeMethodAccessorImpl.invoke0(NativeMethodAccessorImpl.java:-2)←NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)←DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)←Method.invoke(Method.java:569)←AndroidLintWorkAction.invokeLintMainRunMethod(AndroidLintWorkAction.kt:103)←AndroidLintWorkAction.runLint(AndroidLintWorkAction.kt:90)←AndroidLintWorkAction.execute(AndroidLintWorkAction.kt:64)←DefaultWorkerServer.execute(DefaultWorkerServer.java:68)←NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:64)←NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:61)←ClassLoaderUtils.executeInClassloader(ClassLoaderUtils.java:102)←NoIsolationWorkerFactory$1.lambda$execute$0(NoIsolationWorkerFactory.java:61)←AbstractWorker$1.call(AbstractWorker.java:44)←AbstractWorker$1.call(AbstractWorker.java:41)←DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:209)←DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:204)←DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)←DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)←DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)←DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)←DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:53)←AbstractWorker.executeWrappedInBuildOperation(AbstractWorker.java:41)←NoIsolationWorkerFactory$1.execute(NoIsolationWorkerFactory.java:58)←DefaultWorkerExecutor.lambda$submitWork$0(DefaultWorkerExecutor.java:176)←FutureTask.run(FutureTask.java:264)←DefaultConditionalExecutionQueue$ExecutionRunner.runExecution(DefaultConditionalExecutionQueue.java:194)←DefaultConditionalExecutionQueue$ExecutionRunner.access$700(DefaultConditionalExecutionQueue.java:127)←DefaultConditionalExecutionQueue$ExecutionRunner$1.run(DefaultConditionalExecutionQueue.java:169)←Factories$1.create(Factories.java:30)←DefaultWorkerLeaseService.lambda$withLocksAcquired$0(DefaultWorkerLeaseService.java:269)←ResourceLockStatistics$1.measure(ResourceLockStatistics.java:42)←DefaultWorkerLeaseService.withLocksAcquired(DefaultWorkerLeaseService.java:267)←DefaultWorkerLeaseService.withLocks(DefaultWorkerLeaseService.java:259)←DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:127)←DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:132)←DefaultConditionalExecutionQueue$ExecutionRunner.runBatch(DefaultConditionalExecutionQueue.java:164)←DefaultConditionalExecutionQueue$ExecutionRunner.run(DefaultConditionalExecutionQueue.java:133)←Executors$RunnableAdapter.call(Executors.java:539)←FutureTask.run(FutureTask.java:264)←ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)←AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:47)←ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)←ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)←Thread.run(Thread.java:840)`
+     
+     You can run with --stacktrace or set environment variable `LINT_PRINT_STACKTRACE=true` to dump a full stacktrace to stdout.
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 1m 47s
+235 actionable tasks: 66 executed, 169 up-to-date

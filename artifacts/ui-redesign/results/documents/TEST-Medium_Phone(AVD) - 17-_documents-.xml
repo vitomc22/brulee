@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuites tests="10" failures="0" errors="0" skipped="0" time="51.32" timestamp="2026-10-20T18:11:10" hostname="localhost">
+  <testsuite name="com.bruleetelie.documents.OcrStressTest" tests="3" failures="0" errors="0" skipped="0" time="46.736" timestamp="2026-10-20T18:11:10" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":documents" />
+    </properties>
+    <testcase name="ocrRepeatedCancelRetry_doesNotLeaveStuckWork" classname="com.bruleetelie.documents.OcrStressTest" time="9.233" />
+    <testcase name="ocr20LargeImages_completesWithoutOom" classname="com.bruleetelie.documents.OcrStressTest" time="22.755" />
+    <testcase name="ocr50SequentialRuns_completesWithoutLeakOrFailure" classname="com.bruleetelie.documents.OcrStressTest" time="14.748" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.documents.PdfLayoutRegressionTest" tests="3" failures="0" errors="0" skipped="0" time="0.692" timestamp="2026-10-20T18:11:10" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":documents" />
+    </properties>
+    <testcase name="internalPdfIncludesLocalizedCostsOverheadAndProfit" classname="com.bruleetelie.documents.PdfLayoutRegressionTest" time="0.405" />
+    <testcase name="longNotesPaginateWithoutLosingTheFinalTermsAndTotal" classname="com.bruleetelie.documents.PdfLayoutRegressionTest" time="0.156" />
+    <testcase name="customerPdfIsOneStyledPageWithActualBusinessDataAndNoRawFieldsOrCosts" classname="com.bruleetelie.documents.PdfLayoutRegressionTest" time="0.131" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.documents.PdfPageRendererStressTest" tests="4" failures="0" errors="0" skipped="0" time="3.186" timestamp="2026-10-20T18:11:10" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":documents" />
+    </properties>
+    <testcase name="corruptedPdfFailsClearly" classname="com.bruleetelie.documents.PdfPageRendererStressTest" time="0.007" />
+    <testcase name="rendersTwentyAndFiftyPageDocumentsWithoutRetainingBitmaps" classname="com.bruleetelie.documents.PdfPageRendererStressTest" time="1.814" />
+    <testcase name="encryptedPdfIsRejectedWithoutCreatingPages" classname="com.bruleetelie.documents.PdfPageRendererStressTest" time="0.003" />
+    <testcase name="cancellationStopsBeforeNextPageAndRepeatedCyclesRemainStable" classname="com.bruleetelie.documents.PdfPageRendererStressTest" time="1.362" />
+  </testsuite>
+</testsuites>

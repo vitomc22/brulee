@@ -1,5 +1,7 @@
 package com.bruleetelie.app
 
+import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -41,7 +43,14 @@ class PriceScenarioIndividualE2eTest {
     @Test fun priceE2e007_tenPercentTargetMargin() { openPricing(); composeRule.onNodeWithTag("price_margin_input").performScrollTo().performTextClearance(); composeRule.onNodeWithTag("price_margin_input").performTextInput("10"); pricingVisible() }
     @Test fun priceE2e008_fiftyPercentTargetMargin() { openPricing(); composeRule.onNodeWithTag("price_margin_input").performScrollTo().performTextClearance(); composeRule.onNodeWithTag("price_margin_input").performTextInput("50"); pricingVisible() }
     @Test fun priceE2e009_veryHighTargetMarginRemainsFinite() { openPricing(); composeRule.onNodeWithTag("price_margin_input").performScrollTo().performTextClearance(); composeRule.onNodeWithTag("price_margin_input").performTextInput("99"); composeRule.onNodeWithText("Infinity").assertDoesNotExist() }
-    @Test fun priceE2e010_negativeMarginIsBlocked() { openPricing(); composeRule.onNodeWithTag("price_margin_input").performScrollTo().performTextClearance(); composeRule.onNodeWithTag("price_margin_input").performTextInput("-10"); composeRule.onNodeWithText("Margem: 35.00%", substring = false).assertIsDisplayed() }
+    @Test fun priceE2e010_negativeMarginIsBlocked() {
+        openPricing()
+        composeRule.onNodeWithTag("price_margin_input").performScrollTo().performTextReplacement("-10")
+        composeRule.onNodeWithText("Use um valor entre 0 e 99,99").assertIsDisplayed()
+        composeRule.onNodeWithTag("quote_advance").performScrollTo().assertIsNotEnabled()
+        composeRule.onNodeWithTag("price_margin_input").performScrollTo().performTextReplacement("35")
+        composeRule.onNodeWithTag("quote_advance").performScrollTo().assertIsEnabled()
+    }
     @Test fun priceE2e011_zeroCostDoesNotProduceInvalidNumber() { openPricing(); composeRule.onNodeWithText("NaN").assertDoesNotExist(); composeRule.onNodeWithText("Infinity").assertDoesNotExist() }
     @Test fun priceE2e012_suggestedPriceRoundingIsFinite() { openPricing(); composeRule.onNodeWithTag("price_sale_value").performScrollTo().assertIsDisplayed(); composeRule.onNodeWithText("NaN").assertDoesNotExist() }
     @Test fun priceE2e013_finalPriceCanAdvanceToQuote() { openPricing(); composeRule.onNodeWithTag("quote_advance").performScrollTo().performClick(); composeRule.onNodeWithTag("customer_name").performScrollTo().assertIsDisplayed() }

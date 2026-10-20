@@ -50,6 +50,9 @@ class QuoteFlowE2eTest {
         createQuote()
         composeRule.onNodeWithTag("quote_approve").performScrollTo().performClick()
         composeRule.onNodeWithTag("production_board").assertIsDisplayed()
+        composeRule.waitUntil(10000) {
+            composeRule.onAllNodesWithText("Orçamento aprovado e adicionado à produção").fetchSemanticsNodes().isEmpty()
+        }
         composeRule.onNodeWithText("30x Bolo E2E de Chocolate").performScrollTo().assertIsDisplayed()
         val order = runBlocking { withTimeout(10000) { db.productionOrderDao().getAllOrders().first { it.isNotEmpty() }.single() } }
         val steps = runBlocking { db.productionOrderDao().getStepsForOrderSync(order.id) }

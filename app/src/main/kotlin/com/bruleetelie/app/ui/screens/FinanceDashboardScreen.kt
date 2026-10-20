@@ -31,11 +31,13 @@ import com.bruleetelie.domain.SaleSnapshot
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.concurrent.TimeUnit
-import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
-import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
-import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModel
-import com.patrykandpatrick.vico.core.cartesian.data.LineCartesianLayerModel
+import androidx.compose.foundation.Canvas
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import com.bruleetelie.app.ui.components.*
 
 @Composable
 fun FinanceDashboardScreen(
@@ -82,14 +84,6 @@ fun FinanceDashboardScreen(
     )
     val rankings = RecipeProfitabilityRanking.calculate(filteredSales)
     val chartSales = filteredSales.sortedBy { it.completedAtMillis }
-    val chartModel = remember(chartSales) {
-        if (chartSales.isEmpty()) null else CartesianChartModel(
-            LineCartesianLayerModel.build {
-                series(chartSales.map { it.salePrice.cents / 100.0 })
-                series(chartSales.map { it.profit.cents / 100.0 })
-            }
-        )
-    }
     val priceAlerts = priceObservations
         .groupBy { it.ingredientId }
         .mapNotNull { (ingredientId, observations) ->
@@ -187,15 +181,9 @@ fun FinanceDashboardScreen(
                 if (chartSales.isEmpty()) {
                     Text("Sem dados suficientes para o gráfico", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 } else {
-                    CartesianChartHost(
-                        chart = rememberCartesianChart(
-                            rememberLineCartesianLayer()
-                        ),
-                        model = chartModel!!,
-                        modifier = Modifier.fillMaxWidth().height(220.dp)
-                    )
+                    SaleBars(chartSales)
                 }
-                Text("Linha 1: receita · Linha 2: lucro", style = MaterialTheme.typography.labelSmall)
+                Text("Verde: receita · Caramelo: lucro · Vermelho: prejuízo", style = MaterialTheme.typography.labelSmall)
             }
         }
 
@@ -221,14 +209,14 @@ fun FinanceDashboardScreen(
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             MetricStatCard(
-                icon = "↗",
+                icon = BruleeSymbol.Trend,
                 label = "Lucro líquido",
                 value = metrics.totalProfit.format(),
                 modifier = Modifier.weight(1f),
                 iconBackground = BruleePrimaryFixed
             )
             MetricStatCard(
-                icon = "👩‍🍳",
+                icon = BruleeSymbol.Production,
                 label = "Custo total",
                 value = metrics.totalCost.format(),
                 modifier = Modifier.weight(1f),
@@ -241,14 +229,14 @@ fun FinanceDashboardScreen(
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             MetricStatCard(
-                icon = "◎",
+                icon = BruleeSymbol.Target,
                 label = "Ticket médio",
                 value = metrics.averageTicket.format(),
                 modifier = Modifier.weight(1f),
                 iconBackground = BruleePrimaryFixed
             )
             MetricStatCard(
-                icon = "%",
+                icon = BruleeSymbol.Percent,
                 label = "Conversão",
                 value = "${metrics.conversionRatePercent.stripTrailingZeros().toPlainString()}%",
                 modifier = Modifier.weight(1f),
@@ -261,14 +249,14 @@ fun FinanceDashboardScreen(
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             MetricStatCard(
-                icon = "⏱",
+                icon = BruleeSymbol.Clock,
                 label = "Lucro/hora",
                 value = if (activeHours.signum() == 0) "Sem horas" else metrics.profitPerHour.format(),
                 modifier = Modifier.weight(1f),
                 iconBackground = BruleePrimaryFixed
             )
             MetricStatCard(
-                icon = "≋",
+                icon = BruleeSymbol.Finance,
                 label = "Ponto de equilíbrio",
                 value = if (fixedCosts == Money.Zero) "Não configurado" else breakEven.breakEvenRevenue.format(),
                 modifier = Modifier.weight(1f),
@@ -292,7 +280,7 @@ fun FinanceDashboardScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Text("⚠", color = BruleeSecondary)
+                    BruleeIcon(BruleeSymbol.Warning, tint = BruleeSecondary)
                     Text(
                         if (primaryAlert == null) "Preços dos insumos estáveis" else "Alerta: reajuste sugerido",
                         modifier = Modifier.testTag("finance_price_trend_status"),
@@ -346,23 +334,7 @@ fun FinanceDashboardScreen(
 
         Spacer(Modifier.height(8.dp))
 
-        // Export Report Button
-        Button(
-            onClick = onExportCsv,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(54.dp),
-            shape = CircleShape,
-            colors = ButtonDefaults.buttonColors(containerColor = BruleePrimary)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text("▤")
-                Text("Exportar CSV para Web", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
-            }
-        }
+        TactilePrimaryButton("EXPORTAR VENDAS EM CSV", onExportCsv, icon = BruleeSymbol.Download)
     }
 }
 
@@ -409,5 +381,33 @@ private fun FinanceDashboardScreenPreview() {
             revenueGoal = Money.Zero,
             onExportCsv = {}
         )
+    }
+}
+
+@Composable
+private fun SaleBars(sales: List<SaleSnapshot>) {
+    val upper = sales.maxOf { maxOf(it.salePrice.cents, it.profit.cents, 0L) }.coerceAtLeast(1L).toDouble()
+    val lower = sales.minOf { minOf(it.profit.cents, 0L) }.toDouble()
+    val span = upper - lower
+    val progress by animateFloatAsState(1f, tween(if (LocalReducedMotion.current) 0 else 400), label = "Sales chart")
+    Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        sales.forEach { sale ->
+            Column(Modifier.fillMaxWidth().testTag("finance_sale_${sale.id}"), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(sale.productName, style = MaterialTheme.typography.labelLarge, maxLines = 2)
+                Text("Receita ${sale.salePrice.format()} · Lucro ${sale.profit.format()}", style = MaterialTheme.typography.bodySmall)
+                Canvas(Modifier.fillMaxWidth().height(42.dp).testTag("finance_bars_${sale.id}").semantics {
+                    contentDescription = "${sale.productName}: receita ${sale.salePrice.format()}, lucro ${sale.profit.format()}"
+                }) {
+                    val origin = ((-lower / span) * size.width).toFloat()
+                    drawLine(BruleeOutlineVariant, Offset(origin, 0f), Offset(origin, size.height), 1.dp.toPx())
+                    listOf(sale.salePrice to BruleePrimary, sale.profit to if (sale.profit.cents < 0) BruleeError else BruleeSecondary).forEachIndexed { index, (money, color) ->
+                        val extent = (money.cents.toDouble() / span * size.width).toFloat() * progress
+                        drawRoundRect(color, Offset(minOf(origin, origin + extent), index * 23.dp.toPx()),
+                            Size(kotlin.math.abs(extent), 12.dp.toPx()), CornerRadius(3.dp.toPx()))
+                    }
+                }
+                Text(java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.forLanguageTag("pt-BR")).format(java.util.Date(sale.completedAtMillis)), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        }
     }
 }

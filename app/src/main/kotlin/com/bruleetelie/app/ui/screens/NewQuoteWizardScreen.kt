@@ -25,6 +25,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import com.bruleetelie.app.ui.components.BruleeIcon
+import com.bruleetelie.app.ui.components.BruleeSymbol
 import com.bruleetelie.app.ui.components.StatusPill
 import com.bruleetelie.app.ui.components.StepProgressBar
 import com.bruleetelie.app.ui.components.TactilePrimaryButton
@@ -52,16 +54,30 @@ fun NewQuoteWizardScreen(
     savedRecipes: List<SavedRecipe> = emptyList(),
     onSaveRecipe: (SavedRecipe) -> Unit = {},
     onSaveQuote: (Quote) -> Unit = {},
-    whatsAppOpened: Boolean = false
+    whatsAppOpened: Boolean = false,
+    initialQuote: Quote? = null,
+    processing: Boolean = false
 ) {
-    var step by rememberSaveable { mutableStateOf(WizardStep.RecipeName) }
-    var recipeId by rememberSaveable { mutableStateOf(UUID.randomUUID().toString()) }
-    var quoteId by rememberSaveable { mutableStateOf(UUID.randomUUID().toString()) }
-    val quoteCode = remember(quoteId) { "#ORC-${quoteId.take(8).uppercase()}" }
-    var recipeName by rememberSaveable { mutableStateOf("") }
-    var recipeYieldText by rememberSaveable { mutableStateOf("1") }
+    if (processing) AlertDialog(onDismissRequest = {}, confirmButton = {},
+        title = { Text("Preparando seu orçamento") },
+        text = { Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            BruleeMascot(size = 56.dp, mood = com.bruleetelie.app.ui.components.MascotMood.Processing)
+            CircularProgressIndicator(Modifier.size(24.dp).testTag("quote_processing"))
+        } })
+    val restoredDraft = initialQuote?.draft
+    val restoredRecipe = restoredDraft?.recipe
+    val costSettings = restoredDraft?.let {
+        operatingSettings.copy(hourlyLaborRate = it.hourlyLaborRate, gasCostPerHour = it.gasCostPerHour,
+            electricityCostPerHour = it.electricityCostPerHour)
+    } ?: operatingSettings
+    var step by rememberSaveable { mutableStateOf(if (initialQuote == null) WizardStep.RecipeName else WizardStep.entries[restoredDraft?.step?.coerceIn(0, 4) ?: 4]) }
+    var recipeId by rememberSaveable { mutableStateOf(restoredRecipe?.id ?: UUID.randomUUID().toString()) }
+    var quoteId by rememberSaveable { mutableStateOf(initialQuote?.id ?: UUID.randomUUID().toString()) }
+    val quoteCode = remember(quoteId) { initialQuote?.code ?: "#ORC-${quoteId.take(8).uppercase()}" }
+    var recipeName by rememberSaveable { mutableStateOf(initialQuote?.productName.orEmpty()) }
+    var recipeYieldText by rememberSaveable { mutableStateOf(initialQuote?.unitsCount?.toString() ?: "1") }
     val recipeYield = recipeYieldText.toIntOrNull()?.takeIf { it > 0 } ?: 1
-    var ingredients by rememberSaveable(stateSaver = IngredientListSaver) { mutableStateOf(emptyList<RecipeIngredientItem>()) }
+    var ingredients by rememberSaveable(stateSaver = IngredientListSaver) { mutableStateOf(restoredRecipe?.ingredients ?: emptyList<RecipeIngredientItem>()) }
     var ingredientName by rememberSaveable { mutableStateOf("") }
     var packageQuantity by rememberSaveable { mutableStateOf("") }
     var packagePrice by rememberSaveable { mutableStateOf("") }
@@ -71,30 +87,30 @@ fun NewQuoteWizardScreen(
     var editingIngredientId by rememberSaveable { mutableStateOf<String?>(null) }
 
     var times by rememberSaveable(stateSaver = TimesSaver) {
-        mutableStateOf(OperationalTimes(Quantity.minutes(0), Quantity.minutes(0), Quantity.minutes(0)))
+        mutableStateOf(restoredRecipe?.times ?: OperationalTimes(Quantity.minutes(0), Quantity.minutes(0), Quantity.minutes(0)))
     }
-    var prepText by rememberSaveable { mutableStateOf("0") }
-    var cookText by rememberSaveable { mutableStateOf("0") }
-    var decorationText by rememberSaveable { mutableStateOf("0") }
-    var packagingText by rememberSaveable { mutableStateOf("0") }
-    var overheadText by rememberSaveable { mutableStateOf("0") }
-    val packagingCost = runCatching { Money.fromReais(packagingText) }.getOrDefault(Money.Zero)
-    val overheadCost = runCatching { Money.fromReais(overheadText) }.getOrDefault(Money.Zero)
+    var prepText by rememberSaveable { mutableStateOf(restoredRecipe?.times?.prepTime?.value?.toPlainString() ?: "0") }
+    var cookText by rememberSaveable { mutableStateOf(restoredRecipe?.times?.cookTime?.value?.toPlainString() ?: "0") }
+    var decorationText by rememberSaveable { mutableStateOf(restoredRecipe?.times?.decorationTime?.value?.toPlainString() ?: "0") }
+    var packagingText by rememberSaveable { mutableStateOf(restoredRecipe?.packaging?.toBigDecimal()?.toPlainString() ?: "0") }
+    var overheadText by rememberSaveable { mutableStateOf(restoredRecipe?.overhead?.toBigDecimal()?.toPlainString() ?: "0") }
+    val packagingCost = runCatching { Money.fromReais(packagingText.ifBlank { "0" }) }.getOrDefault(Money.Zero)
+    val overheadCost = runCatching { Money.fromReais(overheadText.ifBlank { "0" }) }.getOrDefault(Money.Zero)
     // Recalculate costs dynamically
-    val calculatedCosts = remember(ingredients, times, packagingCost, overheadCost, operatingSettings) {
-        RecipeCostCalculator.calculate(
+    val calculatedCosts = remember(ingredients, times, packagingCost, overheadCost, costSettings) {
+        if (initialQuote != null && restoredDraft == null && ingredients.isEmpty()) initialQuote.pricing.costs else RecipeCostCalculator.calculate(
             ingredients = ingredients,
             times = times,
-            settings = operatingSettings,
+            settings = costSettings,
             packaging = packagingCost,
             overhead = overheadCost
         )
     }
 
     // Interactive sale price
-    var customPriceCents by rememberSaveable { mutableStateOf<Long?>(null) }
+    var customPriceCents by rememberSaveable { mutableStateOf(restoredDraft?.customPrice?.cents ?: initialQuote?.takeIf { it.draft == null }?.pricing?.salePrice?.cents) }
     val customSalePrice = customPriceCents?.let(::Money)
-    var marginValue by rememberSaveable { mutableStateOf(operatingSettings.defaultMarginPercent.toPlainString()) }
+    var marginValue by rememberSaveable { mutableStateOf((restoredDraft?.targetMargin ?: operatingSettings.defaultMarginPercent).toPlainString()) }
     val targetMarginPercent = marginValue.toBigDecimal()
     val pricingResult = remember(calculatedCosts, customSalePrice, targetMarginPercent) {
         if (customSalePrice != null) {
@@ -105,15 +121,26 @@ fun NewQuoteWizardScreen(
     }
 
     // Customer details
-    var customerName by rememberSaveable { mutableStateOf("") }
-    var customerPhone by rememberSaveable { mutableStateOf("") }
-    var deliveryDate by rememberSaveable { mutableStateOf("") }
+    var customerName by rememberSaveable { mutableStateOf(initialQuote?.customer?.name.orEmpty()) }
+    var customerPhone by rememberSaveable { mutableStateOf(initialQuote?.customer?.phone.orEmpty()) }
+    var deliveryDate by rememberSaveable { mutableStateOf(initialQuote?.deliveryDate.orEmpty()) }
+    var quoteNotes by rememberSaveable { mutableStateOf(initialQuote?.notes.orEmpty()) }
+    var validityDays by rememberSaveable { mutableStateOf(initialQuote?.validDays?.toString() ?: "3") }
+
+    val validOperatingInputs = listOf(prepText, cookText, decorationText).all { it.trim().ifEmpty { "0" }.replace(',', '.').toBigDecimalOrNull()?.signum()?.let { sign -> sign >= 0 } == true } && listOf(packagingText, overheadText).all { runCatching { Money.fromReais(it.ifBlank { "0" }) >= Money.Zero }.getOrDefault(false) }
+    val hasPendingIngredient = ingredientName.isNotBlank() || packageQuantity.isNotBlank() || packagePrice.isNotBlank() || usedQuantity.isNotBlank()
+    val canSaveDraft = recipeName.isNotBlank() && (recipeYieldText.toIntOrNull() ?: 0) > 0 && validOperatingInputs && !hasPendingIngredient
 
     fun currentQuote() = Quote(
         id = quoteId, code = quoteCode,
-        customer = Customer("customer-$quoteId", customerName.trim(), customerPhone.trim()),
-        productName = recipeName.trim(), productSubtitle = "Produção artesanal",
-        unitsCount = recipeYield, pricing = pricingResult, deliveryDate = deliveryDate.trim()
+        customer = Customer(initialQuote?.customer?.id ?: "customer-$quoteId", customerName.trim(), customerPhone.trim(), initialQuote?.customer?.notes.orEmpty()),
+        productName = recipeName.trim(), productSubtitle = initialQuote?.productSubtitle ?: "Produção artesanal",
+        unitsCount = recipeYield, pricing = pricingResult, deliveryDate = deliveryDate.trim(),
+        notes = quoteNotes.trim(), validDays = validityDays.toIntOrNull()?.takeIf { it > 0 } ?: 3,
+        draft = if (initialQuote != null && restoredDraft == null && ingredients.isEmpty()) null else QuoteDraft(
+            SavedRecipe(recipeId, "", 0, recipeName.trim(), recipeYield, ingredients, times, packagingCost, overheadCost),
+            costSettings.hourlyLaborRate, costSettings.gasCostPerHour, costSettings.electricityCostPerHour,
+            targetMarginPercent, customSalePrice, step.ordinal.coerceAtMost(4))
     )
     fun saveRecipe() = onSaveRecipe(SavedRecipe(recipeId, "", 0, recipeName.trim(), recipeYield, ingredients, times, packagingCost, overheadCost))
     LaunchedEffect(whatsAppOpened) { if (whatsAppOpened) step = WizardStep.SentSuccess }
@@ -139,7 +166,17 @@ fun NewQuoteWizardScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-                TextButton(onClose, Modifier.testTag("wizard_close")) { Text("Fechar") }
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            TextButton(onClose, Modifier.testTag("wizard_close")) { Text("Fechar") }
+            if (step != WizardStep.SentSuccess) TextButton(
+                onClick = { onSaveQuote(currentQuote()); onClose() },
+                enabled = canSaveDraft,
+                modifier = Modifier.testTag("wizard_save_draft")
+            ) { Text("Salvar rascunho") }
+        }
+        if (initialQuote != null && restoredDraft == null) Text(
+            "Este rascunho antigo mantém os totais salvos. Para recalcular a receita, informe os ingredientes e os tempos.",
+            style = MaterialTheme.typography.bodySmall, modifier = Modifier.testTag("legacy_draft_notice"))
         if (step != WizardStep.RecipeName && step != WizardStep.SentSuccess) {
             TextButton(
                 onClick = {
@@ -182,7 +219,7 @@ fun NewQuoteWizardScreen(
             }
         }
 
-        BruleeTransition(step, Modifier.testTag("wizard_step_transition")) { displayedStep ->
+        BruleeTransition(step, Modifier.testTag("wizard_step_transition"), order = { it.ordinal }) { displayedStep ->
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         when (displayedStep) {
             WizardStep.RecipeName -> {
@@ -192,7 +229,7 @@ fun NewQuoteWizardScreen(
                     onValueChange = { recipeName = it },
                     label = { Text("Nome da Receita") },
                     modifier = Modifier.fillMaxWidth().testTag("recipe_name"),
-                    shape = CircleShape
+                    shape = RoundedCornerShape(16.dp)
                 )
                 OutlinedTextField(
                     value = recipeYieldText, onValueChange = { recipeYieldText = it },
@@ -306,7 +343,8 @@ fun NewQuoteWizardScreen(
                         usedUnit = UnitOfMeasure.Gram
                     }
                 )
-                if (editingIngredientId != null) {
+                if (editingIngredientId != null || hasPendingIngredient) {
+                    Text("Adicione ou cancele o ingrediente antes de salvar o rascunho.", style = MaterialTheme.typography.bodySmall)
                     TextButton(
                         onClick = {
                             editingIngredientId = null
@@ -320,89 +358,102 @@ fun NewQuoteWizardScreen(
                 }
                 ingredients.forEach { item ->
                     Surface(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().testTag("ingredient_card_${item.id}"),
                         color = BruleeSurfaceContainerLowest,
                         shape = RoundedCornerShape(16.dp),
                         shadowElevation = 1.dp
                     ) {
-                        Row(
+                        Column(
                             modifier = Modifier.padding(14.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
-                            Column {
-                                Text(item.name, fontWeight = FontWeight.Bold)
+                            Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
+                                Column(Modifier.weight(1f)) {
+                                    Text(item.name, fontWeight = FontWeight.Bold)
+                                    Text(
+                                        "Uso: ${item.usedQuantity.formatted()} (Pacote: ${item.packageQuantity.formatted()})",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
                                 Text(
-                                    "Uso: ${item.usedQuantity.formatted()} (Pacote: ${item.packageQuantity.formatted()})",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    item.proportionalCost.format(),
+                                    fontWeight = FontWeight.Bold,
+                                    color = BruleePrimary
                                 )
                             }
-                            Text(
-                                item.proportionalCost.format(),
-                                fontWeight = FontWeight.Bold,
-                                color = BruleePrimary
-                            )
-                            TextButton(
-                                onClick = { ingredients = ingredients.filterNot { it.id == item.id } },
-                                modifier = Modifier.testTag("ingredient_remove")
-                            ) { Text("Excluir") }
-                            TextButton(
-                                onClick = {
-                                    ingredientName = item.name
-                                    packageQuantity = item.packageQuantity.value.stripTrailingZeros().toPlainString()
-                                    packagePrice = item.packagePrice.toBigDecimal().toPlainString()
-                                    usedQuantity = item.usedQuantity.value.stripTrailingZeros().toPlainString()
-                                    packageUnit = item.packageQuantity.unit
-                                    usedUnit = item.usedQuantity.unit
-                                    editingIngredientId = item.id
-                                },
-                                modifier = Modifier.testTag("ingredient_edit")
-                            ) { Text("Editar") }
+                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                                TextButton(
+                                    onClick = { ingredients = ingredients.filterNot { it.id == item.id } },
+                                    modifier = Modifier.testTag("ingredient_remove")
+                                ) { Text("Excluir") }
+                                TextButton(
+                                    onClick = {
+                                        ingredientName = item.name
+                                        packageQuantity = item.packageQuantity.value.stripTrailingZeros().toPlainString()
+                                        packagePrice = item.packagePrice.toBigDecimal().toPlainString()
+                                        usedQuantity = item.usedQuantity.value.stripTrailingZeros().toPlainString()
+                                        packageUnit = item.packageQuantity.unit
+                                        usedUnit = item.usedQuantity.unit
+                                        editingIngredientId = item.id
+                                    },
+                                    modifier = Modifier.testTag("ingredient_edit")
+                                ) { Text("Editar") }
+                            }
                         }
                     }
                 }
                 TactilePrimaryButton(
                     text = "CONTINUAR PARA CUSTOS OPERACIONAIS",
-                    enabled = ingredients.isNotEmpty(),
+                    enabled = ingredients.isNotEmpty() && !hasPendingIngredient,
                     onClick = { step = WizardStep.OperationalCosts },
                     modifier = Modifier.testTag("ingredients_continue")
                 )
             }
 
             WizardStep.OperationalCosts -> {
-                Text("Tempos e Complexidade", style = MaterialTheme.typography.headlineMedium)
+                Text("Custos operacionais", style = MaterialTheme.typography.headlineMedium)
+                Text("Preencha os custos desta produção. Campos vazios valem zero.", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 OutlinedTextField(
                     value = prepText,
                     onValueChange = { value ->
                         prepText = value
-                        value.replace(',', '.').toBigDecimalOrNull()?.takeIf { it.signum() >= 0 }?.let {
+                        value.trim().ifEmpty { "0" }.replace(',', '.').toBigDecimalOrNull()?.takeIf { it.signum() >= 0 }?.let {
                             times = times.copy(prepTime = Quantity.minutes(it))
                         }
                     },
                     label = { Text("Preparo ativo (minutos)") },
+                    isError = prepText.isNotBlank() && (prepText.trim().replace(',', '.').toBigDecimalOrNull()?.signum() ?: -1) < 0,
+                    supportingText = { if (prepText.isNotBlank() && (prepText.trim().replace(',', '.').toBigDecimalOrNull()?.signum() ?: -1) < 0) Text("Informe minutos iguais ou maiores que zero") },
+                    keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(keyboardType = androidx.compose.ui.text.input.KeyboardType.Decimal),
                     modifier = Modifier.fillMaxWidth().testTag("operational_prep_minutes")
                 )
                 OutlinedTextField(
                     value = cookText,
                     onValueChange = { value ->
                         cookText = value
-                        value.replace(',', '.').toBigDecimalOrNull()?.takeIf { it.signum() >= 0 }?.let {
+                        value.trim().ifEmpty { "0" }.replace(',', '.').toBigDecimalOrNull()?.takeIf { it.signum() >= 0 }?.let {
                             times = times.copy(cookTime = Quantity.minutes(it))
                         }
                     },
                     label = { Text("Cocção / forno (minutos)") },
+                    isError = cookText.isNotBlank() && (cookText.trim().replace(',', '.').toBigDecimalOrNull()?.signum() ?: -1) < 0,
+                    supportingText = { if (cookText.isNotBlank() && (cookText.trim().replace(',', '.').toBigDecimalOrNull()?.signum() ?: -1) < 0) Text("Informe minutos iguais ou maiores que zero") },
+                    keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(keyboardType = androidx.compose.ui.text.input.KeyboardType.Decimal),
                     modifier = Modifier.fillMaxWidth().testTag("operational_cook_minutes")
                 )
                 OutlinedTextField(
                     value = decorationText,
                     onValueChange = { value ->
                         decorationText = value
-                        value.replace(',', '.').toBigDecimalOrNull()?.takeIf { it.signum() >= 0 }?.let {
+                        value.trim().ifEmpty { "0" }.replace(',', '.').toBigDecimalOrNull()?.takeIf { it.signum() >= 0 }?.let {
                             times = times.copy(decorationTime = Quantity.minutes(it))
                         }
                     },
                     label = { Text("Decoração ativa (minutos)") },
+                    isError = decorationText.isNotBlank() && (decorationText.trim().replace(',', '.').toBigDecimalOrNull()?.signum() ?: -1) < 0,
+                    supportingText = { if (decorationText.isNotBlank() && (decorationText.trim().replace(',', '.').toBigDecimalOrNull()?.signum() ?: -1) < 0) Text("Informe minutos iguais ou maiores que zero") },
+                    keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(keyboardType = androidx.compose.ui.text.input.KeyboardType.Decimal),
                     modifier = Modifier.fillMaxWidth().testTag("operational_decoration_minutes")
                 )
                 Text("Fonte de energia", style = MaterialTheme.typography.labelLarge)
@@ -430,15 +481,15 @@ fun NewQuoteWizardScreen(
                             selected = times.complexity == c,
                             onClick = { times = times.copy(complexity = c) },
                             label = { Text(c.label) },
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f).testTag("complexity_${c.name.lowercase()}")
                         )
                     }
                 }
-                OutlinedTextField(packagingText, { packagingText = it }, label = { Text("Embalagem (R$)") }, modifier = Modifier.fillMaxWidth().testTag("operational_packaging"))
-                OutlinedTextField(overheadText, { overheadText = it }, label = { Text("Outros custos (R$)") }, modifier = Modifier.fillMaxWidth().testTag("operational_overhead"))
+                OptionalCostField(packagingText, { packagingText = it }, "Embalagem (R$)", "operational_packaging")
+                OptionalCostField(overheadText, { overheadText = it }, "Outros custos (R$)", "operational_overhead")
                 TactilePrimaryButton(
                     text = "CALCULAR CUSTO TOTAL",
-                    enabled = listOf(prepText, cookText, decorationText).all { it.replace(',', '.').toBigDecimalOrNull()?.signum()?.let { sign -> sign >= 0 } == true } && listOf(packagingText, overheadText).all { runCatching { Money.fromReais(it) >= Money.Zero }.getOrDefault(false) },
+                    enabled = validOperatingInputs,
                     onClick = { saveRecipe(); step = WizardStep.CostSummaryAndPricing },
                     modifier = Modifier.testTag("costs_calculate")
                 )
@@ -470,9 +521,12 @@ fun NewQuoteWizardScreen(
                     onCustomerPhoneChanged = { customerPhone = it },
                     deliveryDate = deliveryDate,
                     onDeliveryDateChanged = { deliveryDate = it },
+                    notes = quoteNotes, onNotesChanged = { quoteNotes = it },
+                    validityDays = validityDays, onValidityChanged = { validityDays = it },
                     pricing = pricingResult,
                     onSendWhatsApp = { onSendWhatsApp(currentQuote()) },
                     onSharePdf = { onSharePdf(currentQuote()) },
+                    canSaveDraft = canSaveDraft,
                     onSaveDraft = { onSaveQuote(currentQuote()); onClose() },
                     onApproveOrder = { onQuoteApproved(currentQuote()) }
                 )
@@ -529,7 +583,7 @@ private fun CostSummaryAndPricingView(
                     .background(BruleeSecondaryContainer),
                 contentAlignment = Alignment.Center
             ) {
-                Text("🍰", style = MaterialTheme.typography.titleLarge)
+                BruleeIcon(BruleeSymbol.Production, tint = BruleePrimary)
             }
             Column(modifier = Modifier.weight(1f)) {
                 Text(
@@ -566,11 +620,11 @@ private fun CostSummaryAndPricingView(
             )
         }
 
-        CostBreakdownRow("🍫", "Ingredientes selecionados", "Custo proporcional das quantidades informadas", costs.ingredients)
-        CostBreakdownRow("👩‍🍳", "Mão de obra", "Tempo ativo × valor da hora × complexidade", costs.labor)
-        CostBreakdownRow("🔥", "Gás e energia", "Custo proporcional de cocção", costs.energy)
-        CostBreakdownRow("📦", "Embalagem e fita", "Valor informado para a receita", costs.packaging)
-        CostBreakdownRow("＋", "Outros custos", "Despesas adicionais desta produção", costs.overhead)
+        CostBreakdownRow(BruleeSymbol.Stock, "Ingredientes selecionados", "Custo proporcional das quantidades informadas", costs.ingredients)
+        CostBreakdownRow(BruleeSymbol.Clock, "Mão de obra", "Tempo ativo × valor da hora × complexidade", costs.labor)
+        CostBreakdownRow(BruleeSymbol.Flame, "Gás e energia", "Custo proporcional de cocção", costs.energy)
+        CostBreakdownRow(BruleeSymbol.Stock, "Embalagem e fita", "Valor informado para a receita", costs.packaging)
+        CostBreakdownRow(BruleeSymbol.Plus, "Outros custos", "Despesas adicionais desta produção", costs.overhead)
     }
 
     // Total Cost Highlight Card
@@ -592,7 +646,7 @@ private fun CostSummaryAndPricingView(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.Bold
                 )
-                Text(
+                com.bruleetelie.app.ui.components.BruleeAnimatedAmount(
                     costs.total.format(),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold
@@ -625,7 +679,7 @@ private fun CostSummaryAndPricingView(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontWeight = FontWeight.Bold
                     )
-                    Text(
+                    com.bruleetelie.app.ui.components.BruleeAnimatedAmount(
                         pricing.salePrice.format(),
                         modifier = Modifier.testTag("price_sale_value"),
                         style = MaterialTheme.typography.displaySmall,
@@ -688,21 +742,21 @@ private fun CostSummaryAndPricingView(
                     onClick = { onPriceChanged(pricing.salePrice - Money.fromReais("5.00")) },
                     enabled = pricing.salePrice > Money.fromReais("5.00"),
                     modifier = Modifier.weight(1f).testTag("price_decrease_5"),
-                    shape = CircleShape,
+                    shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = BruleeSurfaceContainerHigh, contentColor = BruleeOnSurface)
                 ) { Text("- R$ 5") }
 
                 Button(
                     onClick = { onPriceChanged(pricing.salePrice + Money.fromReais("5.00")) },
                     modifier = Modifier.weight(1f).testTag("price_increase_5"),
-                    shape = CircleShape,
+                    shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = BruleeSurfaceContainerHigh, contentColor = BruleeOnSurface)
                 ) { Text("+ R$ 5") }
 
                 Button(
                     onClick = { onPriceChanged(pricing.salePrice + Money.fromReais("10.00")) },
                     modifier = Modifier.weight(1f).testTag("price_increase_10"),
-                    shape = CircleShape,
+                    shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = BruleeSecondaryContainer, contentColor = BruleeOnSecondaryContainer)
                 ) { Text("+ R$ 10") }
             }
@@ -717,13 +771,13 @@ private fun CostSummaryAndPricingView(
         text = "AVANÇAR PARA ORÇAMENTO",
         enabled = validPrice && validMargin,
         onClick = onAdvance,
-        icon = "→",
+        icon = BruleeSymbol.Arrow,
         modifier = Modifier.testTag("quote_advance")
     )
 }
 
 @Composable
-private fun CostBreakdownRow(icon: String, title: String, subtitle: String, amount: Money) {
+private fun CostBreakdownRow(icon: BruleeSymbol, title: String, subtitle: String, amount: Money) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
         color = BruleeSurfaceContainerLowest,
@@ -742,7 +796,7 @@ private fun CostBreakdownRow(icon: String, title: String, subtitle: String, amou
                     .background(BruleeSurfaceContainerHigh),
                 contentAlignment = Alignment.Center
             ) {
-                Text(icon)
+                BruleeIcon(icon, tint = BruleePrimary)
             }
             Column(modifier = Modifier.weight(1f)) {
                 Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
@@ -754,6 +808,7 @@ private fun CostBreakdownRow(icon: String, title: String, subtitle: String, amou
 }
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 private fun CustomerAndQuoteView(
     recipeName: String,
     quoteCode: String,
@@ -763,13 +818,16 @@ private fun CustomerAndQuoteView(
     onCustomerPhoneChanged: (String) -> Unit,
     deliveryDate: String,
     onDeliveryDateChanged: (String) -> Unit,
+    notes: String, onNotesChanged: (String) -> Unit,
+    validityDays: String, onValidityChanged: (String) -> Unit,
     pricing: PricingResult,
     onSendWhatsApp: () -> Unit,
     onSharePdf: () -> Unit,
     onApproveOrder: () -> Unit,
-    onSaveDraft: () -> Unit
+    onSaveDraft: () -> Unit,
+    canSaveDraft: Boolean
 ) {
-    val validCustomer = customerName.isNotBlank() && deliveryDate.isNotBlank()
+    val validCustomer = customerName.isNotBlank() && isValidDeliveryDate(deliveryDate) && (validityDays.toIntOrNull() ?: 0) in 1..365
     val phoneDigits = customerPhone.filter(Char::isDigit)
     val validPhone = phoneDigits.length in 10..15
     Text(
@@ -799,7 +857,7 @@ private fun CustomerAndQuoteView(
                 onValueChange = onCustomerNameChanged,
                 label = { Text("Nome do Cliente") },
                 modifier = Modifier.fillMaxWidth().testTag("customer_name"),
-                shape = CircleShape
+                shape = RoundedCornerShape(16.dp)
             )
 
             OutlinedTextField(
@@ -807,16 +865,18 @@ private fun CustomerAndQuoteView(
                 onValueChange = onCustomerPhoneChanged,
                 label = { Text("Telefone / WhatsApp") },
                 modifier = Modifier.fillMaxWidth().testTag("customer_phone"),
-                shape = CircleShape
+                shape = RoundedCornerShape(16.dp)
             )
 
-            OutlinedTextField(
-                value = deliveryDate,
-                onValueChange = onDeliveryDateChanged,
-                label = { Text("Data de Entrega Desejada") },
-                modifier = Modifier.fillMaxWidth().testTag("delivery_date"),
-                shape = CircleShape
-            )
+            DeliveryDateField(deliveryDate, onDeliveryDateChanged)
+            OutlinedTextField(validityDays, onValidityChanged, label = { Text("Validade do orçamento (dias)") },
+                isError = (validityDays.toIntOrNull() ?: 0) !in 1..365,
+                modifier = Modifier.fillMaxWidth().testTag("quote_validity"), singleLine = true,
+                shape = RoundedCornerShape(16.dp))
+            OutlinedTextField(notes, onNotesChanged, label = { Text("Observações para o cliente") },
+                placeholder = { Text("Sabores, acabamento, retirada e condições combinadas") },
+                modifier = Modifier.fillMaxWidth().testTag("quote_notes"), minLines = 2,
+                shape = RoundedCornerShape(16.dp))
         }
     }
 
@@ -865,7 +925,7 @@ private fun CustomerAndQuoteView(
                     Text("TOTAL DO ORÇAMENTO", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     Text(pricing.salePrice.format(), style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = BruleePrimary)
                 }
-                StatusPill("Válido por 3 dias", BruleeSecondaryFixed, BruleeSecondary)
+                StatusPill("Válido por $validityDays dias", BruleeSecondaryFixed, BruleeSecondary)
             }
 
             Text(
@@ -882,14 +942,14 @@ private fun CustomerAndQuoteView(
         enabled = validCustomer && validPhone,
         modifier = Modifier.testTag("quote_send_whatsapp"),
         onClick = onSendWhatsApp,
-        icon = "✉"
+        icon = BruleeSymbol.Send
     )
 
     TactileSecondaryButton(
         text = "GERAR E COMPARTILHAR PDF",
         enabled = validCustomer,
         onClick = onSharePdf,
-        icon = "▣",
+        icon = BruleeSymbol.Pdf,
         modifier = Modifier.testTag("quote_share_pdf")
     )
 
@@ -897,10 +957,10 @@ private fun CustomerAndQuoteView(
         text = "Marcar como Aprovado (Adicionar à Produção)",
         enabled = validCustomer,
         onClick = onApproveOrder,
-        icon = "✓",
+        icon = BruleeSymbol.Check,
         modifier = Modifier.testTag("quote_approve")
     )
-    TactileSecondaryButton("SALVAR RASCUNHO", onSaveDraft, Modifier.testTag("quote_save_draft"), enabled = validCustomer)
+    TactileSecondaryButton("SALVAR RASCUNHO", onSaveDraft, Modifier.testTag("quote_save_draft"), enabled = canSaveDraft)
 }
 
 @Composable
@@ -916,7 +976,7 @@ private fun SentSuccessView(customerName: String, onFinish: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            Text("🎉", style = MaterialTheme.typography.displayMedium)
+            BruleeMascot(size = 96.dp, mood = com.bruleetelie.app.ui.components.MascotMood.Success)
             Text(
                 "Orçamento pronto no WhatsApp",
                 style = MaterialTheme.typography.headlineMedium,
@@ -949,4 +1009,13 @@ private fun NewQuoteWizardScreenPreview() {
             onClose = {}
         )
     }
+}
+
+@Composable
+private fun OptionalCostField(value: String, onValueChange: (String) -> Unit, label: String, tag: String) {
+    val valid = runCatching { Money.fromReais(value.ifBlank { "0" }) >= Money.Zero }.getOrDefault(false)
+    OutlinedTextField(value, onValueChange, label = { Text(label) }, isError = !valid,
+        supportingText = { if (!valid) Text("Informe um valor igual ou maior que zero, como 3,50") },
+        keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(keyboardType = androidx.compose.ui.text.input.KeyboardType.Decimal),
+        singleLine = true, shape = RoundedCornerShape(16.dp), modifier = Modifier.fillMaxWidth().testTag(tag))
 }

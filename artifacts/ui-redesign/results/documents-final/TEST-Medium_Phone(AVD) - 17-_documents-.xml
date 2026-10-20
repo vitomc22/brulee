@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuites tests="3" failures="0" errors="0" skipped="0" time="1.935" timestamp="2026-10-20T18:16:42" hostname="localhost">
+  <testsuite name="com.bruleetelie.documents.PdfLayoutRegressionTest" tests="3" failures="0" errors="0" skipped="0" time="1.066" timestamp="2026-10-20T18:16:42" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":documents" />
+    </properties>
+    <testcase name="internalPdfIncludesLocalizedCostsOverheadAndProfit" classname="com.bruleetelie.documents.PdfLayoutRegressionTest" time="0.414" />
+    <testcase name="longNotesPaginateWithoutLosingTheFinalTermsAndTotal" classname="com.bruleetelie.documents.PdfLayoutRegressionTest" time="0.415" />
+    <testcase name="customerPdfIsOneStyledPageWithActualBusinessDataAndNoRawFieldsOrCosts" classname="com.bruleetelie.documents.PdfLayoutRegressionTest" time="0.237" />
+  </testsuite>
+</testsuites>

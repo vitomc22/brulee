@@ -44,9 +44,8 @@ class BackupBlockE2eTest {
     @Test
     fun backup021To030_preferencesRemainAvailableForRestore() {
         composeRule.onNodeWithTag("nav_backup").performClick()
-        composeRule.onNodeWithTag("settings_sounds").performScrollTo().performClick()
         composeRule.onNodeWithTag("settings_reduced_motion").performScrollTo().performClick()
-        composeRule.onNodeWithTag("settings_sounds").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithTag("settings_sounds").assertDoesNotExist()
         composeRule.onNodeWithTag("settings_reduced_motion").performScrollTo().assertIsDisplayed()
     }
 

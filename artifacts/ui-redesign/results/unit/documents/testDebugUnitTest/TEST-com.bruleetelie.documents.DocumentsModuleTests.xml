@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bruleetelie.documents.DocumentsModuleTests" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-20T18:11:54.050Z" hostname="victor-Lenovo-IdeaPad-S145-15API" time="0.274">
+  <properties/>
+  <testcase name="test internal PDF generator includes detailed costs and margin audit" classname="com.bruleetelie.documents.DocumentsModuleTests" time="0.061"/>
+  <testcase name="test backup manager rejects tampered backup with invalid checksum" classname="com.bruleetelie.documents.DocumentsModuleTests" time="0.031"/>
+  <testcase name="versioned OCR fixture reports exact quality" classname="com.bruleetelie.documents.DocumentsModuleTests" time="0.032"/>
+  <testcase name="test backup manager creates valid zip and verifies integrity" classname="com.bruleetelie.documents.DocumentsModuleTests" time="0.007"/>
+  <testcase name="test customer PDF generator NEVER exposes internal costs or profits" classname="com.bruleetelie.documents.DocumentsModuleTests" time="0.002"/>
+  <testcase name="customer PDF text stays private with a large notes payload" classname="com.bruleetelie.documents.DocumentsModuleTests" time="0.005"/>
+  <testcase name="PDF generator handles a fifty-page-sized document without truncation" classname="com.bruleetelie.documents.DocumentsModuleTests" time="0.018"/>
+  <testcase name="test duplicate detector identifies exact checksum" classname="com.bruleetelie.documents.DocumentsModuleTests" time="0.005"/>
+  <testcase name="receipt parser remains bounded for a large OCR payload" classname="com.bruleetelie.documents.DocumentsModuleTests" time="0.099"/>
+  <testcase name="test duplicate detector identifies same purchase despite OCR whitespace changes" classname="com.bruleetelie.documents.DocumentsModuleTests" time="0.004"/>
+  <testcase name="test receipt parser extracts CNPJ items and matches ingredients" classname="com.bruleetelie.documents.DocumentsModuleTests" time="0.003"/>
+  <testcase name="OCR quality metrics expose degradation instead of hiding it" classname="com.bruleetelie.documents.DocumentsModuleTests" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

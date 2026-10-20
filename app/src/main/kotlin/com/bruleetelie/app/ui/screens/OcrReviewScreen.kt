@@ -81,7 +81,7 @@ fun OcrReviewScreen(
                         .clip(CircleShape)
                         .background(BruleeSecondaryFixed),
                     contentAlignment = Alignment.Center
-                ) { Text("🔍") }
+                ) { com.bruleetelie.app.ui.components.BruleeIcon(com.bruleetelie.app.ui.components.BruleeSymbol.Search) }
                 Column(modifier = Modifier.weight(1f)) {
                     Text("Revisão Obrigatória", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                     Text("Nenhum preço é atualizado no estoque sem sua aprovação.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -144,7 +144,7 @@ fun OcrReviewScreen(
                                 containerColor = if (item.isConfirmed) BruleePrimary else BruleeSurfaceContainerHigh,
                                 contentColor = if (item.isConfirmed) Color.White else BruleeOnSurface
                             ),
-                            shape = CircleShape
+                            shape = RoundedCornerShape(16.dp)
                         ) {
                             Text(if (item.isConfirmed) "✓ Confirmado" else "Confirmar")
                         }
@@ -158,7 +158,7 @@ fun OcrReviewScreen(
                             modifier = Modifier
                                 .weight(1f)
                                 .testTag("ocr_edit_${item.id}"),
-                            shape = CircleShape
+                            shape = RoundedCornerShape(16.dp)
                         ) { Text("Editar") }
                     }
 

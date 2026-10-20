@@ -25,7 +25,8 @@ fun Quote.toEntity(): QuoteEntity {
         deliveryDate = deliveryDate,
         validDays = validDays,
         notes = notes,
-        status = status.name
+        status = status.name,
+        draftData = draft?.let(QuoteDraftCodec::encode)
     )
 }
 
@@ -60,7 +61,8 @@ fun QuoteEntity.toDomain(): Quote {
         deliveryDate = deliveryDate,
         validDays = validDays,
         notes = notes,
-        status = quoteStatus
+        status = quoteStatus,
+        draft = draftData?.let(QuoteDraftCodec::decode)
     )
 }
 

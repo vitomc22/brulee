@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuites tests="26" failures="2" errors="0" skipped="0" time="163.382" timestamp="2026-10-20T19:59:58" hostname="localhost">
+  <testsuite name="com.bruleetelie.app.DraftQuoteE2eTest" tests="3" failures="1" errors="0" skipped="0" time="48.102" timestamp="2026-10-20T19:59:58" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="systemBackMovesToPreviousStepAndRetainsInputs" classname="com.bruleetelie.app.DraftQuoteE2eTest" time="12.789" />
+    <testcase name="draftResumesEveryInputUpdatesSameRecordAndApprovesIntoProduction" classname="com.bruleetelie.app.DraftQuoteE2eTest" time="28.295">
+      <failure>java.lang.AssertionError: Action performScrollTo() failed.
+Reason: Expected exactly '1' node but could not find any node that satisfies: (TestTag = 'production_order_order-f7ce853d-62fa-47fb-b75f-d17bb3276f2d')
+
+at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+at androidx.compose.ui.test.ActionsKt.performScrollTo(Actions.kt:81)
+at com.bruleetelie.app.DraftQuoteE2eTest.draftResumesEveryInputUpdatesSameRecordAndApprovesIntoProduction(DraftQuoteE2eTest.kt:106)
+</failure>
+    </testcase>
+    <testcase name="incompleteDraftCanBeSavedAndReturnsToItsSavedStep" classname="com.bruleetelie.app.DraftQuoteE2eTest" time="7.018" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.QuoteUiRegressionTest" tests="3" failures="1" errors="0" skipped="0" time="10.83" timestamp="2026-10-20T19:59:58" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="emptyListAndOfficialBrandAreAccessibleWithReducedMotion" classname="com.bruleetelie.app.QuoteUiRegressionTest" time="1.417" />
+    <testcase name="lazyOrdersListSupportsManyRecordsAndShowsLifecycleStatus" classname="com.bruleetelie.app.QuoteUiRegressionTest" time="7.545" />
+    <testcase name="calendarSelectsBrazilianDateRejectsPastDatesAndSurvivesRestoration" classname="com.bruleetelie.app.QuoteUiRegressionTest" time="1.868">
+      <failure>java.lang.AssertionError: Failed to assert the following: (is not enabled)
+Reason: Expected exactly '1' node but could not find any node that satisfies: ((Text + InputText + EditableText contains '19' (ignoreCase: false)) &amp;&amp; (OnClick is defined))
+
+at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow(SemanticsNodeInteraction.kt:178)
+at androidx.compose.ui.test.SemanticsNodeInteraction.fetchOneOrThrow$default(SemanticsNodeInteraction.kt:150)
+at androidx.compose.ui.test.SemanticsNodeInteraction.fetchSemanticsNode(SemanticsNodeInteraction.kt:84)
+at androidx.compose.ui.test.AssertionsKt.assert(Assertions.kt:262)
+at androidx.compose.ui.test.AssertionsKt.assert$default(Assertions.kt:254)
+at androidx.compose.ui.test.AssertionsKt.assertIsNotEnabled(Assertions.kt:67)
+at com.bruleetelie.app.QuoteUiRegressionTest.calendarSelectsBrazilianDateRejectsPastDatesAndSurvivesRestoration(QuoteUiRegressionTest.kt:28)
+</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.WizardRegressionTest" tests="12" failures="0" errors="0" skipped="0" time="83.33" timestamp="2026-10-20T19:59:58" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="invalidOperatingCostsExplainErrorsAndCorrectionEnablesCalculation" classname="com.bruleetelie.app.WizardRegressionTest" time="8.276" />
+    <testcase name="formSurvivesActivityStateRestorationIncludingIngredients" classname="com.bruleetelie.app.WizardRegressionTest" time="5.642" />
+    <testcase name="savedRecipeCanBeLoadedWithReducedMotionAndItsRealYield" classname="com.bruleetelie.app.WizardRegressionTest" time="2.221" />
+    <testcase name="pdfDraftAndApprovalShareTheSameQuoteIdentity" classname="com.bruleetelie.app.WizardRegressionTest" time="7.806" />
+    <testcase name="removingLastIngredientBlocksAdvanceAndEditingRecalculates" classname="com.bruleetelie.app.WizardRegressionTest" time="5.515" />
+    <testcase name="manualCurrencyKeepsSequentialKeystrokesAndInvalidPriceBlocksAdvance" classname="com.bruleetelie.app.WizardRegressionTest" time="8.431" />
+    <testcase name="WhatsAppDoesNotClaimSuccessWhenCallbackFailsToOpen" classname="com.bruleetelie.app.WizardRegressionTest" time="7.726" />
+    <testcase name="reducedMotionStillAllowsEveryWizardStepAndDraftSave" classname="com.bruleetelie.app.WizardRegressionTest" time="7.017" />
+    <testcase name="pdfCarriesCustomerDeliveryValidityAndNotesFromTheForm" classname="com.bruleetelie.app.WizardRegressionTest" time="9.592" />
+    <testcase name="startsEmptyAndRequiresRecipeAndPositiveYield" classname="com.bruleetelie.app.WizardRegressionTest" time="3.003" />
+    <testcase name="operationalInputsCanBeClearedAndPackagingAndOverheadPersist" classname="com.bruleetelie.app.WizardRegressionTest" time="8.487" />
+    <testcase name="optionalOperatingFieldsEmptyCalculateZeroWithoutReusingOldValues" classname="com.bruleetelie.app.WizardRegressionTest" time="9.614" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.OperationalScreensRegressionTest" tests="6" failures="0" errors="0" skipped="0" time="13.828" timestamp="2026-10-20T19:59:58" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="fixedCostsAndDefaultMarginAreEditableAndAnalyticsExportIsReachable" classname="com.bruleetelie.app.OperationalScreensRegressionTest" time="2.755" />
+    <testcase name="pendingQuotesCanBeSharedApprovedOrRejectedAndAllFilterWorks" classname="com.bruleetelie.app.OperationalScreensRegressionTest" time="2.622" />
+    <testcase name="OCRStartsEmptySupportsPdfAndDisablesActionsWhileProcessing" classname="com.bruleetelie.app.OperationalScreensRegressionTest" time="2.52" />
+    <testcase name="WhatsAppUsesViewIntentWithEncodedCustomerMessage" classname="com.bruleetelie.app.OperationalScreensRegressionTest" time="1.537" />
+    <testcase name="realCustomerPdfIsSharedFromApplicationContextWithReadableUri" classname="com.bruleetelie.app.OperationalScreensRegressionTest" time="1.237" />
+    <testcase name="inventoryAcceptsOnlyValidPricesWithoutShoppingActions" classname="com.bruleetelie.app.OperationalScreensRegressionTest" time="3.157" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.NavigationLayoutRegressionTest" tests="2" failures="0" errors="0" skipped="0" time="6.032" timestamp="2026-10-20T19:59:58" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="debugDistributionCannotAutomaticallyRestoreOldTestRegistrations" classname="com.bruleetelie.app.NavigationLayoutRegressionTest" time="2.448" />
+    <testcase name="fiveTabsHaveConsistentTouchTargetsAndOpenTheirRealScreens" classname="com.bruleetelie.app.NavigationLayoutRegressionTest" time="3.584" />
+  </testsuite>
+</testsuites>

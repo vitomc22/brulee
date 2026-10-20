@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuites tests="16" failures="0" errors="0" skipped="0" time="243.181" timestamp="2026-10-20T18:08:56" hostname="localhost">
+  <testsuite name="com.bruleetelie.app.WizardRegressionTest" tests="12" failures="0" errors="0" skipped="0" time="171.368" timestamp="2026-10-20T18:08:56" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="invalidOperatingCostsExplainErrorsAndCorrectionEnablesCalculation" classname="com.bruleetelie.app.WizardRegressionTest" time="25.383" />
+    <testcase name="formSurvivesActivityStateRestorationIncludingIngredients" classname="com.bruleetelie.app.WizardRegressionTest" time="12.856" />
+    <testcase name="savedRecipeCanBeLoadedWithReducedMotionAndItsRealYield" classname="com.bruleetelie.app.WizardRegressionTest" time="4.562" />
+    <testcase name="pdfDraftAndApprovalShareTheSameQuoteIdentity" classname="com.bruleetelie.app.WizardRegressionTest" time="17.714" />
+    <testcase name="removingLastIngredientBlocksAdvanceAndEditingRecalculates" classname="com.bruleetelie.app.WizardRegressionTest" time="12.871" />
+    <testcase name="manualCurrencyKeepsSequentialKeystrokesAndInvalidPriceBlocksAdvance" classname="com.bruleetelie.app.WizardRegressionTest" time="16.075" />
+    <testcase name="WhatsAppDoesNotClaimSuccessWhenCallbackFailsToOpen" classname="com.bruleetelie.app.WizardRegressionTest" time="16.305" />
+    <testcase name="reducedMotionStillAllowsEveryWizardStepAndDraftSave" classname="com.bruleetelie.app.WizardRegressionTest" time="14.087" />
+    <testcase name="pdfCarriesCustomerDeliveryValidityAndNotesFromTheForm" classname="com.bruleetelie.app.WizardRegressionTest" time="17.21" />
+    <testcase name="startsEmptyAndRequiresRecipeAndPositiveYield" classname="com.bruleetelie.app.WizardRegressionTest" time="5.328" />
+    <testcase name="operationalInputsCanBeClearedAndPackagingAndOverheadPersist" classname="com.bruleetelie.app.WizardRegressionTest" time="13.259" />
+    <testcase name="optionalOperatingFieldsEmptyCalculateZeroWithoutReusingOldValues" classname="com.bruleetelie.app.WizardRegressionTest" time="15.718" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.QuoteFlowE2eTest" tests="2" failures="0" errors="0" skipped="0" time="56.238" timestamp="2026-10-20T18:08:56" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="createRecipeWithCostsApproveProduceAndRecordActualCostsAndRevenue" classname="com.bruleetelie.app.QuoteFlowE2eTest" time="32.437" />
+    <testcase name="WhatsAppActuallyLaunchesCustomerIntentAndSavedQuoteCanBeApprovedLater" classname="com.bruleetelie.app.QuoteFlowE2eTest" time="23.801" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.PriceScenarioIndividualE2eTest" tests="1" failures="0" errors="0" skipped="0" time="8.423" timestamp="2026-10-20T18:08:56" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="priceE2e010_negativeMarginIsBlocked" classname="com.bruleetelie.app.PriceScenarioIndividualE2eTest" time="8.423" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.app.RankScenarioIndividualE2eTest" tests="1" failures="0" errors="0" skipped="0" time="4.081" timestamp="2026-10-20T18:08:56" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":app" />
+    </properties>
+    <testcase name="rankE2e016_accumulatedProfitIsDisplayed" classname="com.bruleetelie.app.RankScenarioIndividualE2eTest" time="4.081" />
+  </testsuite>
+</testsuites>

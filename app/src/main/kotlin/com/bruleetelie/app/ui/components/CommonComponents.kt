@@ -44,7 +44,7 @@ fun StatusPill(
 
 @Composable
 fun MetricStatCard(
-    icon: String,
+    icon: BruleeSymbol,
     label: String,
     value: String,
     modifier: Modifier = Modifier,
@@ -56,10 +56,9 @@ fun MetricStatCard(
         shape = RoundedCornerShape(20.dp),
         shadowElevation = 1.dp
     ) {
-        Row(
-            modifier = Modifier.padding(14.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        Column(
+            modifier = Modifier.heightIn(min = 142.dp).padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Box(
                 modifier = Modifier
@@ -68,7 +67,7 @@ fun MetricStatCard(
                     .background(iconBackground),
                 contentAlignment = Alignment.Center
             ) {
-                Text(icon, style = MaterialTheme.typography.titleMedium)
+                BruleeIcon(icon, tint = BruleePrimary)
             }
             Column {
                 Text(
@@ -140,7 +139,7 @@ fun TactilePrimaryButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    icon: String? = null,
+    icon: BruleeSymbol? = null,
     enabled: Boolean = true
 ) {
     val interaction = remember { MutableInteractionSource() }
@@ -155,7 +154,7 @@ fun TactilePrimaryButton(
             .fillMaxWidth()
             .height(54.dp),
         enabled = enabled,
-        shape = CircleShape,
+        shape = RoundedCornerShape(18.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = BruleePrimary,
             contentColor = BruleeOnPrimary
@@ -166,7 +165,7 @@ fun TactilePrimaryButton(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            if (icon != null) Text(icon, style = MaterialTheme.typography.titleMedium)
+            if (icon != null) BruleeIcon(icon, Modifier.size(20.dp))
             Text(text, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
         }
     }
@@ -177,7 +176,7 @@ fun TactileSecondaryButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    icon: String? = null,
+    icon: BruleeSymbol? = null,
     enabled: Boolean = true
 ) {
     FilledTonalButton(
@@ -186,7 +185,7 @@ fun TactileSecondaryButton(
             .fillMaxWidth()
             .height(50.dp),
         enabled = enabled,
-        shape = CircleShape,
+        shape = RoundedCornerShape(18.dp),
         colors = ButtonDefaults.filledTonalButtonColors(
             containerColor = BruleeSecondaryContainer,
             contentColor = BruleeOnSecondaryContainer
@@ -196,8 +195,8 @@ fun TactileSecondaryButton(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            if (icon != null) Text(icon)
-            Text(text, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+            if (icon != null) BruleeIcon(icon, Modifier.size(20.dp))
+            Text(text, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.SemiBold)
         }
     }
 }

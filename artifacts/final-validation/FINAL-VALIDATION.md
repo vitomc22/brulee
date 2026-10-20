@@ -1,5 +1,6 @@
 # Brulee Telie final validation
 
+> Documento histórico da entrega anterior. A revisão e o APK atuais estão em [fix/REVIEW.md](../fix/REVIEW.md).
 Date: 2026-10-19
 
 ## Completed

@@ -13,14 +13,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-enum class Destination(val label: String, val icon: String) {
-    Production("Produção", "▤"),
-    Quotes("Pedidos", "▧"),
-    Wizard("Novo Orçamento", "➕"),
-    Finance("Finanças", "▣"),
-    Stock("Estoque", "📷"),
-    Backup("Backup", "↥"),
-    Shopping("Compras", "🛒")
+enum class Destination(val label: String, val icon: com.bruleetelie.app.ui.components.BruleeSymbol) {
+    Production("Produção", com.bruleetelie.app.ui.components.BruleeSymbol.Production),
+    Quotes("Pedidos", com.bruleetelie.app.ui.components.BruleeSymbol.Orders),
+    Wizard("Novo Orçamento", com.bruleetelie.app.ui.components.BruleeSymbol.Plus),
+    Finance("Finanças", com.bruleetelie.app.ui.components.BruleeSymbol.Finance),
+    Stock("Estoque", com.bruleetelie.app.ui.components.BruleeSymbol.Stock),
+    Backup("Configurações", com.bruleetelie.app.ui.components.BruleeSymbol.Settings)
 }
 
 sealed interface ActiveFlow {

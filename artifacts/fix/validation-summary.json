@@ -1,0 +1,66 @@
+{
+  "device": {
+    "avd": "Medium_Phone",
+    "android_api": "37.2"
+  },
+  "compose": {
+    "tests": 34,
+    "failures": 0,
+    "skipped": 0
+  },
+  "data_instrumentation": {
+    "tests": 3,
+    "failures": 0,
+    "skipped": 0
+  },
+  "unit": {
+    "app": {
+      "unique_tests": 6,
+      "failures": 0
+    },
+    "data": {
+      "unique_tests": 27,
+      "failures": 0
+    },
+    "domain": {
+      "unique_tests": 29,
+      "failures": 0
+    },
+    "documents": {
+      "unique_tests": 17,
+      "failures": 0
+    },
+    "total_unique_tests": 79,
+    "variant_invocations": 105
+  },
+  "distribution_tests": {
+    "tests": 3,
+    "failures": 0
+  },
+  "build_debug": "passed",
+  "build_release": "passed",
+  "lint": {
+    "app": {
+      "errors": 0,
+      "warnings": 38
+    },
+    "data": {
+      "errors": 0,
+      "warnings": 1
+    },
+    "documents": {
+      "errors": 0,
+      "warnings": 0
+    }
+  },
+  "final_app_data": "cleared with pm clear; only main package installed",
+  "apk": {
+    "path": "artifacts/fix/brulee-debug.apk",
+    "sha256": "b1f0aabe5a30a39a47f0f252ca9e878295c34ba64d112e577b4f4f50e35991f1",
+    "bytes": 16760142
+  },
+  "clean_database": {
+    "tables": 21,
+    "rows": 0
+  }
+}

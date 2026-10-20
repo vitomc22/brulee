@@ -54,7 +54,16 @@ class DocumentsModuleTests {
     fun `test customer PDF generator NEVER exposes internal costs or profits`() {
         val pdfText = pdfGenerator.buildCustomerPdfDocument(sampleQuote)
 
-        assertTrue(pdfText.contains("CUSTOMER_QUOTE"))
+        assertTrue(pdfText.contains("Orçamento"))
+        assertTrue(pdfText.contains("Contato: (11) 98765-4321"))
+        assertFalse(pdfText.contains("TOTAL="))
+        assertFalse(pdfText.contains("QUANTITY="))
+        assertTrue(pdfText.contains(sampleQuote.code))
+        assertTrue(pdfText.contains(sampleQuote.deliveryDate))
+        assertTrue(pdfText.contains("40 unidades"))
+        assertTrue(pdfText.contains("3 dias a partir da emissão"))
+        assertFalse(pdfText.contains("CUSTOMER="))
+        assertFalse(pdfText.contains("VALID_DAYS="))
         assertTrue(pdfText.contains("Ana Souza"))
         assertTrue(pdfText.contains("40 Brigadeiros Gourmet"))
         assertTrue(pdfText.contains("149,90"))
@@ -68,18 +77,21 @@ class DocumentsModuleTests {
         assertFalse(pdfText.contains("38.40"))
         assertFalse(pdfText.contains("50.00"))
         assertFalse(pdfText.contains("51.30"))
+        listOf("Ingredientes", "Mão de obra", "Gás e energia", "Lucro", "Margem", "38,40", "50,00", "51,30", "34,22%").forEach {
+            assertFalse("Customer PDF exposed internal data: $it", pdfText.contains(it))
+        }
     }
 
     @Test
     fun `test internal PDF generator includes detailed costs and margin audit`() {
         val pdfText = pdfGenerator.buildInternalPdfDocument(sampleQuote)
 
-        assertTrue(pdfText.contains("INTERNAL_DETAILED_REPORT"))
-        assertTrue(pdfText.contains("INGREDIENTS_COST"))
-        assertTrue(pdfText.contains("LABOR_COST"))
-        assertTrue(pdfText.contains("PROFIT"))
-        assertTrue(pdfText.contains("MARGIN_PERCENT"))
-        assertTrue(pdfText.contains("34.22%"))
+        assertTrue(pdfText.contains("Relatório interno"))
+        assertTrue(pdfText.contains("Ingredientes"))
+        assertTrue(pdfText.contains("Mão de obra"))
+        assertTrue(pdfText.contains("Lucro"))
+        assertTrue(pdfText.contains("Margem"))
+        assertTrue(pdfText.contains("34,22%"))
     }
 
     @Test

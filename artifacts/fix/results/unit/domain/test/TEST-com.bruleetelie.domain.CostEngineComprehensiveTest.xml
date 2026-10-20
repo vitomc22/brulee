@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bruleetelie.domain.CostEngineComprehensiveTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-20T21:51:13.732Z" hostname="victor-Lenovo-IdeaPad-S145-15API" time="0.028">
+  <properties/>
+  <testcase name="COST-E2E-011 kg to g conversion" classname="com.bruleetelie.domain.CostEngineComprehensiveTest" time="0.02"/>
+  <testcase name="COST-E2E-005 energy cost by power and duration" classname="com.bruleetelie.domain.CostEngineComprehensiveTest" time="0.001"/>
+  <testcase name="COST-E2E-004 gas cost by duration" classname="com.bruleetelie.domain.CostEngineComprehensiveTest" time="0.0"/>
+  <testcase name="COST-E2E-002 ingredients summation" classname="com.bruleetelie.domain.CostEngineComprehensiveTest" time="0.0"/>
+  <testcase name="COST-E2E-006 complete canonical total cost" classname="com.bruleetelie.domain.CostEngineComprehensiveTest" time="0.001"/>
+  <testcase name="COST-E2E-017 expensive ingredient" classname="com.bruleetelie.domain.CostEngineComprehensiveTest" time="0.0"/>
+  <testcase name="COST-E2E-010 zero used quantity" classname="com.bruleetelie.domain.CostEngineComprehensiveTest" time="0.0"/>
+  <testcase name="COST-E2E-015 precise cents calculation" classname="com.bruleetelie.domain.CostEngineComprehensiveTest" time="0.001"/>
+  <testcase name="COST-E2E-001 proportional ingredient cost" classname="com.bruleetelie.domain.CostEngineComprehensiveTest" time="0.0"/>
+  <testcase name="COST-E2E-016 extremely cheap ingredient" classname="com.bruleetelie.domain.CostEngineComprehensiveTest" time="0.0"/>
+  <testcase name="COST-E2E-003 labor cost by active time" classname="com.bruleetelie.domain.CostEngineComprehensiveTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

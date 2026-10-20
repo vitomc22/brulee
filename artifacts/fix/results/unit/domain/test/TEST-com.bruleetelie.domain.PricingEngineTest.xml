@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bruleetelie.domain.PricingEngineTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-20T21:51:13.915Z" hostname="victor-Lenovo-IdeaPad-S145-15API" time="0.002">
+  <properties/>
+  <testcase name="calcula preco sem perder centavos" classname="com.bruleetelie.domain.PricingEngineTest" time="0.001"/>
+  <testcase name="test canonical scenario cost total 70_90" classname="com.bruleetelie.domain.PricingEngineTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

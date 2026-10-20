@@ -1,0 +1,154 @@
+> Task :data:preBuild UP-TO-DATE
+> Task :data:preDebugBuild UP-TO-DATE
+> Task :data:checkDebugAarMetadata UP-TO-DATE
+> Task :data:mergeDebugJniLibFolders UP-TO-DATE
+> Task :data:mergeDebugNativeLibs NO-SOURCE
+> Task :data:stripDebugDebugSymbols NO-SOURCE
+> Task :data:copyDebugJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :domain:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :domain:compileKotlin UP-TO-DATE
+> Task :domain:compileJava NO-SOURCE
+> Task :domain:processResources NO-SOURCE
+> Task :domain:classes UP-TO-DATE
+> Task :domain:jar UP-TO-DATE
+> Task :data:generateDebugResources UP-TO-DATE
+> Task :data:packageDebugResources UP-TO-DATE
+> Task :data:processDebugNavigationResources UP-TO-DATE
+> Task :data:parseDebugLocalResources UP-TO-DATE
+> Task :data:generateDebugRFile UP-TO-DATE
+> Task :data:extractDebugAnnotations UP-TO-DATE
+> Task :data:extractDeepLinksForAarDebug UP-TO-DATE
+> Task :data:generateDebugAssets UP-TO-DATE
+> Task :data:mergeDebugAssets UP-TO-DATE
+> Task :data:kaptGenerateStubsDebugKotlin UP-TO-DATE
+> Task :data:kaptDebugKotlin UP-TO-DATE
+> Task :data:compileDebugKotlin UP-TO-DATE
+> Task :data:javaPreCompileDebug UP-TO-DATE
+> Task :data:compileDebugJavaWithJavac UP-TO-DATE
+> Task :data:mergeDebugGeneratedProguardFiles UP-TO-DATE
+> Task :data:mergeDebugConsumerProguardFiles UP-TO-DATE
+> Task :data:prepareDebugArtProfile UP-TO-DATE
+> Task :data:prepareLintJarForPublish UP-TO-DATE
+> Task :data:processDebugManifest UP-TO-DATE
+> Task :data:processDebugJavaRes UP-TO-DATE
+> Task :data:mergeDebugJavaResource UP-TO-DATE
+> Task :data:syncDebugLibJars UP-TO-DATE
+> Task :data:writeDebugAarMetadata UP-TO-DATE
+> Task :data:bundleDebugLocalLintAar UP-TO-DATE
+> Task :documents:preBuild UP-TO-DATE
+> Task :documents:preDebugBuild UP-TO-DATE
+> Task :documents:checkDebugAarMetadata UP-TO-DATE
+> Task :documents:mergeDebugJniLibFolders UP-TO-DATE
+> Task :documents:mergeDebugNativeLibs NO-SOURCE
+> Task :documents:stripDebugDebugSymbols NO-SOURCE
+> Task :documents:copyDebugJniLibsProjectAndLocalJars UP-TO-DATE
+> Task :documents:generateDebugResources UP-TO-DATE
+> Task :documents:packageDebugResources UP-TO-DATE
+> Task :documents:processDebugNavigationResources UP-TO-DATE
+> Task :documents:parseDebugLocalResources UP-TO-DATE
+> Task :documents:generateDebugRFile UP-TO-DATE
+> Task :documents:extractDebugAnnotations UP-TO-DATE
+> Task :documents:extractDeepLinksForAarDebug UP-TO-DATE
+> Task :documents:generateDebugAssets UP-TO-DATE
+> Task :documents:mergeDebugAssets UP-TO-DATE
+> Task :documents:compileDebugKotlin UP-TO-DATE
+> Task :documents:javaPreCompileDebug UP-TO-DATE
+> Task :documents:compileDebugJavaWithJavac NO-SOURCE
+> Task :documents:mergeDebugGeneratedProguardFiles UP-TO-DATE
+> Task :documents:mergeDebugConsumerProguardFiles UP-TO-DATE
+> Task :documents:prepareDebugArtProfile UP-TO-DATE
+> Task :documents:prepareLintJarForPublish UP-TO-DATE
+> Task :documents:processDebugManifest UP-TO-DATE
+> Task :documents:processDebugJavaRes UP-TO-DATE
+> Task :documents:mergeDebugJavaResource UP-TO-DATE
+> Task :documents:syncDebugLibJars UP-TO-DATE
+> Task :documents:writeDebugAarMetadata UP-TO-DATE
+> Task :documents:bundleDebugLocalLintAar UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:generateDebugRFile UP-TO-DATE
+> Task :data:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :documents:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :app:kaptGenerateStubsDebugKotlin UP-TO-DATE
+> Task :app:kaptDebugKotlin UP-TO-DATE
+> Task :app:compileDebugKotlin UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :data:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :documents:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :app:hiltSyncDebug UP-TO-DATE
+> Task :app:hiltAggregateDepsDebug UP-TO-DATE
+> Task :app:hiltJavaCompileDebug UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:compileDebugNavigationResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :data:extractDeepLinksDebug UP-TO-DATE
+> Task :documents:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :data:mapDebugSourceSetPaths UP-TO-DATE
+> Task :data:compileDebugLibraryResources UP-TO-DATE
+> Task :documents:mapDebugSourceSetPaths UP-TO-DATE
+> Task :documents:compileDebugLibraryResources UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar UP-TO-DATE
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :data:createFullJarDebug UP-TO-DATE
+> Task :data:writeDebugLintModelMetadata UP-TO-DATE
+> Task :documents:createFullJarDebug UP-TO-DATE
+> Task :documents:writeDebugLintModelMetadata UP-TO-DATE
+> Task :app:generateDebugAndroidTestLintModel UP-TO-DATE
+> Task :app:extractProguardFiles UP-TO-DATE
+> Task :data:extractProguardFiles UP-TO-DATE
+> Task :data:generateDebugLintModel UP-TO-DATE
+> Task :documents:extractProguardFiles UP-TO-DATE
+> Task :documents:generateDebugLintModel UP-TO-DATE
+> Task :app:generateDebugLintReportModel UP-TO-DATE
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:generateDebugUnitTestLintModel UP-TO-DATE
+> Task :data:lintAnalyzeDebug UP-TO-DATE
+> Task :documents:lintAnalyzeDebug UP-TO-DATE
+> Task :app:lintAnalyzeDebugAndroidTest UP-TO-DATE
+> Task :data:preDebugAndroidTestBuild UP-TO-DATE
+> Task :data:generateDebugAndroidTestLintModel UP-TO-DATE
+> Task :data:preDebugUnitTestBuild UP-TO-DATE
+> Task :data:generateDebugUnitTestLintModel UP-TO-DATE
+> Task :documents:preDebugAndroidTestBuild UP-TO-DATE
+> Task :documents:generateDebugAndroidTestLintModel UP-TO-DATE
+> Task :documents:preDebugUnitTestBuild UP-TO-DATE
+> Task :documents:generateDebugUnitTestLintModel UP-TO-DATE
+> Task :data:generateDebugLintReportModel UP-TO-DATE
+> Task :documents:generateDebugLintReportModel UP-TO-DATE
+> Task :app:lintAnalyzeDebugUnitTest
+> Task :data:lintAnalyzeDebugUnitTest
+> Task :data:lintAnalyzeDebugAndroidTest
+
+> Task :data:lintReportDebug
+Wrote HTML report to file:///home/victor/Documentos/git/brulee/data/build/reports/lint-results-debug.html
+
+> Task :data:lintDebug
+> Task :data:lint
+> Task :documents:lintAnalyzeDebugAndroidTest
+> Task :documents:lintAnalyzeDebugUnitTest
+> Task :documents:lintReportDebug UP-TO-DATE
+> Task :documents:lintDebug
+> Task :documents:lint
+> Task :app:lintAnalyzeDebug
+
+> Task :app:lintReportDebug
+Wrote HTML report to file:///home/victor/Documentos/git/brulee/app/build/reports/lint-results-debug.html
+
+> Task :app:lintDebug
+> Task :app:lint
+
+BUILD SUCCESSFUL in 54s
+117 actionable tasks: 11 executed, 106 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.3.1/userguide/configuration_cache_enabling.html

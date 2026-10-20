@@ -64,11 +64,27 @@ class WizardRegressionTest {
         rule.onNodeWithTag("ingredient_remove").performScrollTo().performClick()
         rule.onNodeWithTag("ingredients_continue").performScrollTo().assertIsNotEnabled()
     }
+    @Test fun unfinishedIngredientMustBeSavedOrCancelledBeforeLeavingTheStep() {
+        content(); name(); ingredient()
+        rule.onNodeWithTag("ingredient_edit").performScrollTo().assertIsDisplayed().performClick()
+        rule.onNodeWithTag("ingredient_name").performScrollTo().performTextReplacement(
+            "Chocolate com nome bastante longo para conferir a disposição das ações")
+        rule.onNodeWithTag("ingredients_continue").performScrollTo().assertIsNotEnabled()
+        rule.onNodeWithTag("wizard_save_draft").performScrollTo().assertIsNotEnabled()
+        rule.onNodeWithTag("ingredient_add").performScrollTo().performClick()
+        rule.onNodeWithTag("ingredient_edit").performScrollTo().assertIsDisplayed()
+        rule.onNodeWithTag("ingredient_remove").assertIsDisplayed()
+        rule.onNodeWithTag("ingredient_edit").performClick()
+        rule.onNodeWithTag("ingredient_cancel_edit").performScrollTo().performClick()
+        rule.onNodeWithTag("ingredients_continue").performScrollTo().assertIsEnabled()
+        rule.onNodeWithTag("wizard_save_draft").performScrollTo().assertIsEnabled().performClick()
+        rule.runOnIdle { assertEquals("Chocolate com nome bastante longo para conferir a disposição das ações", savedQuote!!.draft!!.recipe.ingredients.single().name) }
+    }
     @Test fun operationalInputsCanBeClearedAndPackagingAndOverheadPersist() {
         content(); name(); ingredient()
         rule.onNodeWithTag("ingredients_continue").performScrollTo().performClick()
         rule.onNodeWithTag("operational_prep_minutes").performTextClearance()
-        rule.onNodeWithTag("costs_calculate").performScrollTo().assertIsNotEnabled()
+        rule.onNodeWithTag("costs_calculate").performScrollTo().assertIsEnabled()
         rule.onNodeWithTag("operational_prep_minutes").performScrollTo().performTextInput("60")
         rule.onNodeWithTag("operational_packaging").performScrollTo().performTextReplacement("3,50")
         rule.onNodeWithTag("operational_overhead").performScrollTo().performTextReplacement("2,00")
@@ -104,6 +120,24 @@ class WizardRegressionTest {
         rule.onNodeWithTag("quote_save_draft").performScrollTo().performClick()
         rule.runOnIdle { assertEquals("Cliente real", savedQuote!!.customer.name); assertEquals(8, savedQuote!!.unitsCount) }
     }
+    @Test fun legacyDraftEditsAvailableFieldsWithoutLosingSavedTotalsOrIdentity() {
+        val legacy = Quote("old-draft", "#ORC-ANTIGO", Customer("old-customer", "Cliente do rascunho", "11987654321"),
+            "Receita antiga", "", 8,
+            PricingEngine.fromSalePrice(RecipeCosts(Money(2000), Money(1000), Money(300), Money(400)), Money(9000)),
+            java.time.LocalDate.now().plusDays(2).format(com.bruleetelie.app.ui.screens.DeliveryDateFormat),
+            validDays = 7, notes = "Retirada combinada")
+        rule.setContent { BruleeTheme {
+            NewQuoteWizardScreen(OperatingSettings(), {}, {}, {}, {}, initialQuote = legacy, onSaveQuote = { savedQuote = it })
+        } }
+        rule.onNodeWithTag("legacy_draft_notice").assertExists()
+        rule.onNodeWithTag("customer_name").performScrollTo().assertTextContains(legacy.customer.name)
+            .performTextReplacement("Cliente atualizado")
+        rule.onNodeWithTag("delivery_date").performScrollTo().assertTextContains(legacy.deliveryDate)
+        rule.onNodeWithTag("quote_save_draft").performScrollTo().performClick()
+        rule.runOnIdle {
+            assertEquals(legacy.copy(customer = legacy.customer.copy(name = "Cliente atualizado")), savedQuote)
+        }
+    }
     @Test fun manualCurrencyKeepsSequentialKeystrokesAndInvalidPriceBlocksAdvance() {
         content(); name(); ingredient()
         rule.onNodeWithTag("ingredients_continue").performScrollTo().performClick()
@@ -133,6 +167,50 @@ class WizardRegressionTest {
         rule.onNodeWithTag("recipe_yield").assertTextContains("6")
         rule.onNodeWithTag("recipe_continue").performScrollTo().performClick()
         rule.onNodeWithText("Ovo").performScrollTo().assertIsDisplayed()
+    }
+
+    @Test fun optionalOperatingFieldsEmptyCalculateZeroWithoutReusingOldValues() {
+        content(); name(); ingredient()
+        rule.onNodeWithTag("ingredients_continue").performScrollTo().performClick()
+        rule.onNodeWithTag("operational_prep_minutes").performTextReplacement("60")
+        rule.onNodeWithTag("operational_packaging").performScrollTo().performTextReplacement("12,50")
+        listOf("prep_minutes", "cook_minutes", "decoration_minutes", "packaging", "overhead").forEach {
+            rule.onNodeWithTag("operational_$it").performScrollTo().performTextClearance()
+        }
+        rule.onNodeWithTag("costs_calculate").performScrollTo().assertIsEnabled().performClick()
+        rule.runOnIdle {
+            assertEquals(0, savedRecipe!!.times.prepTime.value.signum())
+            assertEquals(0L, savedRecipe!!.packaging.cents)
+            assertEquals(0L, savedRecipe!!.overhead.cents)
+        }
+        rule.onNodeWithTag("price_sale_value").performScrollTo().assertIsDisplayed()
+    }
+    @Test fun invalidOperatingCostsExplainErrorsAndCorrectionEnablesCalculation() {
+        content(); name(); ingredient()
+        rule.onNodeWithTag("ingredients_continue").performScrollTo().performClick()
+        rule.onNodeWithTag("operational_prep_minutes").performTextReplacement("-5")
+        rule.onNodeWithText("Informe minutos iguais ou maiores que zero").assertExists()
+        rule.onNodeWithTag("costs_calculate").performScrollTo().assertIsNotEnabled()
+        rule.onNodeWithTag("operational_prep_minutes").performScrollTo().performTextReplacement(" 10,5 ")
+        rule.onNodeWithTag("operational_packaging").performScrollTo().performTextReplacement("abc")
+        rule.onNodeWithText("Informe um valor igual ou maior que zero, como 3,50").assertExists()
+        rule.onNodeWithTag("costs_calculate").performScrollTo().assertIsNotEnabled()
+        rule.onNodeWithTag("operational_packaging").performScrollTo().performTextReplacement("3,50")
+        rule.onNodeWithTag("costs_calculate").performScrollTo().assertIsEnabled().performClick()
+        rule.runOnIdle { assertEquals("10.5", savedRecipe!!.times.prepTime.value.stripTrailingZeros().toPlainString()); assertEquals(350L, savedRecipe!!.packaging.cents) }
+    }
+    @Test fun pdfCarriesCustomerDeliveryValidityAndNotesFromTheForm() {
+        content(); customer()
+        rule.onNodeWithTag("customer_phone").performScrollTo().performTextInput("11987654321")
+        rule.onNodeWithTag("quote_validity").performScrollTo().performTextReplacement("7")
+        rule.onNodeWithTag("quote_notes").performScrollTo().performTextInput("Cobertura de chocolate e retirada às 16h.")
+        rule.onNodeWithTag("quote_share_pdf").performScrollTo().performClick()
+        rule.runOnIdle {
+            assertEquals(7, sharedQuote!!.validDays)
+            assertEquals("Cobertura de chocolate e retirada às 16h.", sharedQuote!!.notes)
+            assertEquals("11987654321", sharedQuote!!.customer.phone)
+            assertEquals("21/10/2026 16:00", sharedQuote!!.deliveryDate)
+        }
     }
 
 }

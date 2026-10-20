@@ -1,5 +1,6 @@
 package com.bruleetelie.app
 
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -33,7 +34,12 @@ class RankScenarioIndividualE2eTest {
     @Test fun rankE2e013_historicalRankingRemainsStable() { ranking() }
     @Test fun rankE2e014_multipleRecipesAreListed() { ranking() }
     @Test fun rankE2e015_productNameIsDisplayed() { ranking() }
-    @Test fun rankE2e016_profitPerUnitIsDisplayed() { ranking(); composeRule.onAllNodesWithText("Lucro/unid.", substring = true)[0].performScrollTo().assertIsDisplayed() }
+    @Test fun rankE2e016_accumulatedProfitIsDisplayed() {
+        ranking()
+        val expected = LegacyFixtures.initialSales().first().profit.format()
+        composeRule.onNodeWithText("Lucro acumulado: $expected").performScrollTo().assertIsDisplayed()
+        composeRule.onAllNodesWithText("Lucro/unid.", substring = true).assertCountEquals(0)
+    }
     @Test fun rankE2e017_marginPillIsDisplayed() { ranking() }
     @Test fun rankE2e018_emptyRankingIsExplicit() { ranking() }
     @Test fun rankE2e019_rankingSurvivesNavigation() { ranking(); composeRule.onNodeWithTag("nav_production").performClick(); ranking() }
