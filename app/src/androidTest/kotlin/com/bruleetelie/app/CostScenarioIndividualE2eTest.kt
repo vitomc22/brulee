@@ -18,7 +18,7 @@ class CostScenarioIndividualE2eTest {
     @get:Rule val composeRule = createAndroidComposeRule<MainActivity>()
 
     private fun openIngredients() {
-        composeRule.onNodeWithTag("nav_wizard").performClick()
+        openTestRecipe(composeRule)
         composeRule.onNodeWithTag("recipe_continue").performClick()
     }
 
@@ -39,6 +39,10 @@ class CostScenarioIndividualE2eTest {
         composeRule.onNodeWithTag("costs_calculate").performScrollTo().performClick()
         composeRule.onNodeWithTag("cost_summary_screen").performScrollTo().assertIsDisplayed()
     }
+
+    @org.junit.After fun removeTestData() { clearTestData(composeRule) }
+
+    @org.junit.Before fun prepareRealTestData() { clearTestData(composeRule) }
 
     @Test fun costE2e001_proportionalIngredientCost() { openIngredients(); addIngredient(); composeRule.onNodeWithText("COST E2E").performScrollTo().assertIsDisplayed() }
     @Test fun costE2e002_sumsIngredients() { openIngredients(); addIngredient("COST A"); addIngredient("COST B", "2000", "20,00", "200"); composeRule.onNodeWithText("COST B").performScrollTo().assertIsDisplayed() }

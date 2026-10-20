@@ -19,9 +19,13 @@ class OcrItemEditingE2eTest {
     @get:Rule
     val composeRule = createAndroidComposeRule<MainActivity>()
 
+    @org.junit.After fun removeTestData() { clearTestData(composeRule) }
+
+    @org.junit.Before fun prepareRealTestData() { clearTestData(composeRule) }
+
     @Test
     fun editDetectedQuantityAndPrice_updatesItemBeforeConfirmation() {
-        composeRule.onNodeWithTag("nav_stock").performClick()
+        openOcrFixture(composeRule)
         composeRule.onNodeWithTag("ocr_process_document")
             .performScrollTo()
             .performClick()

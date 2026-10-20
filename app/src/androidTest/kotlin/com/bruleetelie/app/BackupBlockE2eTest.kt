@@ -15,6 +15,10 @@ class BackupBlockE2eTest {
     @get:Rule
     val composeRule = createAndroidComposeRule<MainActivity>()
 
+    @org.junit.After fun removeTestData() { clearTestData(composeRule) }
+
+    @org.junit.Before fun prepareRealTestData() { clearTestData(composeRule) }
+
     @Test
     fun backup001To010_screenExposesPortableBackupActions() {
         composeRule.onNodeWithTag("nav_backup").performClick()

@@ -14,6 +14,10 @@ import org.junit.Test
 class RankScenarioIndividualE2eTest {
     @get:Rule val composeRule = createAndroidComposeRule<MainActivity>()
     private fun ranking() { composeRule.onNodeWithTag("nav_finance").performClick(); composeRule.onNodeWithText("Ouro do Ateliê").performScrollTo().assertIsDisplayed() }
+    @org.junit.After fun removeTestData() { clearTestData(composeRule) }
+
+    @org.junit.Before fun prepareRealTestData() { clearTestData(composeRule); seedFinanceTestData(composeRule) }
+
     @Test fun rankE2e001_topRecipeIsShown() { ranking() }
     @Test fun rankE2e002_profitOrdersRanking() { ranking() }
     @Test fun rankE2e003_marginOrdersRanking() { ranking() }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bruleetelie.documents.DocumentGatewayTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-20T14:41:01.744Z" hostname="victor-Lenovo-IdeaPad-S145-15API" time="0.07">
+  <properties/>
+  <testcase name="international phone keeps country code and text round trips accents" classname="com.bruleetelie.documents.DocumentGatewayTest" time="0.055"/>
+  <testcase name="test customer quote text NEVER leaks internal costs margins or profits" classname="com.bruleetelie.documents.DocumentGatewayTest" time="0.007"/>
+  <testcase name="test whatsapp url formatting" classname="com.bruleetelie.documents.DocumentGatewayTest" time="0.001"/>
+  <testcase name="test customer quote text contains customer information and total price" classname="com.bruleetelie.documents.DocumentGatewayTest" time="0.0"/>
+  <testcase name="invalid phone cannot produce a send url" classname="com.bruleetelie.documents.DocumentGatewayTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

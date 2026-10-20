@@ -126,3 +126,21 @@ object FinancialAnalysisEngine {
         )
     }
 }
+
+/** Totals for a recipe, weighted by real sales revenue rather than averaging margins. */
+data class RecipeProfitability(val name: String, val salesCount: Int, val revenue: Money, val profit: Money, val marginPercent: BigDecimal)
+
+object RecipeProfitabilityRanking {
+    fun calculate(sales: List<SaleSnapshot>): List<RecipeProfitability> = sales
+        .groupBy { it.productName.replace(Regex("^\\d+x\\s+"), "").trim().lowercase(java.util.Locale.ROOT) }
+        .values.map { entries ->
+            val revenue = entries.fold(Money.Zero) { sum, sale -> sum + sale.salePrice }
+            val profit = entries.fold(Money.Zero) { sum, sale -> sum + sale.profit }
+            RecipeProfitability(
+                name = entries.first().productName.replace(Regex("^\\d+x\\s+"), "").trim(),
+                salesCount = entries.size, revenue = revenue, profit = profit,
+                marginPercent = if (revenue == Money.Zero) BigDecimal.ZERO else BigDecimal(profit.cents)
+                    .multiply(BigDecimal(100)).divide(BigDecimal(revenue.cents), 2, RoundingMode.HALF_EVEN)
+            )
+        }.sortedWith(compareByDescending<RecipeProfitability> { it.profit.cents }.thenBy { it.name })
+}

@@ -16,6 +16,10 @@ class EarningsScenarioIndividualE2eTest {
     private fun finance() { composeRule.onNodeWithTag("nav_finance").performClick(); composeRule.onNodeWithTag("finance_dashboard").assertIsDisplayed() }
     private fun metric(text: String) { composeRule.onNodeWithText(text, substring = true).performScrollTo().assertIsDisplayed() }
 
+    @org.junit.After fun removeTestData() { clearTestData(composeRule) }
+
+    @org.junit.Before fun prepareRealTestData() { clearTestData(composeRule); seedFinanceTestData(composeRule) }
+
     @Test fun earnE2e001_realProfitAfterSale() { finance(); metric("Lucro líquido") }
     @Test fun earnE2e002_realProfitAfterCostIncrease() { finance(); metric("Custo total") }
     @Test fun earnE2e003_realMarginAfterCostIncrease() { finance(); metric("Conversão") }

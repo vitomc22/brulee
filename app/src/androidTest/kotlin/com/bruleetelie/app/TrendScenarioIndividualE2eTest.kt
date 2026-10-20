@@ -13,6 +13,10 @@ import org.junit.Test
 class TrendScenarioIndividualE2eTest {
     @get:Rule val composeRule = createAndroidComposeRule<MainActivity>()
     private fun trend() { composeRule.onNodeWithTag("nav_finance").performClick(); composeRule.onNodeWithTag("finance_price_trend_alert").performScrollTo().assertIsDisplayed() }
+    @org.junit.After fun removeTestData() { clearTestData(composeRule) }
+
+    @org.junit.Before fun prepareRealTestData() { clearTestData(composeRule); seedFinanceTestData(composeRule) }
+
     @Test fun trendE2e001_firstPurchaseCreatesBaseline() { trend() }
     @Test fun trendE2e002_exactTenPercentTriggersAlert() { trend() }
     @Test fun trendE2e003_belowThresholdDoesNotTrigger() { trend() }

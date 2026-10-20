@@ -14,10 +14,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.CoroutineStart
+import androidx.room.withTransaction
+import com.bruleetelie.data.db.*
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 class BruleeRepository(
     private val database: BruleeDatabase? = null,
@@ -36,16 +39,16 @@ class BruleeRepository(
     )
     val settings: StateFlow<OperatingSettings> = _settings.asStateFlow()
 
-    private val _productionOrders = MutableStateFlow(initialOrders())
+    private val _productionOrders = MutableStateFlow<List<ProductionOrder>>(emptyList())
     val productionOrders: StateFlow<List<ProductionOrder>> = _productionOrders.asStateFlow()
 
-    private val _quotes = MutableStateFlow(initialQuotes())
+    private val _quotes = MutableStateFlow<List<Quote>>(emptyList())
     val quotes: StateFlow<List<Quote>> = _quotes.asStateFlow()
 
-    private val _completedSales = MutableStateFlow(initialSales())
+    private val _completedSales = MutableStateFlow<List<SaleSnapshot>>(emptyList())
     val completedSales: StateFlow<List<SaleSnapshot>> = _completedSales.asStateFlow()
 
-    private val _ingredients = MutableStateFlow(initialIngredients())
+    private val _ingredients = MutableStateFlow<List<IngredientEntity>>(emptyList())
     val ingredients: StateFlow<List<IngredientEntity>> = _ingredients.asStateFlow()
 
     private val _priceObservations = MutableStateFlow<List<PriceObservationEntity>>(emptyList())
@@ -54,45 +57,48 @@ class BruleeRepository(
     private val _shoppingItems = MutableStateFlow<List<ShoppingItem>>(emptyList())
     val shoppingItems: StateFlow<List<ShoppingItem>> = _shoppingItems.asStateFlow()
 
+    private val writes = Mutex()
+    private val _recipes = MutableStateFlow<List<SavedRecipe>>(emptyList())
+    val recipes: StateFlow<List<SavedRecipe>> = _recipes.asStateFlow()
+
+    /** A barrier for backup/export and callers that must observe committed data. */
+    suspend fun awaitPendingWrites() { writes.withLock { } }
+
+    suspend fun <T> withExclusiveWrites(block: suspend () -> T): T = writes.withLock { block() }
+
+    private fun persist(block: suspend (BruleeDatabase) -> Unit) {
+        val db = database ?: return
+        scope.launch(start = CoroutineStart.UNDISPATCHED) { writes.withLock { block(db) } }
+    }
+
+    fun saveRecipe(recipe: SavedRecipe) {
+        val current = _recipes.value.firstOrNull { it.id == recipe.id }
+        val revision = recipe.copy(versionId = UUID.randomUUID().toString(), version = (current?.version ?: 0) + 1)
+        _recipes.update { list -> list.filterNot { it.id == revision.id } + revision }
+        database?.let { db -> scope.launch(start = CoroutineStart.UNDISPATCHED) {
+            writes.withLock {
+                db.recipeDao().saveRevision(
+                    RecipeEntity(revision.id, revision.name, defaultServings = revision.yieldCount),
+                    RecipeVersionEntity(revision.versionId, revision.id, revision.version,
+                        revision.times.prepTime.value.toPlainString(), revision.times.cookTime.value.toPlainString(),
+                        revision.times.decorationTime.value.toPlainString(), revision.times.energySource.name,
+                        revision.times.complexity.name, revision.packaging.cents, revision.overhead.cents),
+                    revision.ingredients.map { item -> RecipeIngredientEntity(
+                        UUID.randomUUID().toString(), revision.versionId, item.name,
+                        item.packageQuantity.value.toPlainString(), item.packageQuantity.unit.symbol, item.packagePrice.cents,
+                        item.usedQuantity.value.toPlainString(), item.usedQuantity.unit.symbol
+                    ) }
+                )
+            }
+        } }
+        recipe.ingredients.forEach { addIngredient(it.name, it.packageQuantity.unit.symbol) }
+    }
+
     init {
         if (database != null) {
             scope.launch {
-                seedDatabaseIfEmpty()
                 observeDatabaseAndDataStore()
             }
-        }
-    }
-
-    private suspend fun seedDatabaseIfEmpty() {
-        val db = database ?: return
-
-        // Seed Quotes if empty
-        val existingQuotes = db.quoteDao().getAllQuotes().first()
-        if (existingQuotes.isEmpty()) {
-            db.quoteDao().insertAll(initialQuotes().map { it.toEntity() })
-        }
-
-        // Seed Production Orders & Steps if empty
-        val existingOrders = db.productionOrderDao().getAllOrders().first()
-        if (existingOrders.isEmpty()) {
-            initialOrders().forEach { order ->
-                db.productionOrderDao().insertOrderWithSteps(
-                    order = order.toEntity(),
-                    steps = order.steps.mapIndexed { idx, step -> step.toEntity(order.id, idx) }
-                )
-            }
-        }
-
-        // Seed Sales if empty
-        val existingSales = db.saleSnapshotDao().getAllSales().first()
-        if (existingSales.isEmpty()) {
-            db.saleSnapshotDao().insertAllSales(initialSales().map { it.toEntity() })
-        }
-
-        // Seed Ingredients if empty
-        val existingIngredients = db.ingredientDao().getAllIngredients().first()
-        if (existingIngredients.isEmpty()) {
-            db.ingredientDao().insertAll(initialIngredients())
         }
     }
 
@@ -103,6 +109,26 @@ class BruleeRepository(
         scope.launch {
             settingsDataStore?.settingsFlow?.collectLatest { newSettings ->
                 _settings.value = newSettings
+            }
+        }
+
+        scope.launch {
+            db.recipeDao().getAll().collectLatest { entities ->
+                _recipes.value = entities.mapNotNull { recipe ->
+                    db.recipeDao().latestVersion(recipe.id)?.let { version ->
+                        SavedRecipe(recipe.id, version.id, version.versionNumber, recipe.name, recipe.defaultServings,
+                            db.recipeDao().ingredients(version.id).map { item -> RecipeIngredientItem(
+                                item.id, item.name,
+                                Quantity(item.packageQuantityValue.toBigDecimal(), UnitOfMeasure.entries.first { it.symbol == item.packageQuantityUnit }),
+                                Money(item.packagePriceCents),
+                                Quantity(item.usedQuantityValue.toBigDecimal(), UnitOfMeasure.entries.first { it.symbol == item.usedQuantityUnit })
+                            ) },
+                            OperationalTimes(Quantity.minutes(version.prepMinutes.toBigDecimal()),
+                                Quantity.minutes(version.cookMinutes.toBigDecimal()), Quantity.minutes(version.decorationMinutes.toBigDecimal()),
+                                EnergySource.valueOf(version.energySource), Complexity.valueOf(version.complexity)),
+                            Money(version.packagingCostCents), Money(version.overheadCostCents))
+                    }
+                }
             }
         }
 
@@ -118,7 +144,9 @@ class BruleeRepository(
             db.productionOrderDao().getAllOrders().collectLatest { orderEntities ->
                 val orders = orderEntities.map { entity ->
                     val steps = db.productionOrderDao().getStepsForOrderSync(entity.id)
-                    entity.toDomain(steps)
+                    val order = entity.toDomain(steps)
+                    val current = order.steps.indexOfFirst { !it.isCompleted }
+                    order.copy(steps = order.steps.mapIndexed { index, step -> step.copy(isCurrent = index == current) })
                 }
                 _productionOrders.value = orders
             }
@@ -154,138 +182,104 @@ class BruleeRepository(
     fun updateSettings(newSettings: OperatingSettings) {
         _settings.value = newSettings
         settingsDataStore?.let {
-            scope.launch { it.saveSettings(newSettings) }
+            scope.launch(start = CoroutineStart.UNDISPATCHED) { writes.withLock { it.saveSettings(newSettings) } }
         }
     }
 
     fun updateStepStatus(orderId: String, stepId: String, completed: Boolean) {
-        // Update local state first for immediate UI response
-        _productionOrders.update { orders ->
-            orders.map { order ->
-                if (order.id == orderId) {
-                    val updatedSteps = order.steps.map { step ->
-                        val matchesId = step.id == stepId ||
-                            step.id.substringBefore('-').removePrefix("s") == stepId
-                        if (matchesId) step.copy(isCompleted = completed) else step
-                    }
-                    order.copy(
-                        steps = updatedSteps,
-                        status = if (updatedSteps.all { it.isCompleted }) ProductionStatus.Completed else ProductionStatus.InProgress
-                    )
-                } else order
-            }
-        }
-
-        // Update Room if database is attached
-        database?.let { db ->
-            scope.launch {
+        val order = _productionOrders.value.firstOrNull { it.id == orderId } ?: return
+        if (order.status == ProductionStatus.Completed || order.status == ProductionStatus.Cancelled) return
+        if (order.steps.none { it.id == stepId }) return
+        val changed = order.steps.map { if (it.id == stepId) it.copy(isCompleted = completed) else it }
+        val firstIncomplete = changed.indexOfFirst { !it.isCompleted }
+        val steps = changed.mapIndexed { index, step -> step.copy(isCurrent = index == firstIncomplete) }
+        val updated = order.copy(steps = steps, status = ProductionStatus.InProgress)
+        _productionOrders.update { list -> list.map { if (it.id == orderId) updated else it } }
+        database?.let { db -> scope.launch(start = CoroutineStart.UNDISPATCHED) { writes.withLock {
+            db.withTransaction {
                 db.productionOrderDao().updateStepCompletion(stepId, completed)
-                val order = _productionOrders.value.firstOrNull { it.id == orderId }
-                if (order != null) {
-                    val newStatus = if (order.steps.all { it.isCompleted }) ProductionStatus.Completed.name else ProductionStatus.InProgress.name
-                    db.productionOrderDao().updateOrderStatus(orderId, newStatus)
-                }
+                db.productionOrderDao().updateOrderStatus(orderId, ProductionStatus.InProgress.name)
             }
-        }
+        } } }
     }
 
-    fun completeOrder(orderId: String, actualCosts: RecipeCosts?): SaleSnapshot? {
+    fun completeOrder(orderId: String, actualCosts: RecipeCosts?, activeMinutes: Int = 0): SaleSnapshot? {
         val order = _productionOrders.value.firstOrNull { it.id == orderId } ?: return null
+        _completedSales.value.firstOrNull { it.orderId == orderId }?.let { return it }
+        if (!order.isAllStepsDone || order.status in listOf(ProductionStatus.Completed, ProductionStatus.Cancelled)) return null
         val finalActualCost = actualCosts ?: order.estimatedCosts
         val pricing = PricingEngine.fromSalePrice(finalActualCost, order.salePrice)
-
+        require(activeMinutes >= 0)
         val snapshot = SaleSnapshot(
-            id = "sale-${System.currentTimeMillis()}",
-            orderId = order.id,
-            quoteCode = order.quoteCode,
-            customerName = order.customerName,
-            productName = order.productName,
-            salePrice = order.salePrice,
-            estimatedCost = order.estimatedCosts.total,
-            actualCost = finalActualCost.total,
-            profit = pricing.profit,
-            marginPercent = pricing.marginPercent,
-            completedAtFormatted = "Hoje"
+            id = "sale-$orderId", orderId = orderId, quoteCode = order.quoteCode,
+            customerName = order.customerName, productName = order.productName,
+            salePrice = order.salePrice, estimatedCost = order.estimatedCosts.total,
+            actualCost = finalActualCost.total, profit = pricing.profit, marginPercent = pricing.marginPercent,
+            activeProductionMinutes = activeMinutes,
+            completedAtFormatted = java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"))
         )
-
-        _productionOrders.update { orders ->
-            orders.map {
-                if (it.id == orderId) it.copy(status = ProductionStatus.Completed, actualCosts = finalActualCost) else it
-            }
-        }
-
+        val updated = order.copy(status = ProductionStatus.Completed, actualCosts = finalActualCost)
+        _productionOrders.update { list -> list.map { if (it.id == orderId) updated else it } }
         _completedSales.update { it + snapshot }
-
-        // Persist to Room
-        database?.let { db ->
-            scope.launch {
-                val updatedOrder = order.copy(status = ProductionStatus.Completed, actualCosts = finalActualCost)
-                db.productionOrderDao().insertOrder(updatedOrder.toEntity())
-                db.saleSnapshotDao().insertSale(snapshot.toEntity())
-            }
-        }
-
+        _quotes.update { list -> list.map { if (it.id == order.quoteId) it.copy(status = QuoteStatus.ConvertedToSale) else it } }
+        database?.let { db -> scope.launch(start = CoroutineStart.UNDISPATCHED) { writes.withLock { db.withTransaction {
+            db.productionOrderDao().insertOrderWithSteps(updated.toEntity(), updated.steps.mapIndexed { i, step -> step.toEntity(orderId, i) })
+            db.saleSnapshotDao().insertSale(snapshot.toEntity())
+            db.quoteDao().updateStatus(order.quoteId, QuoteStatus.ConvertedToSale.name)
+        } } } }
         return snapshot
     }
 
     fun addQuote(quote: Quote) {
-        _quotes.update { it + quote }
-        database?.let { db ->
-            scope.launch {
-                db.quoteDao().insertQuote(quote.toEntity())
-            }
-        }
+        val existing = _quotes.value.firstOrNull { it.id == quote.id }
+        // Sharing a previously approved quote must not downgrade its lifecycle.
+        val saved = if (existing?.status in listOf(QuoteStatus.Approved, QuoteStatus.ConvertedToSale)) quote.copy(status = existing!!.status) else quote
+        _quotes.update { listOf(saved) + it.filterNot { item -> item.id == saved.id } }
+        database?.let { db -> scope.launch(start = CoroutineStart.UNDISPATCHED) { writes.withLock { db.withTransaction {
+            db.customerDao().insertCustomer(CustomerEntity(saved.customer.id, saved.customer.name, saved.customer.phone, saved.customer.notes))
+            db.quoteDao().insertQuote(saved.toEntity())
+        } } } }
+    }
+
+    fun updateQuoteStatus(quoteId: String, status: QuoteStatus) {
+        val quote = _quotes.value.firstOrNull { it.id == quoteId } ?: return
+        if (quote.status in listOf(QuoteStatus.Approved, QuoteStatus.ConvertedToSale)) return
+        addQuote(quote.copy(status = status))
     }
 
     fun approveQuote(quoteId: String): ProductionOrder? {
+        _productionOrders.value.firstOrNull { it.quoteId == quoteId }?.let { return it }
         val quote = _quotes.value.firstOrNull { it.id == quoteId } ?: return null
-        _quotes.update { list ->
-            list.map { if (it.id == quoteId) it.copy(status = QuoteStatus.Approved) else it }
-        }
-
+        if (quote.status in listOf(QuoteStatus.Approved, QuoteStatus.Rejected, QuoteStatus.Expired, QuoteStatus.ConvertedToSale)) return null
+        val orderId = "order-$quoteId"
         val newOrder = ProductionOrder(
-            id = "order-${System.currentTimeMillis()}",
-            quoteId = quote.id,
-            quoteCode = quote.code,
-            customerName = quote.customer.name,
-            productName = "${quote.unitsCount}x ${quote.productName}",
+            id = orderId, quoteId = quote.id, quoteCode = quote.code,
+            customerName = quote.customer.name, productName = "${quote.unitsCount}x ${quote.productName}",
             deliveryTimeFormatted = quote.deliveryDate,
-            steps = listOf(
-                ProductionStep("s1-${System.currentTimeMillis()}", "Massa cozida e pesada", isCompleted = false),
-                ProductionStep("s2-${System.currentTimeMillis()}", "Boleamento finalizado", isCompleted = false),
-                ProductionStep("s3-${System.currentTimeMillis()}", "Ornamentação e acabamento", isCompleted = false),
-                ProductionStep("s4-${System.currentTimeMillis()}", "Embalagem cartonada e laço", isCompleted = false)
-            ),
-            status = ProductionStatus.Pending,
-            estimatedCosts = quote.pricing.costs,
-            salePrice = quote.pricing.salePrice
+            steps = listOf("Separar e pesar ingredientes", "Preparar e cozinhar a receita", "Finalizar e decorar", "Embalar e conferir entrega")
+                .mapIndexed { index, title -> ProductionStep("$orderId-step-$index", title, isCurrent = index == 0) },
+            estimatedCosts = quote.pricing.costs, salePrice = quote.pricing.salePrice
         )
-
+        _quotes.update { list -> list.map { if (it.id == quoteId) it.copy(status = QuoteStatus.Approved) else it } }
         _productionOrders.update { listOf(newOrder) + it }
-
-        database?.let { db ->
-            scope.launch {
-                db.quoteDao().updateStatus(quoteId, QuoteStatus.Approved.name)
-                db.productionOrderDao().insertOrderWithSteps(
-                    order = newOrder.toEntity(),
-                    steps = newOrder.steps.mapIndexed { idx, step -> step.toEntity(newOrder.id, idx) }
-                )
-            }
-        }
-
+        database?.let { db -> scope.launch(start = CoroutineStart.UNDISPATCHED) { writes.withLock { db.withTransaction {
+            // Upsert the quote here as well so approval is atomic even before a preceding save finishes.
+            db.quoteDao().insertQuote(quote.copy(status = QuoteStatus.Approved).toEntity())
+            db.productionOrderDao().insertOrderWithSteps(newOrder.toEntity(), newOrder.steps.mapIndexed { i, step -> step.toEntity(orderId, i) })
+        } } } }
         return newOrder
     }
 
-    fun addIngredient(name: String, unitSymbol: String) {
+    fun addIngredient(name: String, unitSymbol: String): IngredientEntity {
+        _ingredients.value.firstOrNull { it.name.equals(name.trim(), ignoreCase = true) }?.let { return it }
         val newIng = IngredientEntity(
-            id = "ing-${System.currentTimeMillis()}",
-            name = name,
+            id = "ing-${UUID.randomUUID()}",
+            name = name.trim(),
             defaultUnitSymbol = unitSymbol
         )
         _ingredients.update { it + newIng }
-        database?.let { db ->
-            scope.launch { db.ingredientDao().insertIngredient(newIng) }
-        }
+        persist { it.ingredientDao().insertIngredient(newIng) }
+        return newIng
     }
 
     fun addPriceObservation(
@@ -308,9 +302,7 @@ class BruleeRepository(
             source = source
         )
         _priceObservations.update { listOf(obs) + it }
-        database?.let { db ->
-            scope.launch { db.priceObservationDao().insertObservation(obs) }
-        }
+        persist { it.priceObservationDao().insertObservation(obs) }
         return obs
     }
 
@@ -324,7 +316,7 @@ class BruleeRepository(
             quantity = cleanQuantity
         )
         _shoppingItems.update { listOf(item) + it }
-        database?.let { db -> scope.launch { db.shoppingItemDao().insertItem(item.toEntity()) } }
+        persist { it.shoppingItemDao().insertItem(item.toEntity()) }
         return item
     }
 
@@ -332,152 +324,12 @@ class BruleeRepository(
         _shoppingItems.update { items ->
             items.map { if (it.id == id) it.copy(isPurchased = purchased) else it }
         }
-        database?.let { db -> scope.launch { db.shoppingItemDao().updatePurchased(id, purchased) } }
+        persist { it.shoppingItemDao().updatePurchased(id, purchased) }
     }
 
     fun deleteShoppingItem(id: String) {
         _shoppingItems.update { items -> items.filterNot { it.id == id } }
-        database?.let { db -> scope.launch { db.shoppingItemDao().deleteItem(id) } }
+        persist { it.shoppingItemDao().deleteItem(id) }
     }
 
-    private companion object {
-        fun initialIngredients(): List<IngredientEntity> {
-            return listOf(
-                IngredientEntity("ing-1", "Chocolate em Pó 50%", "g"),
-                IngredientEntity("ing-2", "Leite Condensado 395g", "un"),
-                IngredientEntity("ing-3", "Creme de Leite 200g", "un"),
-                IngredientEntity("ing-4", "Manteiga Extra Sem Sal", "g"),
-                IngredientEntity("ing-5", "Pasta de Pistache Puro", "g"),
-                IngredientEntity("ing-6", "Farinha de Trigo Especial", "kg"),
-                IngredientEntity("ing-7", "Açúcar de Confeiteiro", "kg"),
-                IngredientEntity("ing-8", "Ovos Brancos Grandes", "dz")
-            )
-        }
-
-        fun initialOrders(): List<ProductionOrder> {
-            val brigadeiroCosts = RecipeCosts(
-                ingredients = Money.fromReais("38.40"),
-                labor = Money.fromReais("50.00"),
-                energy = Money.fromReais("5.70"),
-                packaging = Money.fromReais("4.50")
-            )
-            val boloCosts = RecipeCosts(
-                ingredients = Money.fromReais("62.30"),
-                labor = Money.fromReais("45.00"),
-                energy = Money.fromReais("6.80"),
-                packaging = Money.fromReais("8.00")
-            )
-
-            return listOf(
-                ProductionOrder(
-                    id = "ord-284",
-                    quoteId = "quote-284",
-                    quoteCode = "#ORC-284",
-                    customerName = "Ana Souza",
-                    productName = "40 Brigadeiros Gourmet (Pistache, Doce de Leite, Crème Brûlée)",
-                    deliveryTimeFormatted = "16:00 (Hoje)",
-                    steps = listOf(
-                        ProductionStep("s1-284", "Massa cozida e pesada (18g cada)", isCompleted = true),
-                        ProductionStep("s2-284", "Boleamento finalizado", isCompleted = true),
-                        ProductionStep("s3-284", "Ornamentação e acabamento", isCompleted = false, isCurrent = true),
-                        ProductionStep("s4-284", "Embalagem cartonada e laço", isCompleted = false)
-                    ),
-                    status = ProductionStatus.InProgress,
-                    estimatedCosts = brigadeiroCosts,
-                    salePrice = Money.fromReais("149.90")
-                ),
-                ProductionOrder(
-                    id = "ord-282",
-                    quoteId = "quote-282",
-                    quoteCode = "#ORC-282",
-                    customerName = "Carla Dias",
-                    productName = "Bolo Brûlée Red Velvet 2kg",
-                    deliveryTimeFormatted = "18:30 (Hoje)",
-                    steps = listOf(
-                        ProductionStep("s1-282", "Massa assada e resfriada", isCompleted = true),
-                        ProductionStep("s2-282", "Recheio no descanso", isCompleted = true),
-                        ProductionStep("s3-282", "Montagem e prensagem", isCompleted = false, isCurrent = true),
-                        ProductionStep("s4-282", "Decoração e flores naturais", isCompleted = false)
-                    ),
-                    status = ProductionStatus.InProgress,
-                    estimatedCosts = boloCosts,
-                    salePrice = Money.fromReais("185.00")
-                ),
-                ProductionOrder(
-                    id = "ord-285",
-                    quoteId = "quote-285",
-                    quoteCode = "#ORC-285",
-                    customerName = "Mariana Lima",
-                    productName = "Cento de Macarons Sortidos",
-                    deliveryTimeFormatted = "14:00 (Amanhã)",
-                    steps = listOf(
-                        ProductionStep("s1-285", "Separar insumos e peneirar farinha", isCompleted = false),
-                        ProductionStep("s2-285", "Macaronage e pingagem", isCompleted = false),
-                        ProductionStep("s3-285", "Secagem de cascas e forno", isCompleted = false),
-                        ProductionStep("s4-285", "Recheio e maturação 24h", isCompleted = false)
-                    ),
-                    status = ProductionStatus.Pending,
-                    estimatedCosts = RecipeCosts(Money.fromReais("85.00"), Money.fromReais("70.00"), Money.fromReais("9.00"), Money.fromReais("12.00")),
-                    salePrice = Money.fromReais("280.00")
-                )
-            )
-        }
-
-        fun initialQuotes(): List<Quote> {
-            val costs = RecipeCosts(
-                ingredients = Money.fromReais("38.40"),
-                labor = Money.fromReais("50.00"),
-                energy = Money.fromReais("5.70"),
-                packaging = Money.fromReais("4.50")
-            )
-            val pricing = PricingEngine.fromSalePrice(costs, Money.fromReais("149.90"))
-
-            return listOf(
-                Quote(
-                    id = "quote-284",
-                    code = "#ORC-284",
-                    customer = Customer("c1", "Ana Souza", "(11) 98765-4321"),
-                    productName = "40 Brigadeiros Gourmet",
-                    productSubtitle = "Pistache tostado, Doce de Leite com Flor de Sal, Belga e Crème Brûlée",
-                    unitsCount = 40,
-                    pricing = pricing,
-                    deliveryDate = "Sábado, 14 de Outubro - 16:00",
-                    validDays = 3,
-                    notes = "Caixa Telie Ouro com laço acetinado e entrega inclusa.",
-                    status = QuoteStatus.Sent
-                )
-            )
-        }
-
-        fun initialSales(): List<SaleSnapshot> {
-            return listOf(
-                SaleSnapshot(
-                    id = "s-1",
-                    orderId = "ord-270",
-                    quoteCode = "#ORC-270",
-                    customerName = "Beatriz Rocha",
-                    productName = "Bolo Nozes & Baba de Moça 2.5kg",
-                    salePrice = Money.fromReais("220.00"),
-                    estimatedCost = Money.fromReais("82.10"),
-                    actualCost = Money.fromReais("82.10"),
-                    profit = Money.fromReais("137.90"),
-                    marginPercent = BigDecimal("62.7"),
-                    completedAtFormatted = "Ontem"
-                ),
-                SaleSnapshot(
-                    id = "s-2",
-                    orderId = "ord-268",
-                    quoteCode = "#ORC-268",
-                    customerName = "Felipe Ramos",
-                    productName = "Caixa Telie Degustação 16 un",
-                    salePrice = Money.fromReais("68.00"),
-                    estimatedCost = Money.fromReais("26.40"),
-                    actualCost = Money.fromReais("26.40"),
-                    profit = Money.fromReais("41.60"),
-                    marginPercent = BigDecimal("61.1"),
-                    completedAtFormatted = "3 dias atrás"
-                )
-            )
-        }
-    }
 }

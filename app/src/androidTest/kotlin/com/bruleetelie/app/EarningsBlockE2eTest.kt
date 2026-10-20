@@ -13,6 +13,10 @@ class EarningsBlockE2eTest {
     @get:Rule
     val composeRule = createAndroidComposeRule<MainActivity>()
 
+    @org.junit.After fun removeTestData() { clearTestData(composeRule) }
+
+    @org.junit.Before fun prepareRealTestData() { clearTestData(composeRule); seedFinanceTestData(composeRule) }
+
     @Test
     fun earn001To006_dashboardShowsRevenueProfitAndHistoricalMetrics() {
         composeRule.onNodeWithTag("nav_finance").performClick()
@@ -36,7 +40,7 @@ class EarningsBlockE2eTest {
         composeRule.onNodeWithTag("nav_finance").performClick()
         composeRule.onNodeWithText("Últimos 30 dias").performClick()
         composeRule.onNodeWithTag("finance_dashboard").assertIsDisplayed()
-        composeRule.onNodeWithText("Este mês (Outubro)").performClick()
+        composeRule.onNodeWithTag("finance_filter_month").performClick()
         composeRule.onNodeWithTag("finance_dashboard").assertIsDisplayed()
     }
 
@@ -45,6 +49,6 @@ class EarningsBlockE2eTest {
         composeRule.onNodeWithTag("nav_finance").performClick()
         composeRule.onNodeWithTag("finance_dashboard").assertIsDisplayed()
         composeRule.onNodeWithTag("nav_production").performClick()
-        composeRule.onNodeWithText("Production Board").assertIsDisplayed()
+        composeRule.onNodeWithTag("production_board").assertIsDisplayed()
     }
 }

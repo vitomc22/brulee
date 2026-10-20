@@ -1,162 +1,106 @@
 package com.bruleetelie.data
 
 import com.bruleetelie.domain.*
-import java.math.BigDecimal
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Test
 
 class BruleeRepositoryTest {
-
-    @Test
-    fun `test repository initializes with sample orders and quotes`() {
-        val repo = BruleeRepository()
-        val orders = repo.productionOrders.value
-        val quotes = repo.quotes.value
-        val sales = repo.completedSales.value
-
-        assertTrue(orders.isNotEmpty())
-        assertTrue(quotes.isNotEmpty())
-        assertTrue(sales.isNotEmpty())
-
-        val order = orders.first()
-        assertEquals("#ORC-284", order.quoteCode)
-        assertEquals("Ana Souza", order.customerName)
-        assertEquals(4, order.totalStepsCount)
+    private fun quote(id: String = "q1") = Quote(id, "#ORC-$id", Customer("c1", "Cliente real", "11987654321"), "Bolo", "", 1,
+        PricingEngine.fromSalePrice(RecipeCosts(Money(4000), Money(3000), Money(500), Money(500)), Money(12000)), "21/10/2026 16:00")
+    private fun order(repo: BruleeRepository): ProductionOrder {
+        repo.addQuote(quote())
+        return repo.approveQuote("q1")!!
     }
-
-    @Test
-    fun `test updateStepStatus updates step completion and marks order completed when all done`() {
-        val repo = BruleeRepository()
-        val order = repo.productionOrders.value.first()
-
-        // Complete remaining steps 3 and 4
-        repo.updateStepStatus(order.id, "3", true)
-        repo.updateStepStatus(order.id, "4", true)
-
-        val updatedOrder = repo.productionOrders.value.first { it.id == order.id }
-        assertTrue(updatedOrder.isAllStepsDone)
-        assertEquals(ProductionStatus.Completed, updatedOrder.status)
+    private fun checkAll(repo: BruleeRepository, order: ProductionOrder) {
+        order.steps.forEach { repo.updateStepStatus(order.id, it.id, true) }
     }
-
-    @Test
-    fun `test completeOrder creates immutable SaleSnapshot with correct profit`() {
+    @Test fun `fresh repository has no demonstration data`() {
         val repo = BruleeRepository()
-        val order = repo.productionOrders.value.first()
-
-        val actualCosts = RecipeCosts(
-            ingredients = Money.fromReais("35.00"),
-            labor = Money.fromReais("50.00"),
-            energy = Money.fromReais("5.00"),
-            packaging = Money.fromReais("4.00")
-        ) // R$ 94,00
-
-        val snapshot = repo.completeOrder(order.id, actualCosts)
-        assertNotNull(snapshot)
-        assertEquals(order.quoteCode, snapshot!!.quoteCode)
-        assertEquals(9400L, snapshot.actualCost.cents)
-        assertEquals(Money.fromReais("149.90"), snapshot.salePrice)
-
-        // Profit = 149.90 - 94.00 = 55.90
-        assertEquals(5590L, snapshot.profit.cents)
-
-        // Sale is added to completed sales list
-        assertTrue(repo.completedSales.value.any { it.id == snapshot.id })
+        assertTrue(repo.productionOrders.value.isEmpty()); assertTrue(repo.quotes.value.isEmpty())
+        assertTrue(repo.completedSales.value.isEmpty()); assertTrue(repo.ingredients.value.isEmpty()); assertTrue(repo.recipes.value.isEmpty())
     }
-
-    @Test
-    fun `test approving a quote generates a new production order`() {
+    @Test fun `saving and sharing same quote upserts rather than duplicates`() {
         val repo = BruleeRepository()
-        val quote = Quote(
-            id = "q-test-1",
-            code = "#ORC-999",
-            customer = Customer("c-new", "Juliana Paes", "(21) 99999-8888"),
-            productName = "Torta Holandesa 2kg",
-            productSubtitle = "Com ganache de chocolate meio amargo",
-            unitsCount = 1,
-            pricing = PricingResult(
-                costs = RecipeCosts(Money.fromReais("40.00"), Money.fromReais("30.00"), Money.fromReais("5.00"), Money.fromReais("5.00")),
-                salePrice = Money.fromReais("120.00"),
-                profit = Money.fromReais("40.00"),
-                marginPercent = BigDecimal("33.33")
-            ),
-            deliveryDate = "Domingo, 10:00",
-            status = QuoteStatus.Sent
-        )
-
-        repo.addQuote(quote)
-        val order = repo.approveQuote(quote.id)
-
-        assertNotNull(order)
-        assertEquals("#ORC-999", order!!.quoteCode)
-        assertEquals("Juliana Paes", order.customerName)
-        assertEquals(ProductionStatus.Pending, order.status)
-        assertTrue(repo.productionOrders.value.any { it.quoteCode == "#ORC-999" })
+        repo.addQuote(quote()); repo.addQuote(quote().copy(status = QuoteStatus.Sent))
+        assertEquals(1, repo.quotes.value.size); assertEquals(QuoteStatus.Sent, repo.quotes.value.single().status)
     }
-
-    @Test
-    fun `test addIngredient adds ingredient to repository state`() {
-        val repo = BruleeRepository()
-        val initialCount = repo.ingredients.value.size
-        repo.addIngredient("Farinha de Amêndoas", "g")
-
-        val updatedIngredients = repo.ingredients.value
-        assertEquals(initialCount + 1, updatedIngredients.size)
-        assertTrue(updatedIngredients.any { it.name == "Farinha de Amêndoas" })
+    @Test fun `repeated approval returns same production order`() {
+        val repo = BruleeRepository(); val first = order(repo)
+        assertEquals(first.id, repo.approveQuote("q1")!!.id)
+        assertEquals(1, repo.productionOrders.value.size)
     }
-
-    @Test
-    fun `test OCR price observation is exposed in repository state`() {
-        val repo = BruleeRepository()
-
-        val observation = repo.addPriceObservation(
-            ingredientId = "ing-2",
-            supplierName = "Importação OCR",
-            pkgValue = "395",
-            pkgUnit = "g",
-            pkgPriceCents = 749,
-            unitPriceCents = 1896,
-            source = "OCR"
-        )
-
-        assertEquals(observation, repo.priceObservations.value.first())
-        assertEquals("OCR", observation.source)
-        assertEquals(749L, observation.packagePriceCents)
+    @Test fun `checking all steps does not finalize or book revenue`() {
+        val repo = BruleeRepository(); val order = order(repo); checkAll(repo, order)
+        assertTrue(repo.productionOrders.value.single().isAllStepsDone)
+        assertEquals(ProductionStatus.InProgress, repo.productionOrders.value.single().status)
+        assertTrue(repo.completedSales.value.isEmpty())
     }
-
-    @Test
-    fun `test updateSettings updates operating settings`() {
-        val repo = BruleeRepository()
-        val newSettings = OperatingSettings(
-            hourlyLaborRate = Money.fromReais("30.00"),
-            gasCostPerHour = Money.fromReais("4.00"),
-            electricityCostPerHour = Money.fromReais("3.00"),
-            defaultMarginPercent = BigDecimal("40.00")
-        )
-        repo.updateSettings(newSettings)
-        assertEquals(3000L, repo.settings.value.hourlyLaborRate.cents)
-        assertEquals(BigDecimal("40.00"), repo.settings.value.defaultMarginPercent)
+    @Test fun `cannot finalize incomplete order`() {
+        val repo = BruleeRepository(); val order = order(repo)
+        assertNull(repo.completeOrder(order.id, null)); assertTrue(repo.completedSales.value.isEmpty())
     }
-
-    @Test
-    fun `shopping list supports add check and delete`() {
-        val repo = BruleeRepository()
-        val item = repo.addShoppingItem("Chocolate", "2 kg")
-
-        assertNotNull(item)
-        assertEquals("Chocolate", repo.shoppingItems.value.single().name)
-        repo.setShoppingItemPurchased(item!!.id, true)
-        assertTrue(repo.shoppingItems.value.single().isPurchased)
-        repo.deleteShoppingItem(item.id)
-        assertTrue(repo.shoppingItems.value.isEmpty())
+    @Test fun `finalization is idempotent preserves estimate and computes actual profit`() {
+        val repo = BruleeRepository(); val order = order(repo); checkAll(repo, order)
+        val actual = RecipeCosts(Money(3500), Money(3000), Money(500), Money(400))
+        val sale = repo.completeOrder(order.id, actual, 90)!!
+        assertEquals(sale, repo.completeOrder(order.id, order.estimatedCosts))
+        assertEquals(90, sale.activeProductionMinutes)
+        assertEquals(1, repo.completedSales.value.size); assertEquals(7400L, sale.actualCost.cents)
+        assertEquals(8000L, sale.estimatedCost.cents); assertEquals(4600L, sale.profit.cents)
+        assertEquals(QuoteStatus.ConvertedToSale, repo.quotes.value.single().status)
+        assertEquals(order.estimatedCosts, repo.productionOrders.value.single().estimatedCosts)
     }
-
-    @Test
-    fun `shopping list rejects incomplete items`() {
+    @Test fun `sharing approved or completed quote cannot downgrade status`() {
+        val repo = BruleeRepository(); val order = order(repo)
+        repo.addQuote(quote().copy(status = QuoteStatus.Sent))
+        assertEquals(QuoteStatus.Approved, repo.quotes.value.single().status)
+        checkAll(repo, order); repo.completeOrder(order.id, null)
+        repo.addQuote(quote())
+        assertEquals(QuoteStatus.ConvertedToSale, repo.quotes.value.single().status)
+    }
+    @Test fun `rejecting a quote prevents approval`() {
+        val repo = BruleeRepository(); repo.addQuote(quote()); repo.updateQuoteStatus("q1", QuoteStatus.Rejected)
+        assertNull(repo.approveQuote("q1")); assertTrue(repo.productionOrders.value.isEmpty())
+    }
+    @Test fun `checklist changes are isolated and current step follows progress`() {
+        val repo = BruleeRepository(); val order = order(repo)
+        repo.addQuote(quote("q2")); val second = repo.approveQuote("q2")!!
+        repo.updateStepStatus(order.id, order.steps.first().id, true)
+        assertTrue(repo.productionOrders.value.first { it.id == order.id }.steps[1].isCurrent)
+        assertEquals(0, repo.productionOrders.value.first { it.id == second.id }.completedStepsCount)
+        repo.updateStepStatus(order.id, order.steps.first().id, false)
+        assertTrue(repo.productionOrders.value.first { it.id == order.id }.steps[0].isCurrent)
+    }
+    @Test fun `completed order checklist is immutable`() {
+        val repo = BruleeRepository(); val order = order(repo); checkAll(repo, order); repo.completeOrder(order.id, null)
+        repo.updateStepStatus(order.id, order.steps.first().id, false)
+        assertTrue(repo.productionOrders.value.single().isAllStepsDone)
+    }
+    @Test fun `new OCR ingredient is created and duplicate spelling reuses identity`() {
         val repo = BruleeRepository()
-        assertEquals(null, repo.addShoppingItem("", "2 kg"))
-        assertEquals(null, repo.addShoppingItem("Chocolate", " "))
-        assertTrue(repo.shoppingItems.value.isEmpty())
+        val ingredient = repo.addIngredient("Farinha", "g")
+        assertEquals(ingredient.id, repo.addIngredient(" farinha ", "kg").id)
+        repo.addPriceObservation(ingredient.id, "OCR", "1000", "g", 800, 800, "OCR")
+        assertEquals(1, repo.ingredients.value.size); assertEquals(800L, repo.priceObservations.value.single().packagePriceCents)
+    }
+    @Test fun `recipe revisions preserve older snapshots`() {
+        val repo = BruleeRepository()
+        val recipe = SavedRecipe("r1", "", 0, "Bolo", 8, listOf(RecipeIngredientItem("i1", "Farinha", Quantity.grams(1000), Money(500), Quantity.grams(200))), OperationalTimes())
+        repo.saveRecipe(recipe); val first = repo.recipes.value.single()
+        repo.saveRecipe(first.copy(name = "Bolo revisado"))
+        assertEquals(2, repo.recipes.value.single().version); assertEquals(1, first.version)
+        assertEquals("Bolo", first.name); assertNotEquals(first.versionId, repo.recipes.value.single().versionId)
+    }
+    @Test fun `settings are applied`() {
+        val repo = BruleeRepository(); val settings = OperatingSettings(hourlyLaborRate = Money(3000))
+        repo.updateSettings(settings); assertEquals(settings, repo.settings.value)
+    }
+    @Test fun `shopping list supports add check and delete`() {
+        val repo = BruleeRepository(); val item = repo.addShoppingItem("Chocolate", "2 kg")!!
+        repo.setShoppingItemPurchased(item.id, true); assertTrue(repo.shoppingItems.value.single().isPurchased)
+        repo.deleteShoppingItem(item.id); assertTrue(repo.shoppingItems.value.isEmpty())
+    }
+    @Test fun `shopping list rejects incomplete items`() {
+        val repo = BruleeRepository(); assertNull(repo.addShoppingItem("", "2 kg")); assertNull(repo.addShoppingItem("Chocolate", " "))
     }
 }

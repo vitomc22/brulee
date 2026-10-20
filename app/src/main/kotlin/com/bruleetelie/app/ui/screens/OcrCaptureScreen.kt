@@ -14,27 +14,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import com.bruleetelie.app.ui.components.TactileSecondaryButton
+import com.bruleetelie.app.ui.components.BruleeMascot
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.bruleetelie.app.ui.components.TactilePrimaryButton
 
-const val SAMPLE_RECEIPT_OCR_TEXT = """SUPERMERCADO DOCE AÇÚCAR
-CNPJ: 12.345.678/0001-90
-DATA: 15/10/2026
-1 CHOC NOBRE LEITE 1KG R$ 34,90
-2 LEITE CONDENS MOCA TP 395G R$ 7,49
-3 MANTEIGA EXTRA S SAL 200G R$ 11,89
-4 CACAU PO 100% 500G R$ 29,90
-TOTAL R$ 84,18"""
-
 @Composable
 fun OcrCaptureScreen(
     onProcessText: (String) -> Unit,
-    onScanRequested: () -> Unit = {}
+    onScanRequested: () -> Unit = {},
+    onPdfRequested: () -> Unit = {},
+    processing: Boolean = false
 ) {
-    var rawText by remember { mutableStateOf(SAMPLE_RECEIPT_OCR_TEXT) }
+    var rawText by rememberSaveable { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -50,10 +46,16 @@ fun OcrCaptureScreen(
         )
         TactilePrimaryButton(
             text = "ESCANEAR NOTA",
-            enabled = true,
+            enabled = !processing,
             onClick = onScanRequested,
             modifier = Modifier.testTag("ocr_scan_document")
         )
+        TactileSecondaryButton("IMPORTAR PDF", onPdfRequested, Modifier.testTag("ocr_import_pdf"), enabled = !processing)
+        if (processing) {
+            BruleeMascot(milestone = true)
+            Text("Lendo o documento…", Modifier.testTag("ocr_processing"))
+            androidx.compose.material3.LinearProgressIndicator(Modifier.fillMaxWidth())
+        }
         OutlinedTextField(
             value = rawText,
             onValueChange = { rawText = it },
@@ -65,7 +67,7 @@ fun OcrCaptureScreen(
         )
         TactilePrimaryButton(
             text = "PROCESSAR DOCUMENTO",
-            enabled = rawText.isNotBlank(),
+            enabled = rawText.isNotBlank() && !processing,
             onClick = { onProcessText(rawText) },
             modifier = Modifier.testTag("ocr_process_document")
         )

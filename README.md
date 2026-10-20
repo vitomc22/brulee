@@ -1,56 +1,30 @@
 # Brûlée Telie
 
-Aplicativo Android local-first para custos, precificação, orçamentos, produção e análise financeira de confeitaria artesanal.
+Aplicativo Android local-first para custos, precificação, orçamentos, produção e análise financeira de confeitaria artesanal. Os valores monetários usam centavos inteiros; o histórico de vendas preserva os custos orçados e reais.
 
-## Estado atual
+O app inicia sem dados de demonstração. Cadastre a primeira receita em **Novo Orçamento** ou pelo botão da bancada.
 
-Esta fundação implementa o plano técnico e as camadas de dados e documentos:
+- **Orçamento:** ingredientes, conversões de unidade, rendimento, tempos, complexidade, embalagem, outros custos, margem e preço manual. Receitas são salvas em revisões e podem ser reutilizadas.
+- **Pedidos:** rascunhos, orçamentos preparados para WhatsApp, aprovação e recusa. O WhatsApp abre com telefone e mensagem do cliente; o envio é confirmado pelo usuário no aplicativo externo. PDFs do cliente não incluem custos, margens ou lucro.
+- **Produção:** pedidos reais, filtros de data, checklist persistente, custos e tempo ativo reais na conclusão. Aprovar ou finalizar novamente não duplica pedidos ou vendas.
+- **Estoque:** cadastro de ingredientes e preços, importação de texto, scanner e PDF com revisão humana, e inclusão de itens na lista de compras.
+- **Finanças:** receita, lucro, conversão, lucro por hora, meta, ponto de equilíbrio, tendências de preços e exportação CSV/JSON. O painel funciona também sem vendas.
+- **Configurações:** tarifas, margem padrão, despesas fixas, meta, sons, movimento reduzido e backup portátil com validação de integridade.
+- **Interação:** transições de etapas e navegação, progresso e checklist animados, botões com resposta ao toque e mascote animado. A preferência de movimento reduzido é respeitada.
 
-- projeto multi-módulo (`app`, `domain`, `data`, `documents`);
-- banco de dados Room SQLite (`BruleeDatabase`, DAOs, conversores, mappers imutáveis);
-- armazenamento de configurações operacionais via DataStore Preferences (`OperatingSettingsDataStore`);
-- repositório unificado e reativo (`BruleeRepository`) conectado ao Room e DataStore;
-- geradores de PDF (`DefaultPdfGenerator` para modelo limpo de Cliente e relatório detalhado Interno com auditoria de custos);
-- parser de cupom fiscal/OCR e casamento de ingredientes por alias (`ReceiptParser` & `IngredientMatcher`);
-- gerenciador de backup e restauração zip portátil com checksum SHA-256 (`BackupManager`);
-- design system Material 3 baseado na especificação Stitch;
-- shell operacional com Produção, Finanças, Pedidos e Estoque;
-- tela interativa de fila de produção;
-- dashboard financeiro inicial;
-- `Money` em centavos e motor de precificação Pure Kotlin;
-- suíte completa de testes unitários (`:domain`, `:data`, `:documents`, `:app`).
+## Desenvolvimento e validação
 
-## Solução de Erro de JVM do Gradle ("Incompatible Gradle JVM version")
+Módulos: `app`, `domain`, `data`, `documents` e `benchmark`. Use JDK 17, o SDK Android configurado em `local.properties` e o wrapper Gradle do projeto.
 
-Se o Android Studio exibir o aviso:
-> *Incompatible Gradle JVM version. The project's Gradle version 8.12 is incompatible with the Gradle JVM version 25 currently selected to run Gradle build.*
+A validação de UI deve rodar no AVD **Medium_Phone**, com imagem **API 37.2**, seguido da regressão unitária:
 
-Basta clicar em **"Apply compatible Daemon JVM criteria and sync"** (Aplicar critérios de JVM do Daemon compatíveis e sincronizar) na barra amarela de notificação do Android Studio. O arquivo `gradle/gradle-daemon-jvm.properties` configurado no projeto solicitará automaticamente o uso de JDK 17/21 compatível.
+```bash
+./gradlew :app:connectedDebugAndroidTest :data:connectedDebugAndroidTest
+./gradlew test
+./gradlew :app:assembleDebug :app:assembleRelease
+./gradlew lint
+```
 
-Alternativamente, no Android Studio:
-1. Vá em **Settings / Preferences** > **Build, Execution, Deployment** > **Build Tools** > **Gradle**.
-2. Em **Gradle JDK**, selecione um JDK 17 ou JDK 21 (como o JBR 17/21 ou Eclipse Temurin 17/21) em vez do Java 25.
-3. Clique em **Sync Project with Gradle Files**.
+Os testes de tela criam suas próprias fixtures e limpam banco e preferências antes e depois de cada caso, inclusive em falhas. Dados fictícios ficam exclusivamente no APK de testes. Os testes de telas isoladas usam estado em memória; testes de persistência fecham o banco temporário em `finally`. Após a validação, o app instalado no emulador deve ficar com os dados limpos.
 
-1. **Através do Android Studio (Compose Previews)**:
-   - Abra qualquer tela em `app/src/main/kotlin/com/bruleetelie/app/ui/screens/`.
-   - Clique em **Split** ou **Design** no Android Studio para visualizar o Compose Preview interativo instantaneamente sem precisar compilar o APK completo.
-   - Previews disponíveis:
-     - `ProductionBoardScreenPreview`
-     - `NewQuoteWizardScreenPreview`
-     - `FinanceDashboardScreenPreview`
-     - `ProductionCompletionScreenPreview`
-     - `OcrReviewScreenPreview`
-
-2. **No Emulador ou Dispositivo Físico**:
-   - Selecione o módulo `app` no Android Studio.
-   - Execute (`Shift + F10` ou botão `Run`).
-   - A aplicação será iniciada com o banco de dados Room e DataStore inicializados, permitindo navegar entre as abas **Produção**, **Novo Orçamento**, **Finanças** e **Estoque/OCR**.
-
-## Próximos incrementos
-
-1. Persistência Room e configurações DataStore.
-2. Wizard de receita e custos operacionais.
-3. Orçamento, PDF e compartilhamento.
-4. Fila de produção ligada ao banco local.
-5. Scanner/OCR e revisão humana.
+Os resultados da revisão funcional de outubro de 2026 ficam em `artifacts/functional-review/`.

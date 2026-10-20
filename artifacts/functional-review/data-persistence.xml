@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuites tests="2" failures="0" errors="0" skipped="0" time="3.64" timestamp="2026-10-20T14:38:29" hostname="localhost">
+  <testsuite name="com.bruleetelie.data.BruleeDatabaseMigrationTest" tests="1" failures="0" errors="0" skipped="0" time="0.261" timestamp="2026-10-20T14:38:29" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":data" />
+    </properties>
+    <testcase name="migrate3To4_preservesSaleSnapshotAndCreatesFinancialTables" classname="com.bruleetelie.data.BruleeDatabaseMigrationTest" time="0.261" />
+  </testsuite>
+  <testsuite name="com.bruleetelie.data.RepositoryPersistenceRegressionTest" tests="1" failures="0" errors="0" skipped="0" time="2.776" timestamp="2026-10-20T14:38:29" hostname="localhost">
+    <properties>
+      <property name="device" value="Medium_Phone(AVD) - 17" />
+      <property name="flavor" value="" />
+      <property name="project" value=":data" />
+    </properties>
+    <testcase name="recipeRevisionsQuoteChecklistAndSaleSurviveReopeningRepository" classname="com.bruleetelie.data.RepositoryPersistenceRegressionTest" time="2.776" />
+  </testsuite>
+</testsuites>

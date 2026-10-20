@@ -13,7 +13,11 @@ import org.junit.Test
 /** One test method per DEV-E2E ID from the detailed specification. */
 class DevScenarioIndividualE2eTest {
     @get:Rule val composeRule = createAndroidComposeRule<MainActivity>()
-    private fun production() { composeRule.onNodeWithTag("nav_production").performClick(); composeRule.onNodeWithText("Production Board").assertIsDisplayed() }
+    private fun production() { composeRule.onNodeWithTag("nav_production").performClick(); composeRule.onNodeWithTag("production_board").assertIsDisplayed() }
+    @org.junit.After fun removeTestData() { clearTestData(composeRule) }
+
+    @org.junit.Before fun prepareRealTestData() { clearTestData(composeRule); seedProductionTestData(composeRule) }
+
     @Test fun devE2e001_orderAppearsInProduction() { production() }
     @Test fun devE2e002_orderHasRecipeSteps() { production(); composeRule.onAllNodesWithText("MICROETAPAS DA RECEITA")[0].performScrollTo().assertIsDisplayed() }
     @Test fun devE2e003_currentStepIsVisible() { production() }

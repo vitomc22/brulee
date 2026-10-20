@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bruleetelie.app.AnalyticsJsonExporterTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-20T14:41:00.574Z" hostname="victor-Lenovo-IdeaPad-S145-15API" time="0.038">
+  <properties/>
+  <testcase name="export escapes names and preserves monetary cents" classname="com.bruleetelie.app.AnalyticsJsonExporterTest" time="0.034"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

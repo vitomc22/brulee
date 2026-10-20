@@ -24,6 +24,9 @@ class BruleeDatabaseMigrationTest {
         FrameworkSQLiteOpenHelperFactory()
     )
 
+    @org.junit.Before fun cleanBefore() { context.deleteDatabase("migration-test") }
+    @org.junit.After fun cleanAfter() { context.deleteDatabase("migration-test") }
+
     @Test
     fun migrate3To4_preservesSaleSnapshotAndCreatesFinancialTables() {
         helper.createDatabase("migration-test", 3).apply {

@@ -35,7 +35,9 @@ class DefaultDocumentGateway : DocumentGateway {
     }
 
     override fun formatWhatsAppUrl(quote: Quote): String {
-        val phoneDigits = quote.customer.phone.filter { it.isDigit() }
+        val digits = quote.customer.phone.filter { it.isDigit() }
+        require(digits.length in 10..15) { "Informe um telefone com DDD" }
+        val phoneDigits = if (digits.length in 10..11) "55$digits" else digits
         val encodedMessage = java.net.URLEncoder.encode(generateCustomerQuoteText(quote), "UTF-8")
         return "https://api.whatsapp.com/send?phone=$phoneDigits&text=$encodedMessage"
     }

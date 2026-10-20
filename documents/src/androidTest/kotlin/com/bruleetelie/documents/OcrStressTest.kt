@@ -20,6 +20,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class OcrStressTest {
     private val context = ApplicationProvider.getApplicationContext<android.content.Context>()
+    @get:org.junit.Rule val fixtures = org.junit.rules.TemporaryFolder(context.cacheDir)
     private val gateway = MlKitTextRecognitionGateway()
 
     @Test
@@ -80,7 +81,7 @@ class OcrStressTest {
             drawText("ITEM CHOCOLATE", 80f, 360f, paint)
             drawText("TOTAL 123,45", 80f, 540f, paint)
         }
-        return File(context.cacheDir, "ocr-$name.png").also { file ->
+        return File(fixtures.root, "ocr-$name.png").also { file ->
             file.outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
             bitmap.recycle()
         }

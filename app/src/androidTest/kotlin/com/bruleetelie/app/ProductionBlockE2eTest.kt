@@ -14,10 +14,14 @@ class ProductionBlockE2eTest {
     @get:Rule
     val composeRule = createAndroidComposeRule<MainActivity>()
 
+    @org.junit.After fun removeTestData() { clearTestData(composeRule) }
+
+    @org.junit.Before fun prepareRealTestData() { clearTestData(composeRule); seedProductionTestData(composeRule) }
+
     @Test
     fun dev001To010_productionBoardShowsOrderAndChecklist() {
         composeRule.onNodeWithTag("nav_production").performClick()
-        composeRule.onNodeWithText("Production Board").assertIsDisplayed()
+        composeRule.onNodeWithTag("production_board").assertIsDisplayed()
         composeRule.onAllNodesWithText("MICROETAPAS DA RECEITA")[0].performScrollTo().assertIsDisplayed()
     }
 
@@ -33,7 +37,7 @@ class ProductionBlockE2eTest {
         composeRule.onNodeWithTag("nav_production").performClick()
         composeRule.onNodeWithTag("nav_finance").performClick()
         composeRule.onNodeWithTag("nav_production").performClick()
-        composeRule.onNodeWithText("Production Board").assertIsDisplayed()
+        composeRule.onNodeWithTag("production_board").assertIsDisplayed()
     }
 
     @Test

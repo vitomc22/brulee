@@ -16,6 +16,10 @@ class ShoppingListE2eTest {
     @get:Rule
     val composeRule = createAndroidComposeRule<MainActivity>()
 
+    @org.junit.After fun removeTestData() { clearTestData(composeRule) }
+
+    @org.junit.Before fun prepareRealTestData() { clearTestData(composeRule) }
+
     @Test
     fun addCompleteAndRemoveShoppingItem() {
         composeRule.onNodeWithTag("nav_shopping").performClick()

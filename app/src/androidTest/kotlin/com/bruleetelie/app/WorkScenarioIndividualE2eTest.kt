@@ -13,6 +13,10 @@ import org.junit.Test
 class WorkScenarioIndividualE2eTest {
     @get:Rule val composeRule = createAndroidComposeRule<MainActivity>()
     private fun shopping() { composeRule.onNodeWithTag("nav_shopping").performClick(); composeRule.onNodeWithText("Lista de compras").assertIsDisplayed() }
+    @org.junit.After fun removeTestData() { clearTestData(composeRule) }
+
+    @org.junit.Before fun prepareRealTestData() { clearTestData(composeRule); seedFinanceTestData(composeRule) }
+
     @Test fun workE2e001_shoppingListIsAvailable() { shopping() }
     @Test fun workE2e002_addShoppingItem() { shopping() }
     @Test fun workE2e003_editShoppingQuantity() { shopping() }

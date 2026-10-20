@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.bruleetelie.app.ui.components.StatusPill
+import com.bruleetelie.app.ui.components.BruleeMascot
 import com.bruleetelie.app.ui.components.TactilePrimaryButton
 import com.bruleetelie.app.ui.theme.*
 import com.bruleetelie.domain.CostComparisonResult
@@ -40,6 +41,7 @@ fun ProductionCompletionScreen(
     comparison: CostComparisonResult,
     salesStreak: Int = 0,
     profitableStreak: Int = 0,
+    totalSales: Int = 0,
     soundsEnabled: Boolean = false,
     reducedMotion: Boolean = false,
     onContinue: () -> Unit
@@ -107,7 +109,7 @@ fun ProductionCompletionScreen(
                     ) {
                         Text("⭐", style = MaterialTheme.typography.labelMedium)
                         Text(
-                            "+100 Pts",
+                            "${totalSales * 45} XP",
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.Bold,
                             color = BruleeSecondary
@@ -155,7 +157,7 @@ fun ProductionCompletionScreen(
                         .background(BruleeSecondaryFixed.copy(alpha = 0.7f)),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("👩‍🍳", style = MaterialTheme.typography.displayLarge)
+                    BruleeMascot(milestone = totalSales, size = 100.dp, reducedMotion = reducedMotion)
                 }
                 Surface(
                     color = BruleePrimary,
@@ -163,7 +165,7 @@ fun ProductionCompletionScreen(
                     shadowElevation = 2.dp
                 ) {
                     Text(
-                        "Nv. 14",
+                        "Nv. ${1 + totalSales / 10}",
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
                         color = Color.White,
                         style = MaterialTheme.typography.labelSmall,
@@ -377,6 +379,7 @@ fun ProductionCompletionScreen(
         // CTA
         TactilePrimaryButton(
             text = "CONTINUAR PARA O PAINEL",
+            modifier = Modifier.testTag("completion_continue"),
             onClick = onContinue
         )
     }

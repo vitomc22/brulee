@@ -11,6 +11,10 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.bruleetelie.domain.Money
 import com.bruleetelie.domain.OperatingSettings
 import java.math.BigDecimal
+import java.io.File
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.first
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -29,13 +33,15 @@ class OperatingSettingsDataStore(private val context: Context) {
         val REDUCED_MOTION = booleanPreferencesKey("reduced_motion")
     }
 
-    val settingsFlow: Flow<OperatingSettings> = context.dataStore.data.map { prefs ->
+    val settingsFlow: Flow<OperatingSettings> = context.dataStore.data.map(::decode)
+
+    private fun decode(prefs: Preferences): OperatingSettings {
         val laborCents = prefs[Keys.HOURLY_LABOR_RATE_CENTS] ?: 2500L
         val gasCents = prefs[Keys.GAS_COST_PER_HOUR_CENTS] ?: 320L
         val elecCents = prefs[Keys.ELECTRICITY_COST_PER_HOUR_CENTS] ?: 250L
         val marginStr = prefs[Keys.DEFAULT_MARGIN_PERCENT] ?: "35.00"
 
-        OperatingSettings(
+        return OperatingSettings(
             hourlyLaborRate = Money(laborCents),
             gasCostPerHour = Money(gasCents),
             electricityCostPerHour = Money(elecCents),
@@ -45,6 +51,21 @@ class OperatingSettingsDataStore(private val context: Context) {
             soundsEnabled = prefs[Keys.SOUNDS_ENABLED] ?: true,
             reducedMotion = prefs[Keys.REDUCED_MOTION] ?: false
         )
+    }
+
+    /** Decode in a temporary store before changing live data; never replace an active DataStore file. */
+    suspend fun readBackup(bytes: ByteArray): OperatingSettings = withContext(Dispatchers.IO) {
+        val file = File.createTempFile("brulee-settings-", ".preferences_pb", context.cacheDir)
+        val job = SupervisorJob()
+        try {
+            file.writeBytes(bytes)
+            val temporary = PreferenceDataStoreFactory.create(scope = CoroutineScope(job + Dispatchers.IO), produceFile = { file })
+            decode(temporary.data.first())
+        } finally {
+            job.cancelAndJoin()
+            file.delete()
+            File("${file.path}.tmp").delete()
+        }
     }
 
     suspend fun saveSettings(settings: OperatingSettings) {

@@ -14,9 +14,13 @@ class OcrCaptureE2eTest {
     @get:Rule
     val composeRule = createAndroidComposeRule<MainActivity>()
 
+    @org.junit.After fun removeTestData() { clearTestData(composeRule) }
+
+    @org.junit.Before fun prepareRealTestData() { clearTestData(composeRule) }
+
     @Test
     fun processRecognizedReceiptText_opensReviewWithParsedItems() {
-        composeRule.onNodeWithTag("nav_stock").performClick()
+        openOcrFixture(composeRule)
 
         composeRule.onNodeWithText("Importar Nota Fiscal").assertIsDisplayed()
         composeRule.onNodeWithTag("ocr_process_document")
@@ -34,7 +38,7 @@ class OcrCaptureE2eTest {
 
     @Test
     fun realDocumentScannerAction_isAvailableBeforeManualFallback() {
-        composeRule.onNodeWithTag("nav_stock").performClick()
+        openOcrFixture(composeRule)
 
         composeRule.onNodeWithTag("ocr_scan_document")
             .performScrollTo()

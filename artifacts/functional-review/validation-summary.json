@@ -1,0 +1,1182 @@
+{
+  "ui_rounds": [
+    {
+      "file": "ui-full-initial.xml",
+      "tests": 272,
+      "failures": 27
+    },
+    {
+      "file": "ui-corrections.xml",
+      "tests": 55,
+      "failures": 1
+    },
+    {
+      "file": "ui-final.xml",
+      "tests": 45,
+      "failures": 0
+    },
+    {
+      "file": "ui-pdf-share.xml",
+      "tests": 1,
+      "failures": 0
+    },
+    {
+      "file": "ui-inventory.xml",
+      "tests": 1,
+      "failures": 0
+    }
+  ],
+  "ui_unique_cases": 280,
+  "ui_unresolved": [],
+  "ui_cases": {
+    "com.bruleetelie.app.AccessibilityE2eTest#primaryNavigationKeepsStableSemanticTagsForLargeTextLayouts": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.AccessibilityE2eTest#primaryNavigationExposesTalkBackDescriptionAndClickAction": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.BackupBlockE2eTest#backup021To030_preferencesRemainAvailableForRestore": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.BackupBlockE2eTest#backup001To010_screenExposesPortableBackupActions": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.BackupBlockE2eTest#backup011To020_financialSettingsCanBeEditedBeforeBackup": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.BackupBlockE2eTest#backup031To040_navigationKeepsBackupScreenStable": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.BackupScreenE2eTest#backupActionsAreAvailableFromNavigation": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CanonicalWizardCostE2eTest#cost030_offlineCalculationReachesStableSummary": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CanonicalWizardCostE2eTest#cost025_backAndEditIngredientQuantityRecalculates": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CanonicalWizardCostE2eTest#testCanonicalCostWizardFlow": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CanonicalWizardCostE2eTest#cost028_duplicateIngredientShowsDecisionMessage": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CanonicalWizardCostE2eTest#cost027_removingIngredientKeepsCostSummaryStable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CanonicalWizardCostE2eTest#cost029_missingPriceExplainsWhyCostCannotBeCalculated": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CanonicalWizardCostE2eTest#cost026_cancelEditKeepsOriginalIngredient": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CanonicalWizardCostE2eTest#wizardCanNavigateBackAndRemoveIngredient": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e014_incompatibleUnitIsBlocked": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e017_expensiveIngredient": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e026_cancelEditRestoresValue": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e001_proportionalIngredientCost": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e013_literToMilliliterConversion": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e011_kilogramToGramConversion": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e003_activeLaborUsesTime": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e008_snapshotScreenIsStable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e018_sameIngredientVersionsCanBeAdded": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e022_recipeWithoutGasReachesSummary": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e027_removeIngredientRecalculates": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e010_zeroUsedQuantityIsRejected": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e006_completeProjectedCost": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e028_duplicateIngredientRequiresDecision": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e025_backAndEditQuantityRecalculates": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e007_costFlowIsPersistable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e020_otherCostsReachSummary": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e005_energyUsesPowerAndDuration": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e019_packagingCostReachesSummary": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e016_veryCheapIngredient": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e021_passiveTimeDoesNotBlockCalculation": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e024_recipeWithGasAndEnergyReachesSummary": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e012_gramToKilogramConversion": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e004_gasUsesDuration": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e030_offlineCalculationReachesStableSummary": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e015_centPrecisionIsAccepted": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e002_sumsIngredients": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e009_updatedPriceCanBeEntered": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e023_recipeWithoutEnergyReachesSummary": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CostScenarioIndividualE2eTest#costE2e029_insufficientDataDoesNotCalculate": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e022_invalidDataDoesNotPropagate": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e002_quoteToFinance": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e019_rankingToQuote": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e010_financeSnapshotIsStable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e020_workflowPersistsAfterRestart": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e007_priceToQuote": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e005_saleToFinance": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e030_fullEndToEndFlowIsAvailable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e013_schemaMigrationPreservesMetrics": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e006_costToPrice": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e028_reopenPreservesState": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e004_productionToSale": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e026_backupIntegrityIsStable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e001_quoteToProduction": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e003_quoteToSale": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e011_backupRoundTrip": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e009_productionApprovalIsStable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e023_offlineFlowIsStable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e012_corruptBackupIsRejected": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e027_navigationDoesNotDuplicateState": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e029_androidStateIsConsistent": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e015_correctedOcrToCalculation": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e024_pdfExportFlowIsAvailable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e017_actualCostToEarnings": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e014_ocrToCostToQuote": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e018_trendToPricing": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e025_webExportFlowIsAvailable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e008_quoteApprovalIsStable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e021_emptyStateTransitions": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.CrossScenarioIndividualE2eTest#crossE2e016_manualPriceToProduction": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e008_orderProgressIsPersistent": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e012_checklistSupportsCompleteProgress": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e013_completedStepRemainsChecked": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e024_completionStateIsExplicit": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e017_realCostCanBeShown": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e016_orderStatusIsVisible": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e026_actualCostCanDiffer": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e009_finalizeActionIsAvailable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e004_stepCanBeChecked": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e020_reopenDoesNotDuplicateOrder": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e014_uncompletedStepRemainsPending": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e006_reopenProductionBoard": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e019_varianceIsFinite": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e018_estimatedCostCanBeShown": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e001_orderAppearsInProduction": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e003_currentStepIsVisible": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e022_productionStateIsStable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e015_stepOrderIsStable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e021_navigationPreservesOrder": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e005_stepProgressIsAtomic": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e025_backupPreservesCosts": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e011_checklistSupportsPartialProgress": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e028_productionRemainsAvailableOffline": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e027_saleCompletionIsAvailable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e002_orderHasRecipeSteps": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e007_multipleOrdersRemainSeparate": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e010_finalizeRequiresChecklist": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.DevScenarioIndividualE2eTest#devE2e023_invalidValuesAreAbsent": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.EarningsBlockE2eTest#earn022To024_emptyAndProductionStatesRemainExplicit": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.EarningsBlockE2eTest#earn018To021_financeFilterRemainsStableAfterPeriodChange": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.EarningsBlockE2eTest#earn001To006_dashboardShowsRevenueProfitAndHistoricalMetrics": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.EarningsBlockE2eTest#earn007To017_financeSeparatesOperationalMetrics": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e001_realProfitAfterSale": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e024_insufficientValuesAreNotNaN": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e025_chartHasAccessibleDescription": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e020_timezoneBoundaryDoesNotCrash": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e003_realMarginAfterCostIncrease": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e019_yearBoundaryDoesNotCrash": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e017_zeroRevenueWithPositiveCostIsExplicit": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e014_averageTicketIsDisplayed": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e006_historicalSaleRemainsStable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e024_revenueProfitChartIsAvailable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e021_reopenKeepsMetrics": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e002_realProfitAfterCostIncrease": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e012_multipleSalesSumRevenue": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e010_refundDoesNotCrashFinance": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e011_cancelledSaleIsNotCompletedRevenue": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e018_monthFilterIsAvailable": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e004_realProfitAfterSavings": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e022_backupFlowIsAvailable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e015_negativeProfitIsFinite": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e007_pendingPaymentIsSeparate": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e023_csvExportActionIsAvailable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e016_zeroActualCostIsFinite": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e005_financeUsesActualCost": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e008_partialPaymentIsRepresented": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e009_totalPaymentIsRepresented": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.EarningsScenarioIndividualE2eTest#earnE2e013_multipleSalesSumProfit": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.FinanceDashboardE2eTest#dashboardUsesPersistedFinancialData": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.OcrCaptureE2eTest#processRecognizedReceiptText_opensReviewWithParsedItems": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.OcrCaptureE2eTest#realDocumentScannerAction_isAvailableBeforeManualFallback": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.OcrIgnoreItemE2eTest#ignoreDetectedItem_excludesItFromSavedPriceObservations": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.OcrItemEditingE2eTest#editDetectedQuantityAndPrice_updatesItemBeforeConfirmation": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.OcrLifecycleStressTest#reviewStateSurvivesBackgroundForegroundWithoutDuplicateCommit": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.OcrLifecycleStressTest#reviewStateSurvivesActivityRecreationWithoutAutoPersisting": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.OcrReviewE2eTest#reviewRequiresEveryOcrItemConfirmation_beforeReturningToProduction": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.OperationalScreensRegressionTest#fixedCostsAndDefaultMarginAreEditableAndAnalyticsExportIsReachable": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.OperationalScreensRegressionTest#pendingQuotesCanBeSharedApprovedOrRejectedAndAllFilterWorks": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.OperationalScreensRegressionTest#OCRStartsEmptySupportsPdfAndDisablesActionsWhileProcessing": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.OperationalScreensRegressionTest#WhatsAppUsesViewIntentWithEncodedCustomerMessage": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.OperationalScreensRegressionTest#inventoryAcceptsOnlyValidPricesAndCanAddToShopping": {
+      "passed": true,
+      "source": "ui-inventory.xml"
+    },
+    "com.bruleetelie.app.PriceScenarioIndividualE2eTest#priceE2e011_zeroCostDoesNotProduceInvalidNumber": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PriceScenarioIndividualE2eTest#priceE2e009_veryHighTargetMarginRemainsFinite": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PriceScenarioIndividualE2eTest#priceE2e008_fiftyPercentTargetMargin": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PriceScenarioIndividualE2eTest#priceE2e019_commaCurrencyInputIsAccepted": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PriceScenarioIndividualE2eTest#priceE2e017_manualPriceSurvivesPricingSummary": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PriceScenarioIndividualE2eTest#priceE2e002_profitFollowsSuggestedPrice": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PriceScenarioIndividualE2eTest#priceE2e014_approvedQuoteUsesDisplayedPrice": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PriceScenarioIndividualE2eTest#priceE2e001_suggestedPriceForTargetMargin": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PriceScenarioIndividualE2eTest#priceE2e020_invalidCurrencyInputDoesNotCrash": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PriceScenarioIndividualE2eTest#priceE2e004_manualPriceRecalculatesProfit": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PriceScenarioIndividualE2eTest#priceE2e022_quotePriceIsAvailableForDocuments": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PriceScenarioIndividualE2eTest#priceE2e015_newMarginAffectsCurrentCalculation": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PriceScenarioIndividualE2eTest#priceE2e012_suggestedPriceRoundingIsFinite": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PriceScenarioIndividualE2eTest#priceE2e018_largeSalePriceIsDisplayed": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PriceScenarioIndividualE2eTest#priceE2e006_zeroTargetMarginIsAccepted": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PriceScenarioIndividualE2eTest#priceE2e021_suggestedPriceIsAvailableOffline": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PriceScenarioIndividualE2eTest#priceE2e013_finalPriceCanAdvanceToQuote": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PriceScenarioIndividualE2eTest#priceE2e005_priceBelowCostIsRepresented": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PriceScenarioIndividualE2eTest#priceE2e023_customerQuoteCanGeneratePdf": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PriceScenarioIndividualE2eTest#priceE2e016_costEditCanRecalculatePrice": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PriceScenarioIndividualE2eTest#priceE2e007_tenPercentTargetMargin": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PriceScenarioIndividualE2eTest#priceE2e010_negativeMarginIsBlocked": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PriceScenarioIndividualE2eTest#priceE2e003_marginIsDisplayedAsMargin": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PricingBlockE2eTest#price001To003_suggestedPriceProfitAndMarginAreDisplayed": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PricingBlockE2eTest#price013To022_priceSummaryCanAdvanceToQuoteOffline": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PricingBlockE2eTest#price004_manualAdjustmentRecalculatesProfit": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.PricingBlockE2eTest#price005To012_priceAdjustmentRemainsFiniteAndFormatted": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.ProductionBlockE2eTest#dev001To010_productionBoardShowsOrderAndChecklist": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.ProductionBlockE2eTest#dev025To028_productionStateDoesNotExposeInvalidValues": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.ProductionBlockE2eTest#dev020To024_productionCanBeReopenedFromNavigation": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.ProductionBlockE2eTest#dev011To019_checklistSupportsAtomicStepProgress": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.ProductionRegressionTest#invalidActualCostBlocksCompletionAndCancelDoesNotSell": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.ProductionRegressionTest#dateFiltersReallyChangeOrdersAndExcludeCompleted": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.ProductionRegressionTest#completedOrderCannotBeFinalizedAgain": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.ProductionRegressionTest#emptyBoardHasNoFakeOrdersAndNewQuoteWorks": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.ProductionRegressionTest#checklistEnablesFinalizationAndActualCostCanBeChanged": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.QuoteFlowE2eTest#createRecipeWithCostsApproveProduceAndRecordActualCostsAndRevenue": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.QuoteFlowE2eTest#WhatsAppActuallyLaunchesCustomerIntentAndSavedQuoteCanBeApprovedLater": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.RankScenarioIndividualE2eTest#rankE2e020_rankingDoesNotExposeInvalidNumbers": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.RankScenarioIndividualE2eTest#rankE2e011_rankingUsesActualCost": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.RankScenarioIndividualE2eTest#rankE2e013_historicalRankingRemainsStable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.RankScenarioIndividualE2eTest#rankE2e019_rankingSurvivesNavigation": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.RankScenarioIndividualE2eTest#rankE2e004_tiesUseStableOrder": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.RankScenarioIndividualE2eTest#rankE2e010_rankingHasFiniteMargin": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.RankScenarioIndividualE2eTest#rankE2e015_productNameIsDisplayed": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.RankScenarioIndividualE2eTest#rankE2e022_rankingRemainsAvailableOffline": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.RankScenarioIndividualE2eTest#rankE2e005_negativeProfitRemainsVisible": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.RankScenarioIndividualE2eTest#rankE2e017_marginPillIsDisplayed": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.RankScenarioIndividualE2eTest#rankE2e008_monthFilterRestoresRanking": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.RankScenarioIndividualE2eTest#rankE2e014_multipleRecipesAreListed": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.RankScenarioIndividualE2eTest#rankE2e016_profitPerUnitIsDisplayed": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.RankScenarioIndividualE2eTest#rankE2e001_topRecipeIsShown": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.RankScenarioIndividualE2eTest#rankE2e018_emptyRankingIsExplicit": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.RankScenarioIndividualE2eTest#rankE2e021_rankingIsScrollable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.RankScenarioIndividualE2eTest#rankE2e002_profitOrdersRanking": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.RankScenarioIndividualE2eTest#rankE2e009_rankingHasFiniteProfit": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.RankScenarioIndividualE2eTest#rankE2e007_periodFilterChangesRanking": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.RankScenarioIndividualE2eTest#rankE2e006_zeroSalesShowsEmptyState": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.RankScenarioIndividualE2eTest#rankE2e003_marginOrdersRanking": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.RankScenarioIndividualE2eTest#rankE2e012_rankingUsesSaleSnapshot": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.ShoppingListE2eTest#addCompleteAndRemoveShoppingItem": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.TrendBlockE2eTest#trend011To024_financialValuesNeverExposeInvalidArtifacts": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.TrendBlockE2eTest#trend001To003_baselineAndBelowThresholdAreStable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.TrendBlockE2eTest#trend004To010_dashboardExposesPeriodAndTrendArea": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.TrendBlockE2eTest#trend025To028_trendStateSurvivesNavigation": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e006_kgAndGramAreNormalized": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e024_historyPersistsAfterRestart": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e001_firstPurchaseCreatesBaseline": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e012_unconfirmedOcrDoesNotChangeTrend": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e014_manualCorrectionAfterOcr": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e004_accumulatedIncreaseIsSeparate": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e011_confirmedOcrCreatesObservation": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e008_suppliersRemainDistinct": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e025_backupPreservesHistory": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e028_movingAverageDoesNotUseFutureData": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e007_oldHistoryIsImmutable": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e020_zeroQuantityIsInvalid": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e010_incompatibleUnitIsExcluded": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e009_fractionalQuantityIsHandled": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e026_importedSeriesIsAvailable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e022_historyIsChronological": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e015_discountUsesFinalPrice": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e017_veryHighIncreaseIsFinite": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e013_duplicateNoteDoesNotDuplicateHistory": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e003_belowThresholdDoesNotTrigger": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e018_halfPriceDropIsFinite": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e027_insufficientHistoryIsExplicit": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e021_periodFilterIsAvailable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e016_equalPriceHasNoVariation": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e019_zeroPriceIsInvalid": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e023_sameDayPurchasesAreStable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e002_exactTenPercentTriggersAlert": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.TrendScenarioIndividualE2eTest#trendE2e005_exactTenPercentDrop": {
+      "passed": true,
+      "source": "ui-corrections.xml"
+    },
+    "com.bruleetelie.app.WizardRegressionTest#formSurvivesActivityStateRestorationIncludingIngredients": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.WizardRegressionTest#savedRecipeCanBeLoadedWithReducedMotionAndItsRealYield": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.WizardRegressionTest#pdfDraftAndApprovalShareTheSameQuoteIdentity": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.WizardRegressionTest#removingLastIngredientBlocksAdvanceAndEditingRecalculates": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.WizardRegressionTest#manualCurrencyKeepsSequentialKeystrokesAndInvalidPriceBlocksAdvance": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.WizardRegressionTest#WhatsAppDoesNotClaimSuccessWhenCallbackFailsToOpen": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.WizardRegressionTest#reducedMotionStillAllowsEveryWizardStepAndDraftSave": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.WizardRegressionTest#startsEmptyAndRequiresRecipeAndPositiveYield": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.WizardRegressionTest#operationalInputsCanBeClearedAndPackagingAndOverheadPersist": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.WorkScenarioIndividualE2eTest#workE2e002_addShoppingItem": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.WorkScenarioIndividualE2eTest#workE2e016_listIsAvailableOffline": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.WorkScenarioIndividualE2eTest#workE2e021_backupPreservesShoppingList": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.WorkScenarioIndividualE2eTest#workE2e004_completeShoppingItem": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.WorkScenarioIndividualE2eTest#workE2e013_blankItemIsNotPersisted": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.WorkScenarioIndividualE2eTest#workE2e024_fullShoppingFlowIsAvailable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.WorkScenarioIndividualE2eTest#workE2e001_shoppingListIsAvailable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.WorkScenarioIndividualE2eTest#workE2e014_duplicateItemsRemainExplicit": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.WorkScenarioIndividualE2eTest#workE2e015_listSurvivesRestart": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.WorkScenarioIndividualE2eTest#workE2e023_concurrentStateRemainsStable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.WorkScenarioIndividualE2eTest#workE2e007_emptyShoppingStateIsExplicit": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.WorkScenarioIndividualE2eTest#workE2e019_deleteFlowIsStable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.WorkScenarioIndividualE2eTest#workE2e010_purchasedStateIsVisible": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.WorkScenarioIndividualE2eTest#workE2e017_purchaseFlowIsStable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.WorkScenarioIndividualE2eTest#workE2e005_uncompleteShoppingItem": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.WorkScenarioIndividualE2eTest#workE2e006_deleteShoppingItem": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.WorkScenarioIndividualE2eTest#workE2e018_unpurchaseFlowIsStable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.WorkScenarioIndividualE2eTest#workE2e003_editShoppingQuantity": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.WorkScenarioIndividualE2eTest#workE2e009_quantityIsVisible": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.WorkScenarioIndividualE2eTest#workE2e011_shoppingNavigationIsStable": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.WorkScenarioIndividualE2eTest#workE2e020_listDoesNotExposeInfinity": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.WorkScenarioIndividualE2eTest#workE2e008_multipleShoppingItemsRemainSeparate": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.WorkScenarioIndividualE2eTest#workE2e012_invalidQuantityDoesNotCrash": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.WorkScenarioIndividualE2eTest#workE2e022_restorePreservesShoppingList": {
+      "passed": true,
+      "source": "ui-full-initial.xml"
+    },
+    "com.bruleetelie.app.FinanceRegressionTest#clearingSalesWhileDashboardIsVisibleRestoresEmptyState": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.FinanceRegressionTest#freshAppFinanceAndPeriodFiltersWorkWithNoSales": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.BackupRestoreRegressionTest#invalidDatabaseWithValidArchiveChecksumDoesNotEraseCurrentData": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.BackupRestoreRegressionTest#invalidSettingsAreValidatedBeforeAnyDatabaseReplacement": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.BackupRestoreRegressionTest#restoredBackupRefreshesLiveDataAndAllowsMoreWrites": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.FinanceRegressionTest#recipeRankingAggregatesRepeatedOrdersRatherThanRepeatingRecipeRows": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.AccessibilityE2eTest#secondaryNavigationHasAccessibleDescriptions": {
+      "passed": true,
+      "source": "ui-final.xml"
+    },
+    "com.bruleetelie.app.OperationalScreensRegressionTest#realCustomerPdfIsSharedFromApplicationContextWithReadableUri": {
+      "passed": true,
+      "source": "ui-pdf-share.xml"
+    }
+  },
+  "data": [
+    {
+      "tests": 2,
+      "failures": 0
+    }
+  ],
+  "documents": [
+    {
+      "tests": 7,
+      "failures": 0
+    }
+  ],
+  "unit_unique_cases": 75,
+  "unit_unresolved": [],
+  "checks": {
+    "unit": "passed",
+    "lint": "passed",
+    "debug_build": "passed",
+    "release_build": "passed",
+    "clean_installation": "passed",
+    "app_data_cleared": "passed"
+  },
+  "device": {
+    "avd": "Medium_Phone",
+    "system_image": "android-37.2/google_apis_playstore_ps16k/x86_64",
+    "visible": true
+  },
+  "apk_sha256": "8a0767a55debcd3cb691522342654dfc3c44c4f6d7ab2122ad1e4cc597853bd7",
+  "clean_start_screenshot": "clean-start.png"
+}

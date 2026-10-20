@@ -123,3 +123,10 @@ start/end HTML-comment markers, without disturbing the rest of the file.
 - Always run the affected Compose UI tests on the API 37.2 Android Studio emulator (currently installed as AVD `Medium_Phone`; the user refers to it as `Small Phone API 37.2`), followed by the existing unit-test regression suite, before considering UI work complete.
 - Keep the primary quote flow covered end to end: create a recipe, add ingredients and their costs, calculate operational costs and pricing, fill customer data, approve the quote, and verify that it enters production.
 - Prefer stable semantic test tags for critical actions and fields; tests must not depend on screen coordinates.
+
+## Test data isolation
+
+- Tests must create the fixtures they need and remove all data they create after execution, including failed tests.
+- Keep fictitious customers, recipes, quotes, orders, sales and receipt text in test sources only; the installed app must start without demonstration data.
+- Instrumented tests must await pending writes before cleanup, reset settings they change, and verify the database is empty afterward.
+- After emulator validation, leave the installed app with its data cleared.

@@ -18,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
@@ -29,7 +30,8 @@ fun BackupScreen(
     settings: OperatingSettings,
     onSettingsChanged: (OperatingSettings) -> Unit,
     onExport: () -> Unit,
-    onRestore: () -> Unit
+    onRestore: () -> Unit,
+    onExportAnalytics: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -40,56 +42,56 @@ fun BackupScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text("Configurações e backup", style = MaterialTheme.typography.headlineMedium)
-        var laborRate by remember(settings.hourlyLaborRate) {
+        var laborRate by rememberSaveable {
             mutableStateOf(settings.hourlyLaborRate.toBigDecimal().toPlainString())
         }
         OutlinedTextField(
             value = laborRate,
             onValueChange = { value ->
                 laborRate = value
-                runCatching { Money.fromReais(value) }.getOrNull()?.let {
+                runCatching { Money.fromReais(value) }.getOrNull()?.takeIf { it >= Money.Zero }?.let {
                     onSettingsChanged(settings.copy(hourlyLaborRate = it))
                 }
             },
             label = { Text("Valor da hora de trabalho") },
             modifier = Modifier.fillMaxWidth().testTag("settings_hourly_labor_rate")
         )
-        var gasRate by remember(settings.gasCostPerHour) {
+        var gasRate by rememberSaveable {
             mutableStateOf(settings.gasCostPerHour.toBigDecimal().toPlainString())
         }
         OutlinedTextField(
             value = gasRate,
             onValueChange = { value ->
                 gasRate = value
-                runCatching { Money.fromReais(value) }.getOrNull()?.let {
+                runCatching { Money.fromReais(value) }.getOrNull()?.takeIf { it >= Money.Zero }?.let {
                     onSettingsChanged(settings.copy(gasCostPerHour = it))
                 }
             },
             label = { Text("Custo do gás por hora") },
             modifier = Modifier.fillMaxWidth().testTag("settings_gas_rate")
         )
-        var electricityRate by remember(settings.electricityCostPerHour) {
+        var electricityRate by rememberSaveable {
             mutableStateOf(settings.electricityCostPerHour.toBigDecimal().toPlainString())
         }
         OutlinedTextField(
             value = electricityRate,
             onValueChange = { value ->
                 electricityRate = value
-                runCatching { Money.fromReais(value) }.getOrNull()?.let {
+                runCatching { Money.fromReais(value) }.getOrNull()?.takeIf { it >= Money.Zero }?.let {
                     onSettingsChanged(settings.copy(electricityCostPerHour = it))
                 }
             },
             label = { Text("Custo da energia por hora") },
             modifier = Modifier.fillMaxWidth().testTag("settings_electricity_rate")
         )
-        var goal by remember(settings.monthlyRevenueGoal) {
+        var goal by rememberSaveable {
             mutableStateOf(settings.monthlyRevenueGoal.toBigDecimal().toPlainString())
         }
         OutlinedTextField(
             value = goal,
             onValueChange = { value ->
                 goal = value
-                runCatching { Money.fromReais(value) }.getOrNull()?.let {
+                runCatching { Money.fromReais(value) }.getOrNull()?.takeIf { it >= Money.Zero }?.let {
                     onSettingsChanged(settings.copy(monthlyRevenueGoal = it))
                 }
             },
@@ -118,6 +120,17 @@ fun BackupScreen(
                 modifier = Modifier.testTag("settings_reduced_motion")
             )
         }
+        var fixed by remember { mutableStateOf(settings.monthlyFixedCosts.toBigDecimal().toPlainString()) }
+        OutlinedTextField(fixed, { value ->
+            fixed = value
+            runCatching { Money.fromReais(value) }.getOrNull()?.takeIf { it >= Money.Zero }?.let { onSettingsChanged(settings.copy(monthlyFixedCosts = it)) }
+        }, label = { Text("Despesas fixas mensais") }, modifier = Modifier.fillMaxWidth().testTag("settings_fixed_costs"))
+        var margin by remember { mutableStateOf(settings.defaultMarginPercent.toPlainString()) }
+        OutlinedTextField(margin, { value ->
+            margin = value
+            value.replace(',', '.').toBigDecimalOrNull()?.takeIf { it >= java.math.BigDecimal.ZERO && it < java.math.BigDecimal(100) }?.let { onSettingsChanged(settings.copy(defaultMarginPercent = it)) }
+        }, label = { Text("Margem padrão (%)") }, modifier = Modifier.fillMaxWidth().testTag("settings_default_margin"))
+        OutlinedButton(onExportAnalytics, Modifier.fillMaxWidth().testTag("analytics_export")) { Text("EXPORTAR DADOS PARA WEB") }
         Text(
             "Exporte um arquivo portátil com banco, histórico e configurações. " +
                 "A restauração valida versão e integridade antes de substituir os dados.",

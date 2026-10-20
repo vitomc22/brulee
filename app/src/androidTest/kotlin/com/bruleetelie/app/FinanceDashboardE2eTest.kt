@@ -15,6 +15,10 @@ class FinanceDashboardE2eTest {
     @get:Rule
     val composeRule = createAndroidComposeRule<MainActivity>()
 
+    @org.junit.After fun removeTestData() { clearTestData(composeRule) }
+
+    @org.junit.Before fun prepareRealTestData() { clearTestData(composeRule); seedFinanceTestData(composeRule) }
+
     @Test
     fun dashboardUsesPersistedFinancialData() {
         composeRule.onNodeWithTag("nav_finance").performClick()

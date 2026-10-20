@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bruleetelie.documents.DocumentsModuleTests" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-19T01:26:19.227Z" hostname="victor-Lenovo-IdeaPad-S145-15API" time="0.406">
+  <properties/>
+  <testcase name="test internal PDF generator includes detailed costs and margin audit" classname="com.bruleetelie.documents.DocumentsModuleTests" time="0.016"/>
+  <testcase name="test backup manager rejects tampered backup with invalid checksum" classname="com.bruleetelie.documents.DocumentsModuleTests" time="0.086"/>
+  <testcase name="test backup manager creates valid zip and verifies integrity" classname="com.bruleetelie.documents.DocumentsModuleTests" time="0.069"/>
+  <testcase name="test customer PDF generator NEVER exposes internal costs or profits" classname="com.bruleetelie.documents.DocumentsModuleTests" time="0.006"/>
+  <testcase name="customer PDF text stays private with a large notes payload" classname="com.bruleetelie.documents.DocumentsModuleTests" time="0.01"/>
+  <testcase name="test duplicate detector identifies exact checksum" classname="com.bruleetelie.documents.DocumentsModuleTests" time="0.022"/>
+  <testcase name="receipt parser remains bounded for a large OCR payload" classname="com.bruleetelie.documents.DocumentsModuleTests" time="0.183"/>
+  <testcase name="test duplicate detector identifies same purchase despite OCR whitespace changes" classname="com.bruleetelie.documents.DocumentsModuleTests" time="0.005"/>
+  <testcase name="test receipt parser extracts CNPJ items and matches ingredients" classname="com.bruleetelie.documents.DocumentsModuleTests" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

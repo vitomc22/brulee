@@ -1,10 +1,15 @@
 package com.bruleetelie.data.db
 
 import android.content.Context
+import android.content.ContentValues
+import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.withTransaction
+import java.io.File
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
@@ -37,6 +42,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 )
 @TypeConverters(BruleeConverters::class)
 abstract class BruleeDatabase : RoomDatabase() {
+    abstract fun recipeDao(): RecipeDao
     abstract fun ingredientDao(): IngredientDao
     abstract fun customerDao(): CustomerDao
     abstract fun quoteDao(): QuoteDao
@@ -51,6 +57,45 @@ abstract class BruleeDatabase : RoomDatabase() {
     abstract fun costResourceDao(): CostResourceDao
     abstract fun documentImportDao(): DocumentImportDao
     abstract fun statusHistoryDao(): StatusHistoryDao
+
+    /** Validate/migrate a private copy, then restore rows without closing the live Room instance. */
+    suspend fun restoreFromSnapshot(context: Context, snapshot: File) {
+        val header = ByteArray(16).also { bytes -> snapshot.inputStream().use { it.read(bytes) } }
+        require(header.contentEquals("SQLite format 3\u0000".toByteArray(Charsets.US_ASCII))) { "Banco de dados inválido no backup" }
+        val validator = Room.databaseBuilder(context.applicationContext, BruleeDatabase::class.java, snapshot.absolutePath)
+            .addMigrations(*ALL_MIGRATIONS).build()
+        try {
+            val source = validator.openHelper.writableDatabase
+            val db = openHelper.writableDatabase
+            val tables = db.query("SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%' AND name NOT IN ('android_metadata', 'room_master_table')").use { cursor ->
+                buildList { while (cursor.moveToNext()) add(cursor.getString(0)) }
+            }
+            require(tables.all { it.matches(Regex("[a-z_]+")) }) { "Nome de tabela inválido" }
+            // Stream from a separate connection. ATTACH would reconfigure Android's WAL pool
+            // and discard the temporary triggers Room needs for live invalidation.
+            withTransaction {
+                db.execSQL("PRAGMA defer_foreign_keys = ON")
+                tables.forEach { db.execSQL("DELETE FROM `$it`") }
+                tables.forEach { table ->
+                    source.query("SELECT * FROM `$table`").use { cursor ->
+                        while (cursor.moveToNext()) {
+                            val values = ContentValues()
+                            cursor.columnNames.forEachIndexed { index, name ->
+                                when (cursor.getType(index)) {
+                                    Cursor.FIELD_TYPE_NULL -> values.putNull(name)
+                                    Cursor.FIELD_TYPE_INTEGER -> values.put(name, cursor.getLong(index))
+                                    Cursor.FIELD_TYPE_FLOAT -> values.put(name, cursor.getDouble(index))
+                                    Cursor.FIELD_TYPE_BLOB -> values.put(name, cursor.getBlob(index))
+                                    else -> values.put(name, cursor.getString(index))
+                                }
+                            }
+                            db.insert(table, SQLiteDatabase.CONFLICT_ABORT, values)
+                        }
+                    }
+                }
+            }
+        } finally { validator.close() }
+    }
 
     companion object {
         private val MIGRATION_1_2 = object : Migration(1, 2) {
@@ -121,9 +166,10 @@ abstract class BruleeDatabase : RoomDatabase() {
         }
 
         fun checkpoint(context: Context) {
-            getInstance(context).openHelper.writableDatabase
-                .query("PRAGMA wal_checkpoint(FULL)")
-                .close()
+            getInstance(context).openHelper.writableDatabase.query("PRAGMA wal_checkpoint(FULL)").use { cursor ->
+                // Android cursors execute lazily: closing an unread cursor never checkpoints the WAL.
+                check(cursor.moveToFirst() && cursor.getInt(0) == 0) { "O banco está ocupado; tente exportar novamente" }
+            }
         }
     }
 }

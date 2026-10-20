@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bruleetelie.data.BruleeRepositoryTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-19T01:26:28.604Z" hostname="victor-Lenovo-IdeaPad-S145-15API" time="0.309">
+  <properties/>
+  <testcase name="test addIngredient adds ingredient to repository state" classname="com.bruleetelie.data.BruleeRepositoryTest" time="0.226"/>
+  <testcase name="test completeOrder creates immutable SaleSnapshot with correct profit" classname="com.bruleetelie.data.BruleeRepositoryTest" time="0.001"/>
+  <testcase name="test repository initializes with sample orders and quotes" classname="com.bruleetelie.data.BruleeRepositoryTest" time="0.001"/>
+  <testcase name="shopping list supports add check and delete" classname="com.bruleetelie.data.BruleeRepositoryTest" time="0.015"/>
+  <testcase name="test OCR price observation is exposed in repository state" classname="com.bruleetelie.data.BruleeRepositoryTest" time="0.003"/>
+  <testcase name="test updateStepStatus updates step completion and marks order completed when all done" classname="com.bruleetelie.data.BruleeRepositoryTest" time="0.005"/>
+  <testcase name="shopping list rejects incomplete items" classname="com.bruleetelie.data.BruleeRepositoryTest" time="0.001"/>
+  <testcase name="test updateSettings updates operating settings" classname="com.bruleetelie.data.BruleeRepositoryTest" time="0.001"/>
+  <testcase name="test approving a quote generates a new production order" classname="com.bruleetelie.data.BruleeRepositoryTest" time="0.04"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

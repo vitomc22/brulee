@@ -64,7 +64,8 @@ data class ProductionOrder(
     val status: ProductionStatus = ProductionStatus.Pending,
     val estimatedCosts: RecipeCosts,
     val actualCosts: RecipeCosts? = null,
-    val salePrice: Money
+    val salePrice: Money,
+    val activeProductionMinutes: Int = 0
 ) {
     val completedStepsCount: Int
         get() = steps.count { it.isCompleted }

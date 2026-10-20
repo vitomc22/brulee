@@ -1,14 +1,17 @@
 package com.bruleetelie.app.ui
 
 import androidx.compose.foundation.background
+import com.bruleetelie.app.ui.components.LocalReducedMotion
+import com.bruleetelie.app.ui.components.BruleeTransition
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
+import androidx.activity.compose.BackHandler
+import com.bruleetelie.domain.Quote
+import com.bruleetelie.domain.QuoteStatus
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.material3.NavigationBarItem
-import androidx.navigation3.runtime.NavEntry
-import androidx.navigation3.ui.NavDisplay
 import androidx.compose.runtime.*
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,9 +45,7 @@ import com.bruleetelie.documents.ocr.MlKitTextRecognitionGateway
 import com.bruleetelie.documents.ocr.PdfPageRenderer
 import com.bruleetelie.documents.pdf.DefaultPdfGenerator
 import com.bruleetelie.documents.pdf.PdfTemplateType
-import com.bruleetelie.domain.CostComparisonResult
 import com.bruleetelie.domain.PricingEngine
-import com.bruleetelie.domain.ProductionOrder
 import com.bruleetelie.domain.Money
 import com.bruleetelie.domain.AchievementEngine
 import java.math.BigDecimal
@@ -75,11 +76,34 @@ fun BruleeApp() {
     val settings by repository.settings.collectAsState()
     val ingredients by repository.ingredients.collectAsState()
     val priceObservations by repository.priceObservations.collectAsState()
+    val recipes by repository.recipes.collectAsState()
     val quotes by repository.quotes.collectAsState()
     val shoppingItems by repository.shoppingItems.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
-    val backupManager = remember(context) { AppBackupManager(context) }
+    val backupManager = remember(context) { AppBackupManager(context, repository) }
+    var processingDocument by remember { mutableStateOf(false) }
+    var importingStock by rememberSaveable { mutableStateOf(false) }
+    var whatsAppOpened by remember { mutableStateOf(false) }
+    fun openWhatsApp(quote: Quote) {
+        runCatching { ShareFile.openWhatsApp(activityContext, documentGateway.formatWhatsAppUrl(quote)) }
+            .onSuccess {
+                repository.addQuote(quote.copy(status = QuoteStatus.Sent))
+                if (uiState.destination == Destination.Wizard) whatsAppOpened = true
+            }.onFailure {
+                coroutineScope.launch { snackbarHostState.showSnackbar("Não foi possível abrir o WhatsApp. Verifique o telefone e tente novamente.") }
+            }
+    }
+    fun sharePdf(quote: Quote) {
+        coroutineScope.launch {
+            runCatching {
+                val file = File(File(context.cacheDir, "shared").apply { mkdirs() }, "orcamento-${quote.id}.pdf")
+                withContext(Dispatchers.IO) { pdfGenerator.writePdf(quote, file, PdfTemplateType.CUSTOMER) }
+                ShareFile.shareUri(activityContext, ShareFile.uriForFile(context, file), "application/pdf", "Compartilhar orçamento em PDF")
+                repository.addQuote(quote)
+            }.onFailure { snackbarHostState.showSnackbar("Falha ao compartilhar PDF: ${it.message}") }
+        }
+    }
     val exportBackup = rememberLauncherForActivityResult(
         ActivityResultContracts.CreateDocument("application/zip")
     ) { uri ->
@@ -138,11 +162,31 @@ fun BruleeApp() {
         }
     }
 
+    val importPdf = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) coroutineScope.launch {
+            processingDocument = true
+            val directory = File(context.cacheDir, "ocr-import-${System.currentTimeMillis()}")
+            try {
+                val pages = withContext(Dispatchers.IO) { pdfPageRenderer.renderToFiles(context, uri, directory) }
+                val text = pages.mapIndexed { index, page -> textRecognitionGateway.recognize(context, page, index).text }.joinToString("\n")
+                val parsed = receiptParser.parse(text).items.mapIndexed { index, item -> item.toOcrItem(index + 1) }
+                require(parsed.isNotEmpty()) { "Nenhum item de compra reconhecido. Revise o documento ou cole o texto." }
+                appViewModel.setOcrItems(parsed)
+            } catch (error: Exception) {
+                snackbarHostState.showSnackbar("Falha ao importar PDF: ${error.message}")
+            } finally {
+                processingDocument = false
+                withContext(Dispatchers.IO) { directory.deleteRecursively() }
+            }
+        }
+    }
+
     val scannerLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             coroutineScope.launch {
+                processingDocument = true
                 runCatching {
                     val scan = scannerGateway.parseResult(result.data)
                     val imageUris = if (scan.imageUris.isNotEmpty()) {
@@ -162,8 +206,11 @@ fun BruleeApp() {
                     receiptParser.parse(recognized).items.mapIndexed { index, item ->
                         item.toOcrItem(index + 1)
                     }
-                }.onSuccess { appViewModel.setOcrItems(it) }
-                    .onFailure { snackbarHostState.showSnackbar("Falha ao ler documento: ${it.message}") }
+                }.onSuccess {
+                    if (it.isEmpty()) snackbarHostState.showSnackbar("Nenhum item reconhecido. Revise o documento ou cole o texto.")
+                    else appViewModel.setOcrItems(it)
+                }.onFailure { snackbarHostState.showSnackbar("Falha ao ler documento: ${it.message}") }
+                processingDocument = false
             }
         }
     }
@@ -172,38 +219,24 @@ fun BruleeApp() {
         ProductionWidgetProvider.updateSnapshot(context, orders, sales)
     }
 
-    val navBackStack = rememberSaveable { mutableStateListOf(uiState.destination.name) }
-    LaunchedEffect(uiState.destination, uiState.activeFlow) {
-        if (uiState.activeFlow == ActiveFlow.None && navBackStack.lastOrNull() != uiState.destination.name) {
-            navBackStack.clear()
-            navBackStack.add(uiState.destination.name)
-        }
-    }
-
-    NavDisplay(
-        backStack = navBackStack,
-        onBack = {
-            if (navBackStack.size > 1) {
-                navBackStack.removeLastOrNull()
-                navBackStack.lastOrNull()
-                    ?.let { name -> Destination.entries.firstOrNull { it.name == name } }
-                    ?.let(appViewModel::navigate)
-            }
-        },
-        entryProvider = { key ->
-            NavEntry(key) {
+    val savedScreens = rememberSaveableStateHolder()
+    BackHandler(enabled = uiState.destination != Destination.Production && uiState.destination != Destination.Wizard && uiState.activeFlow == ActiveFlow.None) { appViewModel.navigate(Destination.Production) }
+    BackHandler(enabled = uiState.activeFlow != ActiveFlow.None) { appViewModel.closeActiveFlow() }
+    CompositionLocalProvider(LocalReducedMotion provides settings.reducedMotion) {
         Scaffold(
             containerColor = MaterialTheme.colorScheme.surface,
             snackbarHost = { SnackbarHost(snackbarHostState) },
             topBar = {
                 BruleeTopBar(
-                    Destination.entries.firstOrNull { it.name == key } ?: uiState.destination
+                    uiState.destination,
+                    onNavigate = appViewModel::navigate,
+                    showActions = !isMediumLayout
                 )
             },
             bottomBar = {
                 if (uiState.activeFlow == ActiveFlow.None && !isMediumLayout && !isExpandedLayout) {
                         NavigationBar {
-                            Destination.entries.forEach { item ->
+                            Destination.entries.filter { it !in listOf(Destination.Backup, Destination.Shopping) }.forEach { item ->
                                 val isSelected = uiState.destination == item
                                 NavigationBarItem(
                                     modifier = Modifier
@@ -250,6 +283,7 @@ fun BruleeApp() {
                     ProductionCompletionScreen(
                         productName = flow.order.productName,
                         comparison = flow.comparison,
+                        totalSales = sales.size,
                         salesStreak = AchievementEngine.salesStreak(sales),
                         profitableStreak = AchievementEngine.profitableSalesStreak(sales),
                         soundsEnabled = settings.soundsEnabled,
@@ -258,7 +292,9 @@ fun BruleeApp() {
                     )
                 }
                 ActiveFlow.None -> {
-                    when (uiState.destination) {
+                    BruleeTransition(uiState.destination) { destination ->
+                    savedScreens.SaveableStateProvider(destination.name) {
+                    when (destination) {
                         Destination.Production -> {
                             ProductionBoardScreen(
                                 orders = orders,
@@ -272,8 +308,9 @@ fun BruleeApp() {
                                         actual = order.actualCosts ?: order.estimatedCosts,
                                         salePrice = order.salePrice
                                     )
-                                    repository.completeOrder(order.id, order.actualCosts)
-                                    appViewModel.showOrderCompleted(order, comparison)
+                                    if (repository.completeOrder(order.id, order.actualCosts, order.activeProductionMinutes) != null) {
+                                        appViewModel.showOrderCompleted(order, comparison)
+                                    }
                                 },
                                 onNewQuoteClicked = { appViewModel.navigate(Destination.Wizard) }
                             )
@@ -285,33 +322,29 @@ fun BruleeApp() {
                                 onQuoteApproved = { quote ->
                                     repository.addQuote(quote)
                                     repository.approveQuote(quote.id)
+                                    savedScreens.removeState(Destination.Wizard.name)
                                     appViewModel.navigate(Destination.Production)
                                 },
-                                onSendWhatsApp = { quote ->
-                                    repository.addQuote(quote)
-                                },
-                                onSharePdf = { quote ->
-                                    coroutineScope.launch {
-                                        runCatching {
-                                            val directory = File(context.cacheDir, "shared")
-                                            directory.mkdirs()
-                                            val file = File(directory, "orcamento-${quote.id}.pdf")
-                                            withContext(Dispatchers.IO) {
-                                                pdfGenerator.writePdf(quote, file, PdfTemplateType.CUSTOMER)
-                                            }
-                                            ShareFile.shareUri(
-                                                context,
-                                                ShareFile.uriForFile(context, file),
-                                                "application/pdf",
-                                                "Compartilhar orçamento em PDF"
-                                            )
-                                        }.onFailure {
-                                            snackbarHostState.showSnackbar("Falha ao gerar PDF: ${it.message}")
-                                        }
-                                    }
-                                },
-                                onClose = { appViewModel.navigate(Destination.Production) }
+                                onSendWhatsApp = ::openWhatsApp,
+                                onSharePdf = ::sharePdf,
+                                savedRecipes = recipes,
+                                onSaveRecipe = repository::saveRecipe,
+                                onSaveQuote = repository::addQuote,
+                                whatsAppOpened = whatsAppOpened,
+                                onClose = {
+                                    whatsAppOpened = false
+                                    savedScreens.removeState(Destination.Wizard.name)
+                                    appViewModel.navigate(Destination.Quotes)
+                                }
                             )
+                        }
+
+                        Destination.Quotes -> {
+                            QuotesScreen(quotes,
+                                onNew = { whatsAppOpened = false; appViewModel.navigate(Destination.Wizard) },
+                                onApprove = { repository.approveQuote(it.id); appViewModel.navigate(Destination.Production) },
+                                onWhatsApp = ::openWhatsApp, onPdf = ::sharePdf,
+                                onReject = { repository.updateQuoteStatus(it.id, QuoteStatus.Rejected) })
                         }
 
                         Destination.Finance -> {
@@ -328,12 +361,26 @@ fun BruleeApp() {
 
                         Destination.Stock -> {
                             val itemsToReview = uiState.ocrItems
-                            if (itemsToReview == null) {
+                            if (!importingStock && itemsToReview == null) {
+                                InventoryScreen(ingredients, priceObservations,
+                                    onImport = { importingStock = true },
+                                    onSave = { name, quantity, unit, price ->
+                                        val ingredient = repository.addIngredient(name, unit)
+                                        val factor = if (unit == "g" || unit == "ml") BigDecimal(1000) else BigDecimal.ONE
+                                        val normalized = BigDecimal(price.cents).multiply(factor).divide(quantity.toBigDecimal(), 0, RoundingMode.HALF_UP).longValueExact()
+                                        repository.addPriceObservation(ingredient.id, "", quantity, unit, price.cents, normalized)
+                                    },
+                                    onBuy = { name -> repository.addShoppingItem(name, "1 embalagem"); appViewModel.navigate(Destination.Shopping) })
+                            } else if (itemsToReview == null) {
+                                Column {
+                                TextButton({ importingStock = false }, Modifier.testTag("stock_back")) { Text("← Ingredientes") }
                                 OcrCaptureScreen(
+                                    processing = processingDocument,
+                                    onPdfRequested = { importPdf.launch(arrayOf("application/pdf")) },
                                     onProcessText = { rawText ->
-                                        appViewModel.setOcrItems(receiptParser.parse(rawText).items.mapIndexed { index, item ->
-                                            item.toOcrItem(index + 1)
-                                        })
+                                        val parsed = receiptParser.parse(rawText).items.mapIndexed { index, item -> item.toOcrItem(index + 1) }
+                                        if (parsed.isEmpty()) coroutineScope.launch { snackbarHostState.showSnackbar("Nenhum item reconhecido. Confira o texto do documento.") }
+                                        else appViewModel.setOcrItems(parsed)
                                     },
                                     onScanRequested = {
                                         val activity = activityContext as? Activity
@@ -350,14 +397,15 @@ fun BruleeApp() {
                                         }
                                     }
                                 )
+                                }
                             } else {
                                 OcrReviewScreen(
                                     initialItems = itemsToReview,
                                     onItemsChanged = appViewModel::setOcrItems,
                                     onSaveConfirmedItems = { confirmedItems ->
                                     confirmedItems.forEach { item ->
-                                        val ingredient = ingredients.firstOrNull { it.name == item.matchedIngredient }
-                                        if (ingredient != null) {
+                                        val ingredient = repository.addIngredient(item.matchedIngredient, item.packageQuantityUnit)
+                                        run {
                                             repository.addPriceObservation(
                                                 ingredientId = ingredient.id,
                                                 supplierName = "Importação OCR",
@@ -370,7 +418,8 @@ fun BruleeApp() {
                                         }
                                     }
                                     appViewModel.setOcrItems(null)
-                                    appViewModel.navigate(Destination.Production)
+                                    importingStock = false
+                                    appViewModel.navigate(Destination.Stock)
                                     coroutineScope.launch {
                                         snackbarHostState.showSnackbar(
                                             "${confirmedItems.size} observações de preço salvas"
@@ -386,7 +435,8 @@ fun BruleeApp() {
                                 settings = settings,
                                 onSettingsChanged = repository::updateSettings,
                                 onExport = { exportBackup.launch("brulee-telie-backup.zip") },
-                                onRestore = { restoreBackup.launch(arrayOf("application/zip", "application/octet-stream")) }
+                                onRestore = { restoreBackup.launch(arrayOf("application/zip", "application/octet-stream")) },
+                                onExportAnalytics = { exportAnalytics.launch("brulee-telie-analytics.json") }
                             )
                         }
 
@@ -399,14 +449,14 @@ fun BruleeApp() {
                             )
                         }
                     }
+                    }
+                    }
                 }
             }
             }
         }
     }
     }
-    }
-    )
 }
 
 private fun ParsedReceiptItem.toOcrItem(index: Int): OcrItem {
@@ -438,7 +488,7 @@ private fun ParsedReceiptItem.toOcrItem(index: Int): OcrItem {
 }
 
 @Composable
-private fun BruleeTopBar(destination: Destination) {
+private fun BruleeTopBar(destination: Destination, onNavigate: (Destination) -> Unit, showActions: Boolean) {
     Surface(
         color = BruleeSurface,
         tonalElevation = 2.dp,
@@ -471,7 +521,8 @@ private fun BruleeTopBar(destination: Destination) {
                 )
                 Text(
                     when (destination) {
-                        Destination.Production -> "Production Board"
+                        Destination.Production -> "Produção"
+                        Destination.Quotes -> "Pedidos"
                         Destination.Wizard -> "Novo Orçamento"
                         Destination.Finance -> "Gestão Financeira"
                         Destination.Stock -> "Estoque & OCR"
@@ -482,14 +533,9 @@ private fun BruleeTopBar(destination: Destination) {
                     fontWeight = FontWeight.SemiBold
                 )
             }
-            Box(
-                Modifier
-                    .size(36.dp)
-                    .clip(CircleShape)
-                    .background(BruleePrimaryFixed),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("bt", color = BruleePrimary, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+            if (showActions) {
+            TextButton({ onNavigate(Destination.Shopping) }, Modifier.testTag("nav_shopping").semantics { contentDescription = "Navegação Compras" }) { Text("🛒") }
+            TextButton({ onNavigate(Destination.Backup) }, Modifier.testTag("nav_backup").semantics { contentDescription = "Navegação Backup" }) { Text("⚙") }
             }
         }
     }

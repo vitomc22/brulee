@@ -11,7 +11,11 @@ import org.junit.Test
 /** One test method per CROSS-E2E ID from the detailed specification. */
 class CrossScenarioIndividualE2eTest {
     @get:Rule val composeRule = createAndroidComposeRule<MainActivity>()
-    private fun app() { composeRule.onNodeWithTag("nav_production").performClick(); composeRule.onNodeWithText("Production Board").assertIsDisplayed() }
+    private fun app() { composeRule.onNodeWithTag("nav_production").performClick(); composeRule.onNodeWithTag("production_board").assertIsDisplayed() }
+    @org.junit.After fun removeTestData() { clearTestData(composeRule) }
+
+    @org.junit.Before fun prepareRealTestData() { clearTestData(composeRule) }
+
     @Test fun crossE2e001_quoteToProduction() { app() }
     @Test fun crossE2e002_quoteToFinance() { app() }
     @Test fun crossE2e003_quoteToSale() { app() }

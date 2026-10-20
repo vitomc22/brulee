@@ -14,11 +14,15 @@ class PricingBlockE2eTest {
     val composeRule = createAndroidComposeRule<MainActivity>()
 
     private fun openPricingSummary() {
-        composeRule.onNodeWithTag("nav_wizard").performClick()
+        openTestRecipe(composeRule)
         composeRule.onNodeWithTag("recipe_continue").performClick()
         composeRule.onNodeWithTag("ingredients_continue").performScrollTo().performClick()
         composeRule.onNodeWithTag("costs_calculate").performScrollTo().performClick()
     }
+
+    @org.junit.After fun removeTestData() { clearTestData(composeRule) }
+
+    @org.junit.Before fun prepareRealTestData() { clearTestData(composeRule) }
 
     @Test
     fun price001To003_suggestedPriceProfitAndMarginAreDisplayed() {

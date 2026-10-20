@@ -15,6 +15,7 @@ import javax.inject.Inject
 
 enum class Destination(val label: String, val icon: String) {
     Production("Produção", "▤"),
+    Quotes("Pedidos", "▧"),
     Wizard("Novo Orçamento", "➕"),
     Finance("Finanças", "▣"),
     Stock("Estoque", "📷"),

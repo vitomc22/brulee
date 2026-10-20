@@ -16,7 +16,7 @@ class AutomaticBackupWorker(
     override suspend fun doWork(): Result = runCatching {
         val directory = File(applicationContext.filesDir, "automatic-backups")
         val destination = File(directory, "latest.brulee.zip")
-        AppBackupManager(applicationContext).exportTo(destination)
+        AppBackupManager(applicationContext, (applicationContext as com.bruleetelie.app.BruleeApplication).repository).exportTo(destination)
     }.fold(onSuccess = { Result.success() }, onFailure = { Result.retry() })
 
     companion object {

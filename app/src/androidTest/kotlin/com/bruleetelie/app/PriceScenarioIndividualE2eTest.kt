@@ -17,7 +17,7 @@ class PriceScenarioIndividualE2eTest {
     @get:Rule val composeRule = createAndroidComposeRule<MainActivity>()
 
     private fun openPricing() {
-        composeRule.onNodeWithTag("nav_wizard").performClick()
+        openTestRecipe(composeRule)
         composeRule.onNodeWithTag("recipe_continue").performClick()
         composeRule.onNodeWithTag("ingredients_continue").performScrollTo().performClick()
         composeRule.onNodeWithTag("costs_calculate").performScrollTo().performClick()
@@ -27,6 +27,10 @@ class PriceScenarioIndividualE2eTest {
         composeRule.onNodeWithTag("price_sale_value").performScrollTo().assertIsDisplayed()
         composeRule.onNodeWithTag("price_profit_value").assertIsDisplayed()
     }
+
+    @org.junit.After fun removeTestData() { clearTestData(composeRule) }
+
+    @org.junit.Before fun prepareRealTestData() { clearTestData(composeRule) }
 
     @Test fun priceE2e001_suggestedPriceForTargetMargin() { openPricing(); pricingVisible() }
     @Test fun priceE2e002_profitFollowsSuggestedPrice() { openPricing(); composeRule.onNodeWithTag("price_profit_value").performScrollTo().assertIsDisplayed() }

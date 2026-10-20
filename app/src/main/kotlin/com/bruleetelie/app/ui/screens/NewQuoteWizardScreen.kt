@@ -9,9 +9,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.saveable.Saver
+import androidx.activity.compose.BackHandler
+import com.bruleetelie.app.ui.components.BruleeTransition
+import com.bruleetelie.app.ui.components.BruleeMascot
+import java.util.UUID
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,75 +48,54 @@ fun NewQuoteWizardScreen(
     onQuoteApproved: (Quote) -> Unit,
     onSendWhatsApp: (Quote) -> Unit,
     onSharePdf: (Quote) -> Unit,
-    onClose: () -> Unit
+    onClose: () -> Unit,
+    savedRecipes: List<SavedRecipe> = emptyList(),
+    onSaveRecipe: (SavedRecipe) -> Unit = {},
+    onSaveQuote: (Quote) -> Unit = {},
+    whatsAppOpened: Boolean = false
 ) {
-    var step by remember { mutableStateOf(WizardStep.RecipeName) }
+    var step by rememberSaveable { mutableStateOf(WizardStep.RecipeName) }
+    var recipeId by rememberSaveable { mutableStateOf(UUID.randomUUID().toString()) }
+    var quoteId by rememberSaveable { mutableStateOf(UUID.randomUUID().toString()) }
+    val quoteCode = remember(quoteId) { "#ORC-${quoteId.take(8).uppercase()}" }
+    var recipeName by rememberSaveable { mutableStateOf("") }
+    var recipeYieldText by rememberSaveable { mutableStateOf("1") }
+    val recipeYield = recipeYieldText.toIntOrNull()?.takeIf { it > 0 } ?: 1
+    var ingredients by rememberSaveable(stateSaver = IngredientListSaver) { mutableStateOf(emptyList<RecipeIngredientItem>()) }
+    var ingredientName by rememberSaveable { mutableStateOf("") }
+    var packageQuantity by rememberSaveable { mutableStateOf("") }
+    var packagePrice by rememberSaveable { mutableStateOf("") }
+    var usedQuantity by rememberSaveable { mutableStateOf("") }
+    var packageUnit by rememberSaveable { mutableStateOf(UnitOfMeasure.Gram) }
+    var usedUnit by rememberSaveable { mutableStateOf(UnitOfMeasure.Gram) }
+    var editingIngredientId by rememberSaveable { mutableStateOf<String?>(null) }
 
-    // State variables for the wizard
-    var recipeName by remember { mutableStateOf("Brigadeiro Gourmet Tradicional") }
-    var recipeYield by remember { mutableIntStateOf(30) }
-
-    // Ingredients
-    val ingredients = remember {
-        mutableStateListOf(
-            RecipeIngredientItem(
-                id = "1",
-                name = "Chocolate Nobre 50%",
-                packageQuantity = Quantity.kilograms(1),
-                packagePrice = Money.fromReais("60.00"),
-                usedQuantity = Quantity.grams(350)
-            ),
-            RecipeIngredientItem(
-                id = "2",
-                name = "Leite Condensado Moça",
-                packageQuantity = Quantity.grams(395),
-                packagePrice = Money.fromReais("7.50"),
-                usedQuantity = Quantity.grams(395)
-            ),
-            RecipeIngredientItem(
-                id = "3",
-                name = "Manteiga Extra s/ Sal",
-                packageQuantity = Quantity.grams(200),
-                packagePrice = Money.fromReais("12.00"),
-                usedQuantity = Quantity.grams(40)
-            )
-        )
+    var times by rememberSaveable(stateSaver = TimesSaver) {
+        mutableStateOf(OperationalTimes(Quantity.minutes(0), Quantity.minutes(0), Quantity.minutes(0)))
     }
-    var ingredientName by remember { mutableStateOf("") }
-    var packageQuantity by remember { mutableStateOf("") }
-    var packagePrice by remember { mutableStateOf("") }
-    var usedQuantity by remember { mutableStateOf("") }
-    var packageUnit by remember { mutableStateOf(UnitOfMeasure.Gram) }
-    var usedUnit by remember { mutableStateOf(UnitOfMeasure.Gram) }
-    var editingIngredientId by remember { mutableStateOf<String?>(null) }
-
-    var times by remember {
-        mutableStateOf(
-            OperationalTimes(
-                prepTime = Quantity.minutes(60),
-                cookTime = Quantity.minutes(30),
-                decorationTime = Quantity.minutes(30),
-                energySource = EnergySource.Gas,
-                complexity = Complexity.Normal
-            )
-        )
-    }
-
-    var packagingCost by remember { mutableStateOf(Money.fromReais("4.50")) }
-
+    var prepText by rememberSaveable { mutableStateOf("0") }
+    var cookText by rememberSaveable { mutableStateOf("0") }
+    var decorationText by rememberSaveable { mutableStateOf("0") }
+    var packagingText by rememberSaveable { mutableStateOf("0") }
+    var overheadText by rememberSaveable { mutableStateOf("0") }
+    val packagingCost = runCatching { Money.fromReais(packagingText) }.getOrDefault(Money.Zero)
+    val overheadCost = runCatching { Money.fromReais(overheadText) }.getOrDefault(Money.Zero)
     // Recalculate costs dynamically
-    val calculatedCosts = remember(ingredients.toList(), times, packagingCost) {
+    val calculatedCosts = remember(ingredients, times, packagingCost, overheadCost, operatingSettings) {
         RecipeCostCalculator.calculate(
             ingredients = ingredients,
             times = times,
             settings = operatingSettings,
-            packaging = packagingCost
+            packaging = packagingCost,
+            overhead = overheadCost
         )
     }
 
     // Interactive sale price
-    var customSalePrice by remember { mutableStateOf<Money?>(null) }
-    var targetMarginPercent by remember { mutableStateOf(operatingSettings.defaultMarginPercent) }
+    var customPriceCents by rememberSaveable { mutableStateOf<Long?>(null) }
+    val customSalePrice = customPriceCents?.let(::Money)
+    var marginValue by rememberSaveable { mutableStateOf(operatingSettings.defaultMarginPercent.toPlainString()) }
+    val targetMarginPercent = marginValue.toBigDecimal()
     val pricingResult = remember(calculatedCosts, customSalePrice, targetMarginPercent) {
         if (customSalePrice != null) {
             PricingEngine.fromSalePrice(calculatedCosts, customSalePrice!!)
@@ -118,10 +105,24 @@ fun NewQuoteWizardScreen(
     }
 
     // Customer details
-    var customerName by remember { mutableStateOf("Ana Souza") }
-    var customerPhone by remember { mutableStateOf("(11) 98765-4321") }
-    var deliveryDate by remember { mutableStateOf("Sábado, 14 de Outubro - 16:00") }
+    var customerName by rememberSaveable { mutableStateOf("") }
+    var customerPhone by rememberSaveable { mutableStateOf("") }
+    var deliveryDate by rememberSaveable { mutableStateOf("") }
 
+    fun currentQuote() = Quote(
+        id = quoteId, code = quoteCode,
+        customer = Customer("customer-$quoteId", customerName.trim(), customerPhone.trim()),
+        productName = recipeName.trim(), productSubtitle = "Produção artesanal",
+        unitsCount = recipeYield, pricing = pricingResult, deliveryDate = deliveryDate.trim()
+    )
+    fun saveRecipe() = onSaveRecipe(SavedRecipe(recipeId, "", 0, recipeName.trim(), recipeYield, ingredients, times, packagingCost, overheadCost))
+    LaunchedEffect(whatsAppOpened) { if (whatsAppOpened) step = WizardStep.SentSuccess }
+    fun goBack() {
+        step = WizardStep.entries[(step.ordinal - 1).coerceAtLeast(0)]
+    }
+    BackHandler { if (step == WizardStep.RecipeName || step == WizardStep.SentSuccess) onClose() else goBack() }
+    val scroll = rememberScrollState()
+    LaunchedEffect(step) { scroll.scrollTo(0) }
     val currentStepNumber = when (step) {
         WizardStep.RecipeName -> 1
         WizardStep.Ingredients -> 2
@@ -134,10 +135,11 @@ fun NewQuoteWizardScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(scroll)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+                TextButton(onClose, Modifier.testTag("wizard_close")) { Text("Fechar") }
         if (step != WizardStep.RecipeName && step != WizardStep.SentSuccess) {
             TextButton(
                 onClick = {
@@ -160,15 +162,29 @@ fun NewQuoteWizardScreen(
                 shape = RoundedCornerShape(18.dp),
                 shadowElevation = 1.dp
             ) {
+                Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    BruleeMascot(milestone = currentStepNumber, size = 54.dp)
+                    Text(when (step) {
+                        WizardStep.RecipeName -> "Vamos criar algo delicioso?"
+                        WizardStep.Ingredients -> "Cada ingrediente conta!"
+                        WizardStep.OperationalCosts -> "Seu tempo também tem valor."
+                        WizardStep.CostSummaryAndPricing -> "Agora, um preço que valoriza você."
+                        else -> "Falta pouco para o próximo pedido!"
+                    }, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
+                }
                 StepProgressBar(
                     currentStep = currentStepNumber,
                     totalSteps = 5,
-                    modifier = Modifier.padding(14.dp)
+                    modifier = Modifier.fillMaxWidth()
                 )
+                }
             }
         }
 
-        when (step) {
+        BruleeTransition(step, Modifier.testTag("wizard_step_transition")) { displayedStep ->
+        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        when (displayedStep) {
             WizardStep.RecipeName -> {
                 Text("Qual receita você vai orçar?", style = MaterialTheme.typography.headlineMedium)
                 OutlinedTextField(
@@ -178,8 +194,26 @@ fun NewQuoteWizardScreen(
                     modifier = Modifier.fillMaxWidth().testTag("recipe_name"),
                     shape = CircleShape
                 )
+                OutlinedTextField(
+                    value = recipeYieldText, onValueChange = { recipeYieldText = it },
+                    label = { Text("Rendimento (unidades)") },
+                    modifier = Modifier.fillMaxWidth().testTag("recipe_yield"), singleLine = true
+                )
+                if (savedRecipes.isNotEmpty()) {
+                    Text("Usar uma receita salva", style = MaterialTheme.typography.titleMedium)
+                    savedRecipes.forEach { recipe ->
+                        OutlinedButton(onClick = {
+                            recipeId = recipe.id; recipeName = recipe.name; recipeYieldText = recipe.yieldCount.toString()
+                            ingredients = recipe.ingredients; times = recipe.times
+                            prepText = times.prepTime.value.toPlainString(); cookText = times.cookTime.value.toPlainString(); decorationText = times.decorationTime.value.toPlainString()
+                            packagingText = recipe.packaging.toBigDecimal().toPlainString()
+                            overheadText = recipe.overhead.toBigDecimal().toPlainString()
+                        }, modifier = Modifier.fillMaxWidth().testTag("recipe_load_${recipe.id}")) { Text("${recipe.name} • versão ${recipe.version}") }
+                    }
+                }
                 TactilePrimaryButton(
                     text = "CONTINUAR",
+                    enabled = recipeName.isNotBlank() && (recipeYieldText.toIntOrNull() ?: 0) > 0,
                     onClick = { step = WizardStep.Ingredients },
                     modifier = Modifier.testTag("recipe_continue")
                 )
@@ -197,7 +231,7 @@ fun NewQuoteWizardScreen(
                     OutlinedTextField(
                         value = packageQuantity,
                         onValueChange = { packageQuantity = it },
-                        label = { Text("Qtd. pacote (g)") },
+                        label = { Text("Qtd. do pacote") },
                         modifier = Modifier.weight(1f).testTag("ingredient_package_quantity")
                     )
                     OutlinedTextField(
@@ -209,7 +243,7 @@ fun NewQuoteWizardScreen(
                 }
                 Text("Unidade da compra", style = MaterialTheme.typography.labelMedium)
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    listOf(UnitOfMeasure.Gram, UnitOfMeasure.Kilogram, UnitOfMeasure.Milliliter, UnitOfMeasure.Liter).forEach { unit ->
+                    listOf(UnitOfMeasure.Gram, UnitOfMeasure.Kilogram, UnitOfMeasure.Milliliter, UnitOfMeasure.Liter, UnitOfMeasure.Unit).forEach { unit ->
                         FilterChip(
                             selected = packageUnit == unit,
                             onClick = { packageUnit = unit },
@@ -221,12 +255,12 @@ fun NewQuoteWizardScreen(
                 OutlinedTextField(
                     value = usedQuantity,
                     onValueChange = { usedQuantity = it },
-                    label = { Text("Quantidade usada (g)") },
+                    label = { Text("Quantidade usada") },
                     modifier = Modifier.fillMaxWidth().testTag("ingredient_used_quantity")
                 )
                 Text("Unidade usada", style = MaterialTheme.typography.labelMedium)
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    listOf(UnitOfMeasure.Gram, UnitOfMeasure.Kilogram, UnitOfMeasure.Milliliter, UnitOfMeasure.Liter).forEach { unit ->
+                    listOf(UnitOfMeasure.Gram, UnitOfMeasure.Kilogram, UnitOfMeasure.Milliliter, UnitOfMeasure.Liter, UnitOfMeasure.Unit).forEach { unit ->
                         FilterChip(
                             selected = usedUnit == unit,
                             onClick = { usedUnit = unit },
@@ -262,7 +296,7 @@ fun NewQuoteWizardScreen(
                             usedQuantity = Quantity(parsedUsedQuantity!!, usedUnit)
                         )
                         val existingIndex = ingredients.indexOfFirst { it.id == editingIngredientId }
-                        if (existingIndex >= 0) ingredients[existingIndex] = updated else ingredients += updated
+                        ingredients = if (existingIndex >= 0) ingredients.mapIndexed { i, item -> if (i == existingIndex) updated else item } else ingredients + updated
                         editingIngredientId = null
                         ingredientName = ""
                         packageQuantity = ""
@@ -310,7 +344,7 @@ fun NewQuoteWizardScreen(
                                 color = BruleePrimary
                             )
                             TextButton(
-                                onClick = { ingredients.remove(item) },
+                                onClick = { ingredients = ingredients.filterNot { it.id == item.id } },
                                 modifier = Modifier.testTag("ingredient_remove")
                             ) { Text("Excluir") }
                             TextButton(
@@ -330,6 +364,7 @@ fun NewQuoteWizardScreen(
                 }
                 TactilePrimaryButton(
                     text = "CONTINUAR PARA CUSTOS OPERACIONAIS",
+                    enabled = ingredients.isNotEmpty(),
                     onClick = { step = WizardStep.OperationalCosts },
                     modifier = Modifier.testTag("ingredients_continue")
                 )
@@ -338,8 +373,9 @@ fun NewQuoteWizardScreen(
             WizardStep.OperationalCosts -> {
                 Text("Tempos e Complexidade", style = MaterialTheme.typography.headlineMedium)
                 OutlinedTextField(
-                    value = times.prepTime.value.stripTrailingZeros().toPlainString(),
+                    value = prepText,
                     onValueChange = { value ->
+                        prepText = value
                         value.replace(',', '.').toBigDecimalOrNull()?.takeIf { it.signum() >= 0 }?.let {
                             times = times.copy(prepTime = Quantity.minutes(it))
                         }
@@ -348,8 +384,9 @@ fun NewQuoteWizardScreen(
                     modifier = Modifier.fillMaxWidth().testTag("operational_prep_minutes")
                 )
                 OutlinedTextField(
-                    value = times.cookTime.value.stripTrailingZeros().toPlainString(),
+                    value = cookText,
                     onValueChange = { value ->
+                        cookText = value
                         value.replace(',', '.').toBigDecimalOrNull()?.takeIf { it.signum() >= 0 }?.let {
                             times = times.copy(cookTime = Quantity.minutes(it))
                         }
@@ -358,8 +395,9 @@ fun NewQuoteWizardScreen(
                     modifier = Modifier.fillMaxWidth().testTag("operational_cook_minutes")
                 )
                 OutlinedTextField(
-                    value = times.decorationTime.value.stripTrailingZeros().toPlainString(),
+                    value = decorationText,
                     onValueChange = { value ->
+                        decorationText = value
                         value.replace(',', '.').toBigDecimalOrNull()?.takeIf { it.signum() >= 0 }?.let {
                             times = times.copy(decorationTime = Quantity.minutes(it))
                         }
@@ -396,9 +434,12 @@ fun NewQuoteWizardScreen(
                         )
                     }
                 }
+                OutlinedTextField(packagingText, { packagingText = it }, label = { Text("Embalagem (R$)") }, modifier = Modifier.fillMaxWidth().testTag("operational_packaging"))
+                OutlinedTextField(overheadText, { overheadText = it }, label = { Text("Outros custos (R$)") }, modifier = Modifier.fillMaxWidth().testTag("operational_overhead"))
                 TactilePrimaryButton(
                     text = "CALCULAR CUSTO TOTAL",
-                    onClick = { step = WizardStep.CostSummaryAndPricing },
+                    enabled = listOf(prepText, cookText, decorationText).all { it.replace(',', '.').toBigDecimalOrNull()?.signum()?.let { sign -> sign >= 0 } == true } && listOf(packagingText, overheadText).all { runCatching { Money.fromReais(it) >= Money.Zero }.getOrDefault(false) },
+                    onClick = { saveRecipe(); step = WizardStep.CostSummaryAndPricing },
                     modifier = Modifier.testTag("costs_calculate")
                 )
             }
@@ -409,10 +450,11 @@ fun NewQuoteWizardScreen(
                     yieldCount = recipeYield,
                     costs = calculatedCosts,
                     pricing = pricingResult,
-                    onPriceChanged = { customSalePrice = it },
+                    targetMargin = targetMarginPercent,
+                    onPriceChanged = { customPriceCents = it.cents },
                     onMarginChanged = {
-                        targetMarginPercent = it
-                        customSalePrice = null
+                        marginValue = it.toPlainString()
+                        customPriceCents = null
                     },
                     onAdvance = { step = WizardStep.CustomerAndQuote }
                 )
@@ -421,6 +463,7 @@ fun NewQuoteWizardScreen(
             WizardStep.CustomerAndQuote -> {
                 CustomerAndQuoteView(
                     recipeName = recipeName,
+                    quoteCode = quoteCode,
                     customerName = customerName,
                     onCustomerNameChanged = { customerName = it },
                     customerPhone = customerPhone,
@@ -428,50 +471,10 @@ fun NewQuoteWizardScreen(
                     deliveryDate = deliveryDate,
                     onDeliveryDateChanged = { deliveryDate = it },
                     pricing = pricingResult,
-                    onSendWhatsApp = {
-                        val quote = Quote(
-                            id = "quote-${System.currentTimeMillis()}",
-                            code = "#ORC-284",
-                            customer = Customer("c-${System.currentTimeMillis()}", customerName, customerPhone),
-                            productName = recipeName,
-                            productSubtitle = "Produzido artesanalmente com ingredientes nobres",
-                            unitsCount = recipeYield,
-                            pricing = pricingResult,
-                            deliveryDate = deliveryDate,
-                            status = QuoteStatus.Sent
-                        )
-                        onSendWhatsApp(quote)
-                        step = WizardStep.SentSuccess
-                    },
-                    onSharePdf = {
-                        val quote = Quote(
-                            id = "quote-${System.currentTimeMillis()}",
-                            code = "#ORC-284",
-                            customer = Customer("c-${System.currentTimeMillis()}", customerName, customerPhone),
-                            productName = recipeName,
-                            productSubtitle = "Produzido artesanalmente com ingredientes nobres",
-                            unitsCount = recipeYield,
-                            pricing = pricingResult,
-                            deliveryDate = deliveryDate,
-                            status = QuoteStatus.Draft
-                        )
-                        onSharePdf(quote)
-                    },
-                    onApproveOrder = {
-                        val quote = Quote(
-                            id = "quote-${System.currentTimeMillis()}",
-                            code = "#ORC-284",
-                            customer = Customer("c-${System.currentTimeMillis()}", customerName, customerPhone),
-                            productName = recipeName,
-                            productSubtitle = "Produzido artesanalmente com ingredientes nobres",
-                            unitsCount = recipeYield,
-                            pricing = pricingResult,
-                            deliveryDate = deliveryDate,
-                            status = QuoteStatus.Approved
-                        )
-                        onQuoteApproved(quote)
-                        onClose()
-                    }
+                    onSendWhatsApp = { onSendWhatsApp(currentQuote()) },
+                    onSharePdf = { onSharePdf(currentQuote()) },
+                    onSaveDraft = { onSaveQuote(currentQuote()); onClose() },
+                    onApproveOrder = { onQuoteApproved(currentQuote()) }
                 )
             }
 
@@ -483,6 +486,8 @@ fun NewQuoteWizardScreen(
             }
         }
     }
+    }
+    }
 }
 
 @Composable
@@ -491,10 +496,19 @@ private fun CostSummaryAndPricingView(
     yieldCount: Int,
     costs: RecipeCosts,
     pricing: PricingResult,
+    targetMargin: BigDecimal,
     onPriceChanged: (Money) -> Unit,
     onMarginChanged: (BigDecimal) -> Unit,
     onAdvance: () -> Unit
 ) {
+    var manualPriceText by rememberSaveable { mutableStateOf(pricing.salePrice.toBigDecimal().toPlainString()) }
+    var marginText by rememberSaveable { mutableStateOf(targetMargin.setScale(2).toPlainString()) }
+    var priceFocused by remember { mutableStateOf(false) }
+    var marginFocused by remember { mutableStateOf(false) }
+    LaunchedEffect(pricing.salePrice) { if (!priceFocused) manualPriceText = pricing.salePrice.toBigDecimal().toPlainString() }
+    LaunchedEffect(targetMargin) { if (!marginFocused) marginText = targetMargin.setScale(2).toPlainString() }
+    val validPrice = runCatching { Money.fromReais(manualPriceText) > Money.Zero }.getOrDefault(false)
+    val validMargin = marginText.replace(',', '.').toBigDecimalOrNull()?.let { it >= BigDecimal.ZERO && it < BigDecimal(100) } == true
     // Mascot Narrative Banner
     Surface(
         modifier = Modifier
@@ -552,10 +566,11 @@ private fun CostSummaryAndPricingView(
             )
         }
 
-        CostBreakdownRow("🍫", "Ingredientes selecionados", "Cacau, leite condensado, manteiga", costs.ingredients)
-        CostBreakdownRow("👩‍🍳", "Mão de obra", "Preparo refinado + acabamento (1h30)", costs.labor)
+        CostBreakdownRow("🍫", "Ingredientes selecionados", "Custo proporcional das quantidades informadas", costs.ingredients)
+        CostBreakdownRow("👩‍🍳", "Mão de obra", "Tempo ativo × valor da hora × complexidade", costs.labor)
         CostBreakdownRow("🔥", "Gás e energia", "Custo proporcional de cocção", costs.energy)
-        CostBreakdownRow("📦", "Embalagem e fita", "Forminhas 4 pétalas e fita acetinada", costs.packaging)
+        CostBreakdownRow("📦", "Embalagem e fita", "Valor informado para a receita", costs.packaging)
+        CostBreakdownRow("＋", "Outros custos", "Despesas adicionais desta produção", costs.overhead)
     }
 
     // Total Cost Highlight Card
@@ -641,20 +656,15 @@ private fun CostSummaryAndPricingView(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            var manualPriceText by remember(pricing.salePrice) {
-                mutableStateOf(pricing.salePrice.toBigDecimal().toPlainString())
-            }
-            var marginText by remember(pricing.marginPercent) {
-                mutableStateOf(pricing.marginPercent.setScale(2).toPlainString())
-            }
             OutlinedTextField(
                 value = manualPriceText,
                 onValueChange = { value ->
                     manualPriceText = value
-                    value.replace(',', '.').toBigDecimalOrNull()?.let { onPriceChanged(Money.fromReais(it)) }
+                    runCatching { Money.fromReais(value) }.getOrNull()?.takeIf { it > Money.Zero }?.let(onPriceChanged)
                 },
                 label = { Text("Preço manual") },
-                modifier = Modifier.fillMaxWidth().testTag("price_manual_input"),
+                isError = !validPrice,
+                modifier = Modifier.fillMaxWidth().testTag("price_manual_input").onFocusChanged { priceFocused = it.isFocused },
                 singleLine = true
             )
             OutlinedTextField(
@@ -664,7 +674,8 @@ private fun CostSummaryAndPricingView(
                     value.replace(',', '.').toBigDecimalOrNull()?.takeIf { it >= BigDecimal.ZERO && it < BigDecimal("100") }?.let(onMarginChanged)
                 },
                 label = { Text("Margem alvo (%)") },
-                modifier = Modifier.fillMaxWidth().testTag("price_margin_input"),
+                isError = !validMargin,
+                modifier = Modifier.fillMaxWidth().testTag("price_margin_input").onFocusChanged { marginFocused = it.isFocused },
                 singleLine = true,
                 supportingText = { Text("Use um valor entre 0 e 99,99") }
             )
@@ -675,6 +686,7 @@ private fun CostSummaryAndPricingView(
             ) {
                 Button(
                     onClick = { onPriceChanged(pricing.salePrice - Money.fromReais("5.00")) },
+                    enabled = pricing.salePrice > Money.fromReais("5.00"),
                     modifier = Modifier.weight(1f).testTag("price_decrease_5"),
                     shape = CircleShape,
                     colors = ButtonDefaults.buttonColors(containerColor = BruleeSurfaceContainerHigh, contentColor = BruleeOnSurface)
@@ -697,9 +709,13 @@ private fun CostSummaryAndPricingView(
         }
     }
 
+    if (pricing.profit < Money.Zero) {
+        Text("Atenção: este preço fica abaixo do custo de produção.", color = MaterialTheme.colorScheme.error, modifier = Modifier.testTag("price_loss_warning"))
+    }
     // CTA
     TactilePrimaryButton(
         text = "AVANÇAR PARA ORÇAMENTO",
+        enabled = validPrice && validMargin,
         onClick = onAdvance,
         icon = "→",
         modifier = Modifier.testTag("quote_advance")
@@ -740,6 +756,7 @@ private fun CostBreakdownRow(icon: String, title: String, subtitle: String, amou
 @Composable
 private fun CustomerAndQuoteView(
     recipeName: String,
+    quoteCode: String,
     customerName: String,
     onCustomerNameChanged: (String) -> Unit,
     customerPhone: String,
@@ -749,8 +766,12 @@ private fun CustomerAndQuoteView(
     pricing: PricingResult,
     onSendWhatsApp: () -> Unit,
     onSharePdf: () -> Unit,
-    onApproveOrder: () -> Unit
+    onApproveOrder: () -> Unit,
+    onSaveDraft: () -> Unit
 ) {
+    val validCustomer = customerName.isNotBlank() && deliveryDate.isNotBlank()
+    val phoneDigits = customerPhone.filter(Char::isDigit)
+    val validPhone = phoneDigits.length in 10..15
     Text(
         "Para quem é este orçamento?",
         style = MaterialTheme.typography.headlineMedium,
@@ -780,12 +801,6 @@ private fun CustomerAndQuoteView(
                 modifier = Modifier.fillMaxWidth().testTag("customer_name"),
                 shape = CircleShape
             )
-
-            // Suggestion Chips
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                SuggestionChip(onClick = { onCustomerNameChanged("Ana Souza") }, label = { Text("Ana Souza") })
-                SuggestionChip(onClick = { onCustomerNameChanged("Carla Dias") }, label = { Text("Carla Dias") })
-            }
 
             OutlinedTextField(
                 value = customerPhone,
@@ -832,7 +847,7 @@ private fun CustomerAndQuoteView(
                     Text("Brûlée Telie", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = BruleePrimary)
                     Text("CONFEITARIA ARTESANAL", style = MaterialTheme.typography.labelSmall, color = BruleeSecondary, fontWeight = FontWeight.Bold)
                 }
-                StatusPill("#ORC-284", BruleePrimaryFixed, BruleePrimary)
+                StatusPill(quoteCode, BruleePrimaryFixed, BruleePrimary)
             }
 
             HorizontalDivider(color = BruleeSurfaceContainerHigh)
@@ -864,12 +879,15 @@ private fun CustomerAndQuoteView(
     // Tactile Actions
     TactilePrimaryButton(
         text = "ENVIAR NO WHATSAPP",
+        enabled = validCustomer && validPhone,
+        modifier = Modifier.testTag("quote_send_whatsapp"),
         onClick = onSendWhatsApp,
         icon = "✉"
     )
 
     TactileSecondaryButton(
         text = "GERAR E COMPARTILHAR PDF",
+        enabled = validCustomer,
         onClick = onSharePdf,
         icon = "▣",
         modifier = Modifier.testTag("quote_share_pdf")
@@ -877,10 +895,12 @@ private fun CustomerAndQuoteView(
 
     TactileSecondaryButton(
         text = "Marcar como Aprovado (Adicionar à Produção)",
+        enabled = validCustomer,
         onClick = onApproveOrder,
         icon = "✓",
         modifier = Modifier.testTag("quote_approve")
     )
+    TactileSecondaryButton("SALVAR RASCUNHO", onSaveDraft, Modifier.testTag("quote_save_draft"), enabled = validCustomer)
 }
 
 @Composable
@@ -898,18 +918,19 @@ private fun SentSuccessView(customerName: String, onFinish: () -> Unit) {
         ) {
             Text("🎉", style = MaterialTheme.typography.displayMedium)
             Text(
-                "Orçamento Enviado!",
+                "Orçamento pronto no WhatsApp",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = BruleeOnSecondaryContainer
             )
             Text(
-                "O orçamento formatado foi preparado para $customerName com sucesso.",
+                "Confirme o envio para $customerName no WhatsApp. O orçamento ficou salvo em Pedidos.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = BruleeOnSecondaryContainer
             )
             TactilePrimaryButton(
-                text = "VOLTAR À PRODUÇÃO",
+                text = "VER PEDIDOS",
+                modifier = Modifier.testTag("quote_sent_finish"),
                 onClick = onFinish
             )
         }

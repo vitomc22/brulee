@@ -23,6 +23,7 @@ import com.bruleetelie.app.ui.components.StatusPill
 import com.bruleetelie.app.ui.theme.*
 import com.bruleetelie.data.db.PriceObservationEntity
 import com.bruleetelie.domain.FinancialAnalysisEngine
+import com.bruleetelie.domain.RecipeProfitabilityRanking
 import com.bruleetelie.domain.Money
 import com.bruleetelie.domain.Quote
 import com.bruleetelie.domain.QuoteStatus
@@ -79,12 +80,10 @@ fun FinanceDashboardScreen(
         totalRevenue = metrics.totalRevenue,
         totalVariableCosts = metrics.totalCost
     )
-    val rankings = filteredSales.sortedWith(
-        compareByDescending<SaleSnapshot> { it.profit.cents }.thenBy { it.productName }
-    )
+    val rankings = RecipeProfitabilityRanking.calculate(filteredSales)
     val chartSales = filteredSales.sortedBy { it.completedAtMillis }
     val chartModel = remember(chartSales) {
-        CartesianChartModel(
+        if (chartSales.isEmpty()) null else CartesianChartModel(
             LineCartesianLayerModel.build {
                 series(chartSales.map { it.salePrice.cents / 100.0 })
                 series(chartSales.map { it.profit.cents / 100.0 })
@@ -128,7 +127,7 @@ fun FinanceDashboardScreen(
                 modifier = Modifier.testTag("finance_filter_month"),
                 selected = selectedFilter == "Este mês",
                 onClick = { selectedFilter = "Este mês" },
-                label = { Text("Este mês (Outubro)") },
+                label = { Text("Este mês") },
                 colors = FilterChipDefaults.filterChipColors(
                     selectedContainerColor = BruleeSecondary,
                     selectedLabelColor = Color.White
@@ -192,7 +191,7 @@ fun FinanceDashboardScreen(
                         chart = rememberCartesianChart(
                             rememberLineCartesianLayer()
                         ),
-                        model = chartModel,
+                        model = chartModel!!,
                         modifier = Modifier.fillMaxWidth().height(220.dp)
                     )
                 }
@@ -338,7 +337,7 @@ fun FinanceDashboardScreen(
             rankings.take(10).forEachIndexed { index, sale ->
                 ProfitabilityRankingRow(
                     rank = (index + 1).toString(),
-                    name = sale.productName,
+                    name = sale.name,
                     margin = "${sale.marginPercent.stripTrailingZeros().toPlainString()}%",
                     profit = sale.profit.format()
                 )
@@ -391,7 +390,7 @@ private fun ProfitabilityRankingRow(rank: String, name: String, margin: String, 
             }
             Column(modifier = Modifier.weight(1f)) {
                 Text(name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-                Text("Lucro/unid. $profit", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("Lucro acumulado: $profit", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             StatusPill(margin, BruleePrimaryFixed, BruleePrimary)
         }

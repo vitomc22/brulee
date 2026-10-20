@@ -22,6 +22,10 @@ class OcrLifecycleStressTest {
     @get:Rule
     val composeRule = createAndroidComposeRule<MainActivity>()
 
+    @org.junit.After fun removeTestData() { clearTestData(composeRule) }
+
+    @org.junit.Before fun prepareRealTestData() { clearTestData(composeRule) }
+
     @Test
     fun reviewStateSurvivesActivityRecreationWithoutAutoPersisting() {
         openReviewAndEdit()
@@ -47,7 +51,7 @@ class OcrLifecycleStressTest {
     }
 
     private fun openReviewAndEdit() {
-        composeRule.onNodeWithTag("nav_stock").performClick()
+        openOcrFixture(composeRule)
         composeRule.onNodeWithTag("ocr_process_document")
             .performScrollTo()
             .performClick()

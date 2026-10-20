@@ -4,4 +4,6 @@ import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class BruleeApplication : Application()
+class BruleeApplication : Application() {
+    @javax.inject.Inject lateinit var repository: com.bruleetelie.data.BruleeRepository
+}

@@ -17,10 +17,14 @@ class CanonicalWizardCostE2eTest {
     @get:Rule
     val composeRule = createAndroidComposeRule<MainActivity>()
 
+    @org.junit.After fun removeTestData() { clearTestData(composeRule) }
+
+    @org.junit.Before fun prepareRealTestData() { clearTestData(composeRule) }
+
     @Test
     fun testCanonicalCostWizardFlow() {
         // Open new quote wizard
-        composeRule.onNodeWithTag("nav_wizard").performClick()
+        openTestRecipe(composeRule)
         composeRule.onNodeWithText("Passo 1 de 5").performScrollTo().assertIsDisplayed()
 
         // Step 1: Recipe name
@@ -79,7 +83,7 @@ class CanonicalWizardCostE2eTest {
 
     @Test
     fun wizardCanNavigateBackAndRemoveIngredient() {
-        composeRule.onNodeWithTag("nav_wizard").performClick()
+        openTestRecipe(composeRule)
         composeRule.onNodeWithTag("recipe_continue").performClick()
 
         composeRule.onNodeWithTag("ingredient_name").performTextInput("Ingrediente removível")
@@ -100,7 +104,7 @@ class CanonicalWizardCostE2eTest {
 
     @Test
     fun cost025_backAndEditIngredientQuantityRecalculates() {
-        composeRule.onNodeWithTag("nav_wizard").performClick()
+        openTestRecipe(composeRule)
         composeRule.onNodeWithTag("recipe_continue").performClick()
 
         composeRule.onAllNodesWithTag("ingredient_edit")[0].performScrollTo().performClick()
@@ -114,7 +118,7 @@ class CanonicalWizardCostE2eTest {
 
     @Test
     fun cost027_removingIngredientKeepsCostSummaryStable() {
-        composeRule.onNodeWithTag("nav_wizard").performClick()
+        openTestRecipe(composeRule)
         composeRule.onNodeWithTag("recipe_continue").performClick()
         composeRule.onAllNodesWithTag("ingredient_remove")[1].performClick()
         composeRule.onNodeWithTag("ingredients_continue").performScrollTo().performClick()
@@ -126,7 +130,7 @@ class CanonicalWizardCostE2eTest {
 
     @Test
     fun cost026_cancelEditKeepsOriginalIngredient() {
-        composeRule.onNodeWithTag("nav_wizard").performClick()
+        openTestRecipe(composeRule)
         composeRule.onNodeWithTag("recipe_continue").performClick()
         composeRule.onAllNodesWithTag("ingredient_edit")[0].performClick()
         composeRule.onNodeWithTag("ingredient_used_quantity").performTextClearance()
@@ -139,7 +143,7 @@ class CanonicalWizardCostE2eTest {
 
     @Test
     fun cost028_duplicateIngredientShowsDecisionMessage() {
-        composeRule.onNodeWithTag("nav_wizard").performClick()
+        openTestRecipe(composeRule)
         composeRule.onNodeWithTag("recipe_continue").performClick()
         composeRule.onNodeWithTag("ingredient_name").performTextInput("Chocolate Nobre 50%")
         composeRule.onNodeWithTag("ingredient_package_quantity").performTextInput("1000")
@@ -150,7 +154,7 @@ class CanonicalWizardCostE2eTest {
 
     @Test
     fun cost029_missingPriceExplainsWhyCostCannotBeCalculated() {
-        composeRule.onNodeWithTag("nav_wizard").performClick()
+        openTestRecipe(composeRule)
         composeRule.onNodeWithTag("recipe_continue").performClick()
         composeRule.onNodeWithTag("ingredient_name").performTextInput("Ingrediente sem preço")
         composeRule.onNodeWithTag("ingredient_validation").performScrollTo().assertIsDisplayed()
@@ -158,7 +162,7 @@ class CanonicalWizardCostE2eTest {
 
     @Test
     fun cost030_offlineCalculationReachesStableSummary() {
-        composeRule.onNodeWithTag("nav_wizard").performClick()
+        openTestRecipe(composeRule)
         composeRule.onNodeWithTag("recipe_continue").performClick()
         composeRule.onNodeWithTag("ingredients_continue").performScrollTo().performClick()
         composeRule.onNodeWithTag("costs_calculate").performScrollTo().performClick()

@@ -98,3 +98,16 @@ object RecipeCostCalculator {
         )
     }
 }
+
+/** A saved, immutable revision of a recipe. New saves create a new revision. */
+data class SavedRecipe(
+    val id: String,
+    val versionId: String,
+    val version: Int,
+    val name: String,
+    val yieldCount: Int,
+    val ingredients: List<RecipeIngredientItem>,
+    val times: OperationalTimes,
+    val packaging: Money = Money.Zero,
+    val overhead: Money = Money.Zero
+)

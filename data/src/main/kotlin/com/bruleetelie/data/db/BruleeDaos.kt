@@ -189,3 +189,25 @@ interface StatusHistoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPayment(value: PaymentStatusHistoryEntity)
 }
+
+@Dao
+interface RecipeDao {
+    @Query("SELECT * FROM recipes ORDER BY name ASC")
+    fun getAll(): Flow<List<RecipeEntity>>
+    @Query("SELECT * FROM recipe_versions WHERE recipeId = :recipeId ORDER BY versionNumber DESC LIMIT 1")
+    suspend fun latestVersion(recipeId: String): RecipeVersionEntity?
+    @Query("SELECT * FROM recipe_ingredients WHERE recipeVersionId = :versionId ORDER BY rowid")
+    suspend fun ingredients(versionId: String): List<RecipeIngredientEntity>
+    @Upsert
+    suspend fun saveRecipe(recipe: RecipeEntity)
+    @Insert
+    suspend fun insertVersion(version: RecipeVersionEntity)
+    @Insert
+    suspend fun insertIngredients(ingredients: List<RecipeIngredientEntity>)
+    @Transaction
+    suspend fun saveRevision(recipe: RecipeEntity, version: RecipeVersionEntity, ingredients: List<RecipeIngredientEntity>) {
+        saveRecipe(recipe)
+        insertVersion(version)
+        insertIngredients(ingredients)
+    }
+}

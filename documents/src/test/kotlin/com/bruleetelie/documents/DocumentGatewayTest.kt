@@ -62,11 +62,22 @@ class DocumentGatewayTest {
         assertFalse("Não deve conter palavra lucro", text.contains("lucro", ignoreCase = true))
     }
 
+    @Test fun `international phone keeps country code and text round trips accents`() {
+        val quote = sampleQuote.copy(customer = sampleQuote.customer.copy(phone = "+55 (11) 98765-4321"))
+        val url = gateway.formatWhatsAppUrl(quote)
+        assertTrue(url.contains("phone=5511987654321&"))
+        org.junit.Assert.assertEquals(gateway.generateCustomerQuoteText(quote), java.net.URLDecoder.decode(url.substringAfter("&text="), "UTF-8"))
+    }
+    @Test(expected = IllegalArgumentException::class)
+    fun `invalid phone cannot produce a send url`() {
+        gateway.formatWhatsAppUrl(sampleQuote.copy(customer = sampleQuote.customer.copy(phone = "123")))
+    }
+
     @Test
     fun `test whatsapp url formatting`() {
         val url = gateway.formatWhatsAppUrl(sampleQuote)
 
-        assertTrue(url.startsWith("https://api.whatsapp.com/send?phone=11987654321&text="))
+        assertTrue(url.startsWith("https://api.whatsapp.com/send?phone=5511987654321&text="))
         assertTrue(url.contains("ORC-284"))
     }
 }

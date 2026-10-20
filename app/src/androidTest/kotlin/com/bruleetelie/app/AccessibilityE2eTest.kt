@@ -16,6 +16,10 @@ class AccessibilityE2eTest {
     @get:Rule
     val composeRule = createAndroidComposeRule<MainActivity>()
 
+    @org.junit.After fun removeTestData() { clearTestData(composeRule) }
+
+    @org.junit.Before fun prepareRealTestData() { clearTestData(composeRule) }
+
     @Test
     fun primaryNavigationExposesTalkBackDescriptionAndClickAction() {
         composeRule.onNodeWithContentDescription("Navegação Produção")
@@ -33,4 +37,9 @@ class AccessibilityE2eTest {
             .assertIsDisplayed()
             .assertHasClickAction()
     }
+    @Test fun secondaryNavigationHasAccessibleDescriptions() {
+        composeRule.onNodeWithContentDescription("Navegação Compras").assertIsDisplayed().assertHasClickAction()
+        composeRule.onNodeWithContentDescription("Navegação Backup").assertIsDisplayed().assertHasClickAction()
+    }
+
 }

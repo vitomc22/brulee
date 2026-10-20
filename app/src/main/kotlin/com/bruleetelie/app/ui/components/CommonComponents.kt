@@ -5,7 +5,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -87,6 +93,7 @@ fun StepProgressBar(
     modifier: Modifier = Modifier
 ) {
     val progress = (currentStep.toFloat() / totalSteps.coerceAtLeast(1).toFloat()).coerceIn(0f, 1f)
+    val animatedProgress by animateFloatAsState(progress, tween(if (LocalReducedMotion.current) 0 else 450, easing = FastOutSlowInEasing), label = "Wizard progress")
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -117,7 +124,7 @@ fun StepProgressBar(
             )
         }
         LinearProgressIndicator(
-            progress = { progress },
+            progress = { animatedProgress },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(8.dp)
@@ -136,9 +143,15 @@ fun TactilePrimaryButton(
     icon: String? = null,
     enabled: Boolean = true
 ) {
+    val interaction = remember { MutableInteractionSource() }
+    val pressed by interaction.collectIsPressedAsState()
+    val reduced = LocalReducedMotion.current
+    val scale by animateFloatAsState(if (pressed && !reduced) 0.97f else 1f, spring(stiffness = Spring.StiffnessMediumLow), label = "Tactile button")
+    val haptics = LocalHapticFeedback.current
     Button(
-        onClick = onClick,
-        modifier = modifier
+        onClick = { haptics.performHapticFeedback(HapticFeedbackType.Confirm); onClick() },
+        interactionSource = interaction,
+        modifier = modifier.graphicsLayer { scaleX = scale; scaleY = scale; translationY = if (pressed && !reduced) 3.dp.toPx() else 0f }
             .fillMaxWidth()
             .height(54.dp),
         enabled = enabled,

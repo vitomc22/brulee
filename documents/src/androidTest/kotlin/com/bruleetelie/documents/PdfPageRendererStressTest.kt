@@ -17,13 +17,14 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class PdfPageRendererStressTest {
     private val context = ApplicationProvider.getApplicationContext<android.content.Context>()
+    @get:org.junit.Rule val fixtures = org.junit.rules.TemporaryFolder(context.cacheDir)
     private val renderer = PdfPageRenderer()
 
     @Test
     fun rendersTwentyAndFiftyPageDocumentsWithoutRetainingBitmaps() {
         listOf(20, 50).forEach { pageCount ->
             val pdf = createPdf(pageCount)
-            val output = File(context.cacheDir, "pdf-pages-$pageCount")
+            val output = File(fixtures.root, "pdf-pages-$pageCount")
             val pages = renderer.renderToFiles(context, android.net.Uri.fromFile(pdf), output)
             assertEquals(pageCount, pages.size)
             assertTrue(pages.all { File(it.path!!).length() > 100 })
@@ -34,7 +35,7 @@ class PdfPageRendererStressTest {
 
     @Test
     fun corruptedPdfFailsClearly() {
-        val file = File(context.cacheDir, "corrupted.pdf").apply { writeText("not a PDF") }
+        val file = File(fixtures.root, "corrupted.pdf").apply { writeText("not a PDF") }
         try {
             renderer.renderAll(context, android.net.Uri.fromFile(file)) { _, _ -> }
             throw AssertionError("corrupted PDF unexpectedly rendered")
@@ -47,7 +48,7 @@ class PdfPageRendererStressTest {
 
     @Test
     fun encryptedPdfIsRejectedWithoutCreatingPages() {
-        val file = File(context.cacheDir, "encrypted-receipt.pdf")
+        val file = File(fixtures.root, "encrypted-receipt.pdf")
         context.assets.open("pdf/encrypted_receipt.pdf").use { input ->
             file.outputStream().use(input::copyTo)
         }
@@ -77,7 +78,7 @@ class PdfPageRendererStressTest {
                 assertTrue(rendered.get() < 6)
             }
             repeat(3) {
-                val output = File(context.cacheDir, "pdf-repeat-$it")
+                val output = File(fixtures.root, "pdf-repeat-$it")
                 assertEquals(20, renderer.renderToFiles(context, android.net.Uri.fromFile(pdf), output).size)
                 output.deleteRecursively()
             }
@@ -87,7 +88,7 @@ class PdfPageRendererStressTest {
     }
 
     private fun createPdf(pageCount: Int): File {
-        val file = File(context.cacheDir, "fixture-$pageCount-${System.nanoTime()}.pdf")
+        val file = File(fixtures.root, "fixture-$pageCount-${System.nanoTime()}.pdf")
         val document = PdfDocument()
         val paint = Paint().apply { color = Color.BLACK; textSize = 18f }
         repeat(pageCount) { index ->

@@ -16,9 +16,13 @@ class OcrIgnoreItemE2eTest {
     @get:Rule
     val composeRule = createAndroidComposeRule<MainActivity>()
 
+    @org.junit.After fun removeTestData() { clearTestData(composeRule) }
+
+    @org.junit.Before fun prepareRealTestData() { clearTestData(composeRule) }
+
     @Test
     fun ignoreDetectedItem_excludesItFromSavedPriceObservations() {
-        composeRule.onNodeWithTag("nav_stock").performClick()
+        openOcrFixture(composeRule)
         composeRule.onNodeWithTag("ocr_process_document")
             .performScrollTo()
             .performClick()
@@ -37,7 +41,7 @@ class OcrIgnoreItemE2eTest {
             .performScrollTo()
             .performClick()
 
-        composeRule.onNodeWithText("Production Board").assertIsDisplayed()
+        composeRule.onNodeWithTag("inventory_screen").assertIsDisplayed()
         composeRule.onNodeWithText("3 observações de preço salvas").assertIsDisplayed()
     }
 }
